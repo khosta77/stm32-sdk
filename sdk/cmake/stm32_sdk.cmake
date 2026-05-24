@@ -58,6 +58,7 @@ target_compile_options(stm32_core INTERFACE
     -Wextra
     -Wpedantic
     -Wshadow
+    -Werror
     $<$<COMPILE_LANGUAGE:C>:-std=gnu11>
     $<$<COMPILE_LANGUAGE:CXX>:-std=gnu++20>
 )
