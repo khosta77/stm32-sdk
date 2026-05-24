@@ -16,16 +16,26 @@ maintainer, пока API не стабилизируется (цель — v1.0)
 
 ## Инструменты
 
-Номер версии выводится из git-тегов через `setuptools-scm`. Нигде нет ручной
-константы — именно тег создаёт релиз для пользователей `stmtool`.
+Номер версии выводится из git-тегов через `poetry-dynamic-versioning`
+(переход с `setuptools-scm` в v0.1.4). Нигде нет ручной константы —
+именно тег создаёт релиз для пользователей `stmtool`.
 
 `tools/stmtool/pyproject.toml` конфигурирует:
 
 ```toml
-[tool.setuptools_scm]
-root = "../.."
-version_file = "stmtool/_version.py"
+[build-system]
+requires = ["poetry-core>=1.9", "poetry-dynamic-versioning>=1.4"]
+build-backend = "poetry_dynamic_versioning.backend"
+
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "pep440"
 ```
+
+Плагин поднимается от `tools/stmtool/pyproject.toml` до корневого
+`.git` и берёт последний `vMAJOR.MINOR.PATCH` тег — тот же источник
+истины, что использует и CMake-сторона SDK.
 
 ## Процедура релиза
 
@@ -41,6 +51,58 @@ version_file = "stmtool/_version.py"
    <https://khosta77.github.io/stm32-sdk/> подтянул свежий контент.
 
 ## История релизов
+
+### v0.1.4 (в подготовке)
+
+Фокус: качество и инфраструктура, новых SDK-фич нет кроме
+[issue #9](https://github.com/khosta77/stm32-sdk/issues/9).
+
+Главные изменения:
+
+- `driver::NullGpioPin` — пустая реализация `IGpioPin` для плат, где
+  CS-линия SPI впаяна в GND (issue #9). Drop-in для сенсоров,
+  принимающих `IGpioPin&` (например, `W25q32`).
+- `stmtool` мигрирован с `setuptools` на Poetry + `poethepoet`.
+  Новая команда `poetry run poe ci` запускает ruff / flake8 / pylint
+  / black / isort / mypy (strict) / bandit / pytest за один заход.
+  `poetry run poe fix` применяет все авто-фиксеры. Рантайм `__version__`
+  теперь берётся через `importlib.metadata`; генерируемый `_version.py`
+  удалён.
+- У `stmtool` появился baseline тест-сьют (~80% покрытия, 50 тестов)
+  и новый workflow `.github/workflows/stmtool.yml`, запускающий
+  `poe ci` на каждом PR, затрагивающем `tools/stmtool/**`.
+- `.github/workflows/build.yml` переписан: chip-matrix теперь
+  `[STM32F407VG]`, и каждый PR собирает **все 7 шаблонов** параллельно
+  (`fail-fast: false`).
+- `-Wall -Wextra -Wpedantic -Wshadow -Werror` постоянно включены на
+  `stm32_core` и пропагируются на драйверы, RTOS, сенсоры, пользовательский
+  код. Политика — на странице [Compiler and warning flags](build-flags.md).
+- Project-level `.claude/commands/{ci,fix,build-all-templates,test-template,release-check}.md`
+  для контрибьюторов, использующих Claude Code.
+- Новая секция `CLAUDE.md` «Quality enforcement»: линт-правила и `-W*`
+  флаги нельзя отключать без явного согласования с пользователем.
+
+Известные ограничения / не проверяется в CI:
+
+- **STM32F401CE и STM32F411CE** формально поддерживаются кодом SDK, но
+  больше не покрываются CI (у maintainer'а нет физического железа).
+  Используйте на свой страх и риск; если соберёте под них и поймаете
+  warning, ломающий `-Werror` — заведите issue.
+- `bare-metal/blink/main.cpp` обновлён: `g_ticks = g_ticks + 1` вместо
+  `++g_ticks` (C++20 deprecation `operator++` на volatile). Downstream-
+  проектам, скопировавшим оригинальный код, нужна такая же однострочная
+  правка.
+
+Отложено в v0.1.5+:
+
+- Все P1-команды `stmtool` из
+  [issue #2](https://github.com/khosta77/stm32-sdk/issues/2):
+  `monitor`, `size`, `config`, `project info`, `device list`, `chips`,
+  `boards`.
+- Новые bare-metal шаблоны: `uart-echo`, `spi-sensor`, `adc-dma`.
+- Board definitions (`.toml` файлы) и Python chipdb.
+- Флаг `-Wconversion` (много шума на CMSIS-коде; требует отдельной
+  чистки).
 
 ### v0.1.3 (в подготовке)
 

@@ -47,6 +47,28 @@ The `gpio({...})` free function is a `consteval` validator: it throws
 GPIO port clock enable is handled by `GpioPin`'s constructor (it inspects the
 port address and toggles the right `RCC_AHB1ENR_GPIOxEN` bit).
 
+### `NullGpioPin` — `driver.null_gpio` (v0.1.4)
+
+A no-op implementation of `IGpioPin`. Use it when a sensor or driver
+takes an `IGpioPin&` for a CS line that is **hardwired** on the board
+(for example, an SPI flash whose CS is tied to GND through a jumper).
+
+```cpp
+import driver.null_gpio;
+import driver.stm32f4.spi;
+
+driver::NullGpioPin null_cs;
+W25q32 flash{spi, null_cs, {.id = 0xEF4016}};  // hardware CS — no toggling
+```
+
+All four `IGpioPin` methods (`set`, `reset`, `toggle`, `read`) are
+inline empty functions, so the compiler typically devirtualises them
+into nothing when the concrete type is known at the call site. There
+is no register access, no clock enable, and no peripheral state. It is
+intentionally chip-agnostic and lives at the top of
+`sdk/drivers/include/driver/null_gpio.cppm` rather than under
+`stm32f4/`.
+
 ## I2C — `driver.stm32f4.i2c`
 
 ```cpp

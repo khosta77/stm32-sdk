@@ -47,6 +47,27 @@ Output / AlternateFunction, `af > 15` для AF.
 Тактирование GPIO-порта включается в конструкторе `GpioPin` (смотрит на адрес
 порта и устанавливает соответствующий бит `RCC_AHB1ENR_GPIOxEN`).
 
+### `NullGpioPin` — `driver.null_gpio` (v0.1.4)
+
+Пустая реализация `IGpioPin`. Используйте, когда сенсор или драйвер
+принимает `IGpioPin&` под CS-линию, **впаянную** в плату (например, SPI
+flash с CS, подтянутым к GND джампером).
+
+```cpp
+import driver.null_gpio;
+import driver.stm32f4.spi;
+
+driver::NullGpioPin null_cs;
+W25q32 flash{spi, null_cs, {.id = 0xEF4016}};  // CS hardwired — без переключений
+```
+
+Все четыре метода `IGpioPin` (`set`, `reset`, `toggle`, `read`) — это
+inline-пустышки, поэтому компилятор обычно девиртуализует их в ничто,
+если конкретный тип известен в точке вызова. Никакого доступа к
+регистрам, тактирования и состояния периферии. Модуль сознательно
+chip-agnostic и лежит на верхнем уровне в
+`sdk/drivers/include/driver/null_gpio.cppm`, а не под `stm32f4/`.
+
 ## I2C — `driver.stm32f4.i2c`
 
 ```cpp

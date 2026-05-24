@@ -67,6 +67,7 @@ nav:
   - Home: index.md
   - Quick start: quickstart.md
   - stmtool: stmtool.md
+  - Build flags: build-flags.md
   - Modules:
       - Drivers: modules/drivers.md
       - Sensors: modules/sensors.md
