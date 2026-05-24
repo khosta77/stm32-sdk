@@ -49,6 +49,32 @@ PRs without the corresponding documentation update should not merge. The
 `docs.yml` workflow rebuilds the site on every push to `develop`; failing
 to update docs means future contributors see stale information.
 
+## Quality enforcement (must follow)
+
+- `-Werror` is permanently enabled in `sdk/cmake/stm32_sdk.cmake` via the
+  `stm32_core` INTERFACE target. Warnings are errors in SDK code and in
+  downstream user projects. Do NOT disable `-Werror` or any individual
+  `-W*` flag without explicit user approval. If a CMSIS / vendor header
+  triggers a warning, suppress it locally at the file level via
+  `set_source_files_properties(... PROPERTIES COMPILE_OPTIONS "-Wno-XXX")`,
+  not globally.
+
+- `stmtool` code must pass `poetry run poe ci` before any commit: ruff,
+  flake8, black, isort, mypy (strict), bandit, pylint, pytest with at
+  least 70% coverage. Do NOT add `# noqa`, `# type: ignore`,
+  `--ignore=...`, or `disable=...` directives without explicit user
+  approval. If a linter produces a critically large number of errors,
+  stop and ask the user whether to disable the rule or fix every
+  occurrence -- never decide unilaterally.
+
+- `poetry run poe fix` runs all auto-fixers (ruff, isort, black, ruff
+  format). It is safe to run locally; results must still pass `poe ci`.
+
+- Commit messages are in English (Conventional Commits). Pull request
+  descriptions targeting `develop` are in Russian. This split keeps the
+  history machine-readable for tooling while the PR narrative stays
+  natural for the team.
+
 ## Release process
 
 Releases use SemVer (`vMAJOR.MINOR.PATCH`). The project is pre-1.0; both
@@ -64,7 +90,8 @@ To cut a release:
 4. Create the GitHub Release; copy notes from the new section in
    `docs/release.md`.
 
-The version number is derived from git tags via `setuptools-scm` —
+The version number is derived from git tags via
+`poetry-dynamic-versioning` (the SDK side still picks the same tag) --
 no hand-edited version constants anywhere. Tagging the repo is what
 publishes a release for `stmtool` consumers.
 
