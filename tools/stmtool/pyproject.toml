@@ -116,3 +116,35 @@ exclude_lines = [
     "raise NotImplementedError",
     "if TYPE_CHECKING:",
 ]
+
+[tool.poe.tasks]
+# Linters
+lint-ruff = "ruff check stmtool tests"
+lint-flake8 = "flake8 stmtool tests"
+lint-pylint = "pylint stmtool"
+
+# Format checks
+fmt-check-ruff = "ruff format --check stmtool tests"
+fmt-check-black = "black --check stmtool tests"
+fmt-check-isort = "isort --check-only stmtool tests"
+
+# Types
+type-mypy = "mypy stmtool tests"
+
+# Security
+sec-bandit = "bandit -ll -r stmtool"
+
+# Tests
+test = "pytest tests --cov=stmtool --cov-fail-under=70"
+
+# Composite gates
+lint = ["lint-ruff", "lint-flake8", "lint-pylint"]
+fmt-check = ["fmt-check-ruff", "fmt-check-black", "fmt-check-isort"]
+ci = ["lint", "fmt-check", "type-mypy", "sec-bandit", "test"]
+
+# Auto-fixers
+fix-ruff = "ruff check --fix stmtool tests"
+fix-isort = "isort stmtool tests"
+fix-black = "black stmtool tests"
+fix-ruff-format = "ruff format stmtool tests"
+fix = ["fix-ruff", "fix-isort", "fix-black", "fix-ruff-format"]
