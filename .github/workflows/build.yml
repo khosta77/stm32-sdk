@@ -10,8 +10,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        chip: [STM32F407VG, STM32F401CE, STM32F411CE]
+        chip: [STM32F407VG]
+        template:
+          - blink
+          - i2c-scan
+          - freertos-blink
+          - mpu6050-uart
+          - oled-display-test
+          - w25q32-flash-test
+          - imu-flash-oled-demo
 
     steps:
       - uses: actions/checkout@v4
@@ -29,17 +38,22 @@ jobs:
       - name: Install stmtool
         run: pip install ./tools/stmtool
 
-      - name: Create test project
-        run: stmtool project create ci-test --chip ${{ matrix.chip }}
+      - name: Create project
+        run: |
+          stmtool project create "ci-${{ matrix.template }}" \
+            --chip ${{ matrix.chip }} \
+            --template ${{ matrix.template }}
         env:
           STMSDK_PATH: ${{ github.workspace }}
 
       - name: Build
         run: |
-          cd ci-test
+          cd "ci-${{ matrix.template }}"
           stmtool build --native
         env:
           STMSDK_PATH: ${{ github.workspace }}
 
       - name: Binary size
-        run: arm-none-eabi-size ci-test/build/ci-test.elf
+        run: |
+          cd "ci-${{ matrix.template }}"
+          arm-none-eabi-size build/*.elf

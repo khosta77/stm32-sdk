@@ -3,7 +3,7 @@
 static volatile uint32_t g_ticks;
 
 extern "C" void SysTick_Handler() {
-    ++g_ticks;
+    g_ticks = g_ticks + 1;
 }
 
 static void delay(uint32_t ms) {

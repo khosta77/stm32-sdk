@@ -1,21 +1,150 @@
-[project]
+[tool.poetry]
 name = "stmtool"
-dynamic = ["version"]
+version = "0.0.0"
 description = "CLI tool for STM32-SDK bare-metal projects"
-requires-python = ">=3.10"
-dependencies = [
-    "typer[all]>=0.9",
-    "rich>=13.0",
-    "tomli>=2.0;python_version<'3.11'",
-]
+authors = ["khosta77"]
+readme = "../../README.md"
+license = "MIT"
+packages = [{ include = "stmtool" }]
 
-[project.scripts]
+[tool.poetry.dependencies]
+python = "^3.10"
+typer = { extras = ["all"], version = ">=0.9" }
+rich = ">=13.0"
+tomli = { version = ">=2.0", python = "<3.11" }
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8"
+pytest-mock = ">=3.12"
+pytest-cov = ">=5"
+ruff = ">=0.6"
+flake8 = ">=7"
+flake8-bugbear = ">=24.0"
+flake8-comprehensions = ">=3.14"
+black = ">=24"
+isort = ">=5.13"
+mypy = ">=1.11"
+bandit = ">=1.7"
+pylint = ">=3.2"
+poethepoet = ">=0.27"
+
+[tool.poetry.scripts]
 stmtool = "stmtool.cli:app"
 
 [build-system]
-requires = ["setuptools>=68", "setuptools-scm>=8"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.9", "poetry-dynamic-versioning>=1.4"]
+build-backend = "poetry_dynamic_versioning.backend"
 
-[tool.setuptools_scm]
-root = "../.."
-version_file = "stmtool/_version.py"
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "pep440"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+extend-exclude = ["build", "dist", ".venv", "tests/fixtures"]
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "UP",   # pyupgrade
+    "SIM",  # flake8-simplify
+    "C4",   # flake8-comprehensions
+    "RUF",  # ruff-specific
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["B011"]
+"stmtool/cli.py" = ["B008"]
+"stmtool/i18n.py" = ["RUF001"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+extend-exclude = '''
+/(
+    \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+skip = ["build", "dist", ".venv"]
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+exclude = [
+    "build/",
+    "dist/",
+    "tests/fixtures/",
+]
+
+[[tool.mypy.overrides]]
+module = ["typer.*", "rich.*", "tomli"]
+ignore_missing_imports = true
+
+[tool.bandit]
+exclude_dirs = ["tests", "build", "dist"]
+
+[tool.pylint."MESSAGES CONTROL"]
+max-line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "--strict-markers"
+
+[tool.coverage.run]
+source = ["stmtool"]
+omit = ["stmtool/__init__.py"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+]
+
+[tool.poe.tasks]
+# Linters
+lint-ruff = "ruff check stmtool tests"
+lint-flake8 = "flake8 stmtool tests"
+lint-pylint = "pylint stmtool"
+
+# Format checks
+fmt-check-ruff = "ruff format --check stmtool tests"
+fmt-check-black = "black --check stmtool tests"
+fmt-check-isort = "isort --check-only stmtool tests"
+
+# Types
+type-mypy = "mypy stmtool tests"
+
+# Security
+sec-bandit = "bandit -ll -r stmtool"
+
+# Tests
+test = "pytest tests --cov=stmtool --cov-fail-under=70"
+
+# Composite gates
+lint = ["lint-ruff", "lint-flake8", "lint-pylint"]
+fmt-check = ["fmt-check-ruff", "fmt-check-black", "fmt-check-isort"]
+ci = ["lint", "fmt-check", "type-mypy", "sec-bandit", "test"]
+
+# Auto-fixers
+fix-ruff = "ruff check --fix stmtool tests"
+fix-isort = "isort stmtool tests"
+fix-black = "black stmtool tests"
+fix-ruff-format = "ruff format stmtool tests"
+fix = ["fix-ruff", "fix-isort", "fix-black", "fix-ruff-format"]

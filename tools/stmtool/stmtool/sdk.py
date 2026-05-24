@@ -13,20 +13,18 @@ from __future__ import annotations
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional
 
-if sys.version_info >= (3, 11):
-    import tomllib
-else:
-    import tomli as tomllib
-
-from stmtool.i18n import t
 from stmtool.project import (
     _SDK_CACHE_DIR,
     _checkout_version,
     _clone_sdk_cache,
     resolve_sdk_root,
 )
+
+if sys.version_info >= (3, 11):
+    import tomllib
+else:
+    import tomli as tomllib
 
 
 def _ensure_cache() -> Path:
@@ -54,6 +52,7 @@ def list_versions() -> list[str]:
         ["git", "-C", str(cache), "tag", "-l", "v*", "--sort=-v:refname"],
         capture_output=True,
         text=True,
+        check=False,
     )
     if result.returncode != 0:
         return []
@@ -67,6 +66,7 @@ def current_version() -> str:
         ["git", "-C", str(cache), "describe", "--tags", "--always"],
         capture_output=True,
         text=True,
+        check=False,
     )
     if result.returncode != 0:
         return ""
@@ -78,7 +78,7 @@ def resolve_path() -> Path:
     return resolve_sdk_root()
 
 
-def project_sdk_version(cwd: Optional[Path] = None) -> Optional[str]:
+def project_sdk_version(cwd: Path | None = None) -> str | None:
     """Read ``[sdk].version`` from ``stmproject.toml`` in ``cwd`` if present."""
     cwd = cwd or Path.cwd()
     config_path = cwd / "stmproject.toml"
