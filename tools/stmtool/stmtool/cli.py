@@ -1,3 +1,6 @@
+"""Top-level Typer application that wires together the ``stmtool`` CLI commands."""
+
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -8,9 +11,9 @@ from rich.table import Table
 
 from stmtool import __version__
 from stmtool import sdk as sdk_module
+from stmtool.completions import complete_chip, complete_flash_tool, complete_template
 from stmtool.config import load_config
 from stmtool.i18n import t
-from stmtool.completions import complete_chip, complete_flash_tool, complete_template
 from stmtool.project import create_project, list_templates, resolve_sdk_root
 
 app = typer.Typer(name="stmtool", help=t("app_help"), no_args_is_help=True)
@@ -29,34 +32,34 @@ DOCKER_IMAGE = "ghcr.io/khosta77/stm32-sdk-build:latest"
 def project_create(
     name: str = typer.Argument(..., help=t("project_name_help")),
     chip: str = typer.Option(..., "--chip", help=t("chip_help"), autocompletion=complete_chip),
-    template: str = typer.Option("blink", "--template", help=t("template_help"), autocompletion=complete_template),
-    with_claude: bool = typer.Option(
-        False, "--with-claude", help=t("create_claude_help")
+    template: str = typer.Option(
+        "blink", "--template", help=t("template_help"), autocompletion=complete_template
     ),
+    with_claude: bool = typer.Option(False, "--with-claude", help=t("create_claude_help")),
 ) -> None:
+    """Generate a new STM32 project directory from a template."""
     try:
         with console.status(t("initializing_git")):
             path = create_project(name, chip, template, with_claude=with_claude)
-        console.print(f"[bold green]{t('project_created', name=name, path=path)}[/bold green]")
+        console.print(f"[bold green]{t('project_created', name=name, path=str(path))}[/bold green]")
         if with_claude:
             if (path / "CLAUDE.md").exists():
                 console.print(f"[green]{t('create_claude_added')}[/green]")
             else:
-                console.print(
-                    f"[yellow]{t('create_claude_missing', template=template)}[/yellow]"
-                )
+                console.print(f"[yellow]{t('create_claude_missing', template=template)}[/yellow]")
     except (RuntimeError, ValueError, FileExistsError) as e:
         console.print(f"[red]{e}[/red]")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 @project_app.command("templates", help="Show available project templates")
 def project_templates() -> None:
+    """Print a table of all templates available in the SDK."""
     try:
         sdk_root = resolve_sdk_root()
     except RuntimeError as e:
         console.print(f"[red]{e}[/red]")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
     templates = list_templates(sdk_root)
     if not templates:
@@ -74,6 +77,72 @@ def project_templates() -> None:
     console.print(table)
 
 
+def _resolve_target_chip(chip: str | None, config: dict[str, object]) -> str:
+    """Pick the chip name from the CLI flag, the project config, or fail loudly."""
+    target_chip = chip
+    if not target_chip:
+        target = config.get("target")
+        if isinstance(target, dict):
+            target_chip = target.get("chip")
+    if not target_chip:
+        console.print(f"[red]{t('no_chip')}[/red]")
+        raise typer.Exit(code=1)
+    return target_chip
+
+
+def _build_native(
+    target_chip: str, sdk_dir: Path, build_type: str, verbose: bool
+) -> subprocess.CompletedProcess[bytes]:
+    """Run ``cmake`` configure + build locally without Docker."""
+    configure_cmd: list[str] = [
+        "cmake",
+        "-G",
+        "Ninja",
+        "-B",
+        "build",
+        f"-DSTM32_CHIP={target_chip}",
+        f"-DSTM32_SDK={sdk_dir}",
+        f"-DCMAKE_BUILD_TYPE={build_type}",
+    ]
+    build_cmd: list[str] = ["cmake", "--build", "build"]
+    if verbose:
+        build_cmd.append("--verbose")
+    msg = t("building", chip=target_chip, build_type=build_type, mode=t("mode_local"))
+    console.print(f"[bold green]{msg}[/bold green]")
+    result = subprocess.run(configure_cmd, check=False)
+    if result.returncode == 0:
+        result = subprocess.run(build_cmd, check=False)
+    return result
+
+
+def _build_docker(
+    target_chip: str, sdk_root: Path, build_type: str, verbose_flag: str
+) -> subprocess.CompletedProcess[bytes]:
+    """Run ``cmake`` configure + build inside the SDK Docker image."""
+    cmake_cmd = (
+        f"cmake -B build -DSTM32_CHIP={target_chip} -DSTM32_SDK=/sdk-repo/sdk "
+        f"-DCMAKE_BUILD_TYPE={build_type} && cmake --build build {verbose_flag}"
+    )
+    docker_cmd: list[str] = [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        f"{Path.cwd()}:/workspace",
+        "-v",
+        f"{sdk_root}:/sdk-repo:ro",
+        "-w",
+        "/workspace",
+        DOCKER_IMAGE,
+        "bash",
+        "-c",
+        cmake_cmd,
+    ]
+    msg = t("building", chip=target_chip, build_type=build_type, mode=t("mode_docker"))
+    console.print(f"[bold green]{msg}[/bold green]")
+    return subprocess.run(docker_cmd, check=False)
+
+
 @app.command(help=t("build_help"))
 def build(
     release: bool = typer.Option(False, "--release", help=t("build_release")),
@@ -82,7 +151,8 @@ def build(
     chip: str = typer.Option(None, "--chip", help=t("build_chip"), autocompletion=complete_chip),
     clean: bool = typer.Option(False, "--clean", help=t("build_clean")),
 ) -> None:
-    config = {}
+    """Configure and build the current project (Docker by default)."""
+    config: dict[str, object] = {}
     config_path = Path("stmproject.toml")
     if config_path.exists():
         config = load_config(config_path)
@@ -91,57 +161,47 @@ def build(
         console.print(f"[yellow]{t('cleaning')}[/yellow]")
         shutil.rmtree("build", ignore_errors=True)
 
-    sdk_version = config.get("sdk", {}).get("version", "develop")
+    sdk_section = config.get("sdk")
+    sdk_version = (
+        sdk_section.get("version", "develop") if isinstance(sdk_section, dict) else "develop"
+    )
 
     try:
         sdk_root = resolve_sdk_root(version=sdk_version)
-        sdk_path = sdk_root / "sdk"
     except RuntimeError as e:
         console.print(f"[red]{e}[/red]")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
-    target_chip = chip or config.get("target", {}).get("chip")
-    if not target_chip:
-        console.print(f"[red]{t('no_chip')}[/red]")
-        raise typer.Exit(code=1)
-
+    target_chip = _resolve_target_chip(chip, config)
     build_type = "Release" if release else "Debug"
     verbose_flag = "--verbose" if verbose else ""
 
     if native:
-        cmd = f"cmake -G Ninja -B build -DSTM32_CHIP={target_chip} -DSTM32_SDK={sdk_path} -DCMAKE_BUILD_TYPE={build_type} && cmake --build build {verbose_flag}"
-        mode = t("mode_local")
-        console.print(f"[bold green]{t('building', chip=target_chip, build_type=build_type, mode=mode)}[/bold green]")
-        result = subprocess.run(cmd, shell=True)
+        result = _build_native(target_chip, sdk_root / "sdk", build_type, verbose)
     else:
-        cmake_cmd = f"cmake -B build -DSTM32_CHIP={target_chip} -DSTM32_SDK=/sdk-repo/sdk -DCMAKE_BUILD_TYPE={build_type} && cmake --build build {verbose_flag}"
-        cmd = [
-            "docker", "run", "--rm",
-            "-v", f"{Path.cwd()}:/workspace",
-            "-v", f"{sdk_root}:/sdk-repo:ro",
-            "-w", "/workspace",
-            DOCKER_IMAGE,
-            "bash", "-c", cmake_cmd,
-        ]
-        mode = t("mode_docker")
-        console.print(f"[bold green]{t('building', chip=target_chip, build_type=build_type, mode=mode)}[/bold green]")
-        result = subprocess.run(cmd)
+        result = _build_docker(target_chip, sdk_root, build_type, verbose_flag)
 
     raise typer.Exit(code=result.returncode)
 
 
 @app.command(help=t("flash_help"))
 def flash(
-    tool: str = typer.Option(None, "--tool", help=t("flash_tool"), autocompletion=complete_flash_tool),
+    tool: str = typer.Option(
+        None, "--tool", help=t("flash_tool"), autocompletion=complete_flash_tool
+    ),
     verify: bool = typer.Option(False, "--verify", help=t("flash_verify")),
     erase: bool = typer.Option(False, "--erase", help=t("flash_erase")),
 ) -> None:
-    config = {}
+    """Flash the most recently built ``.bin`` to the connected board."""
+    config: dict[str, object] = {}
     config_path = Path("stmproject.toml")
     if config_path.exists():
         config = load_config(config_path)
 
-    flash_tool = tool or config.get("flash", {}).get("tool", "stlink")
+    flash_section = config.get("flash")
+    flash_tool = tool or (
+        flash_section.get("tool", "stlink") if isinstance(flash_section, dict) else "stlink"
+    )
 
     bin_files = list(Path("build").glob("*.bin"))
     if not bin_files:
@@ -150,41 +210,41 @@ def flash(
 
     bin_path = bin_files[0]
 
-    if flash_tool == "stlink":
-        cmd = ["st-flash"]
-        if erase:
-            subprocess.run(["st-flash", "erase"])
-        cmd.extend(["--reset", "write", str(bin_path), "0x08000000"])
-        if verify:
-            cmd.append("--verify")
-        console.print(f"[bold green]{t('flashing', name=bin_path.name)}[/bold green]")
-        result = subprocess.run(cmd)
-        raise typer.Exit(code=result.returncode)
-    else:
+    if flash_tool != "stlink":
         console.print(f"[yellow]{t('not_implemented')}[/yellow]")
         raise typer.Exit(code=1)
+
+    cmd = ["st-flash"]
+    if erase:
+        subprocess.run(["st-flash", "erase"], check=False)
+    cmd.extend(["--reset", "write", str(bin_path), "0x08000000"])
+    if verify:
+        cmd.append("--verify")
+    console.print(f"[bold green]{t('flashing', name=bin_path.name)}[/bold green]")
+    result = subprocess.run(cmd, check=False)
+    raise typer.Exit(code=result.returncode)
 
 
 @sdk_app.command("update", help=t("sdk_update_help"))
 def sdk_update(
-    version: str = typer.Option(
-        None, "--version", help=t("sdk_update_version_help")
-    ),
+    target: str = typer.Option(None, "--version", help=t("sdk_update_version_help")),
 ) -> None:
-    target_version = version or sdk_module.project_sdk_version() or "develop"
+    """Update the cached SDK to a release tag or ``develop``."""
+    target_version = target or sdk_module.project_sdk_version() or "develop"
     try:
         with console.status(t("sdk_updating", version=target_version)):
             sdk_root = sdk_module.update_cache(target_version)
     except RuntimeError as e:
         console.print(f"[red]{e}[/red]")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
     console.print(
-        f"[bold green]{t('sdk_updated', version=target_version, path=sdk_root)}[/bold green]"
+        f"[bold green]{t('sdk_updated', version=target_version, path=str(sdk_root))}[/bold green]"
     )
 
 
 @sdk_app.command("list-versions", help=t("sdk_list_versions_help"))
 def sdk_list_versions() -> None:
+    """Print every release tag known to the cached SDK repository."""
     versions = sdk_module.list_versions()
     if not versions:
         console.print(f"[yellow]{t('sdk_no_tags_found')}[/yellow]")
@@ -196,16 +256,18 @@ def sdk_list_versions() -> None:
 
 
 @sdk_app.command("path", help=t("sdk_path_help"))
-def sdk_path() -> None:
+def sdk_path_cmd() -> None:
+    """Print the resolved SDK root path."""
     try:
         print(sdk_module.resolve_path())
     except RuntimeError as e:
         console.print(f"[red]{e}[/red]")
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=1) from e
 
 
 @app.command(help=t("doctor_help"))
 def doctor() -> None:
+    """Probe the host environment for required build/flash tools."""
     table = Table(title="stmtool doctor")
     table.add_column("Component", style="bold")
     table.add_column("Status")
@@ -220,8 +282,12 @@ def doctor() -> None:
 
     for name, cmd in checks:
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
-            version_line = result.stdout.split("\n")[0].strip() if result.returncode == 0 else result.stderr.split("\n")[0].strip()
+            result = subprocess.run(cmd, capture_output=True, text=True, timeout=5, check=False)
+            version_line = (
+                result.stdout.split("\n")[0].strip()
+                if result.returncode == 0
+                else result.stderr.split("\n")[0].strip()
+            )
             if result.returncode == 0:
                 table.add_row(name, "[green]OK[/green]", version_line)
             else:
@@ -238,8 +304,7 @@ def doctor() -> None:
 def completion(
     shell: str = typer.Argument("zsh", help=t("completion_shell_help")),
 ) -> None:
-    import os
-
+    """Print the shell completion script for ``bash``, ``zsh``, or ``fish``."""
     env = os.environ.copy()
     env["_STMTOOL_COMPLETE"] = f"source_{shell}"
     result = subprocess.run(
@@ -247,6 +312,7 @@ def completion(
         env=env,
         capture_output=True,
         text=True,
+        check=False,
     )
     if result.returncode == 0 and result.stdout.strip():
         console.print(f"[dim]# {t('completion_hint')}[/dim]")
@@ -257,7 +323,8 @@ def completion(
 
 
 @app.command(help=t("version_help"))
-def version() -> None:
+def show_version() -> None:
+    """Print the installed stmtool version."""
     console.print(f"stmtool {__version__}")
 
 

@@ -1,15 +1,18 @@
+"""Project scaffolding and SDK-cache helpers used by the stmtool CLI."""
+
+import os
 import re
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
+from stmtool.i18n import t
+
 if sys.version_info >= (3, 11):
     import tomllib
 else:
     import tomli as tomllib
-
-from stmtool.i18n import t
 
 _CHIP_RE = re.compile(r"^STM32[A-Z]\d{3}[A-Z]{2}$")
 _DEFAULT_REPO = "https://github.com/khosta77/stm32-sdk.git"
@@ -31,18 +34,19 @@ _SDK_CACHE_DIR = Path.home() / ".stmtool" / "stm32-sdk"
 
 
 def _is_sdk_root(p: Path) -> bool:
+    """Return ``True`` if ``p`` contains both ``sdk/`` and ``templates/``."""
     return (p / "sdk").is_dir() and (p / "templates").is_dir()
 
 
 def _clone_sdk_cache() -> Path:
-    import sys
-
+    """Clone the SDK repository into the user-level cache directory."""
     print(t("sdk_cloning"), file=sys.stderr)
     _SDK_CACHE_DIR.parent.mkdir(parents=True, exist_ok=True)
     result = subprocess.run(
         ["git", "clone", _DEFAULT_REPO, str(_SDK_CACHE_DIR)],
         capture_output=True,
         text=True,
+        check=False,
     )
     if result.returncode != 0:
         raise RuntimeError(t("sdk_not_found"))
@@ -50,34 +54,39 @@ def _clone_sdk_cache() -> Path:
 
 
 def _checkout_version(repo_dir: Path, version: str) -> None:
+    """Check out ``develop`` or a release tag in the cached SDK repository."""
     if version == "develop":
         subprocess.run(
             ["git", "-C", str(repo_dir), "fetch", "origin", "develop"],
             capture_output=True,
+            check=False,
         )
         subprocess.run(
             ["git", "-C", str(repo_dir), "checkout", "develop"],
             capture_output=True,
+            check=False,
         )
         subprocess.run(
             ["git", "-C", str(repo_dir), "pull", "--ff-only"],
             capture_output=True,
+            check=False,
         )
     else:
         tag = f"v{version}"
         subprocess.run(
             ["git", "-C", str(repo_dir), "fetch", "origin", "tag", tag],
             capture_output=True,
+            check=False,
         )
         subprocess.run(
             ["git", "-C", str(repo_dir), "checkout", tag],
             capture_output=True,
+            check=False,
         )
 
 
 def resolve_sdk_root(version: str = "develop") -> Path:
-    import os
-
+    """Locate the SDK root via ``STMSDK_PATH``, project ancestors, or cache."""
     env_path = os.environ.get("STMSDK_PATH")
     if env_path:
         p = Path(env_path)
@@ -98,9 +107,10 @@ def resolve_sdk_root(version: str = "develop") -> Path:
     return _SDK_CACHE_DIR
 
 
-def list_templates(sdk_root: Path) -> list[dict]:
+def list_templates(sdk_root: Path) -> list[dict[str, str]]:
+    """Enumerate all templates under ``sdk_root/templates`` with metadata."""
     templates_dir = sdk_root / "templates"
-    result: list[dict] = []
+    result: list[dict[str, str]] = []
 
     for category_dir in sorted(templates_dir.iterdir()):
         if not category_dir.is_dir():
@@ -114,16 +124,19 @@ def list_templates(sdk_root: Path) -> list[dict]:
             with open(meta_path, "rb") as f:
                 meta = tomllib.load(f)
             tpl = meta.get("template", {})
-            result.append({
-                "name": tpl.get("name", ""),
-                "description": tpl.get("description", ""),
-                "category": tpl.get("category", ""),
-            })
+            result.append(
+                {
+                    "name": tpl.get("name", ""),
+                    "description": tpl.get("description", ""),
+                    "category": tpl.get("category", ""),
+                }
+            )
 
     return result
 
 
 def discover_template(sdk_root: Path, template_name: str) -> Path:
+    """Resolve ``template_name`` to its directory under ``sdk_root/templates``."""
     templates_dir = sdk_root / "templates"
     available: list[str] = []
 
@@ -143,9 +156,7 @@ def discover_template(sdk_root: Path, template_name: str) -> Path:
             if name == template_name:
                 return tpl_dir
 
-    raise RuntimeError(
-        t("template_not_found", name=template_name, available=", ".join(available))
-    )
+    raise RuntimeError(t("template_not_found", name=template_name, available=", ".join(available)))
 
 
 def create_project(
@@ -156,6 +167,7 @@ def create_project(
     with_claude: bool = False,
     sdk_version: str = "develop",
 ) -> Path:
+    """Create a new STM32 project directory from a template under the cwd."""
     sdk_root = resolve_sdk_root()
     tpl_dir = discover_template(sdk_root, template_name)
 
@@ -183,17 +195,16 @@ def create_project(
             content = content.replace("@SDK_VERSION@", sdk_version)
             dest = target / item.stem
             dest.write_text(content)
-        elif item.name.endswith(".cpp") or item.name.endswith(".c") or item.name.endswith(".h"):
+        elif item.name.endswith((".cpp", ".c", ".h")):
             shutil.copy2(item, target / "src" / item.name)
+        elif item.is_dir():
+            shutil.copytree(item, target / item.name)
         else:
-            if item.is_dir():
-                shutil.copytree(item, target / item.name)
-            else:
-                shutil.copy2(item, target / item.name)
+            shutil.copy2(item, target / item.name)
 
     (target / ".gitignore").write_text(_GITIGNORE)
     (target / "README.md").write_text(f"# {name}\n")
 
-    subprocess.run(["git", "init"], cwd=target, capture_output=True)
+    subprocess.run(["git", "init"], cwd=target, capture_output=True, check=False)
 
     return target

@@ -1,3 +1,5 @@
+"""Minimal English/Russian translation table for stmtool CLI strings."""
+
 import os
 
 _LANG = os.environ.get("STMTOOL_LANG", "en").lower()[:2]
@@ -77,7 +79,9 @@ _STRINGS: dict[str, dict[str, str]] = {
     },
     "no_chip": {
         "en": "Error: no chip specified (use --chip or set target.chip in stmproject.toml)",
-        "ru": "Ошибка: чип не указан (используйте --chip или задайте target.chip в stmproject.toml)",
+        "ru": (
+            "Ошибка: чип не указан (используйте --chip или задайте target.chip в stmproject.toml)"
+        ),
     },
     "building": {
         "en": "Building {chip} ({build_type}){mode}...",
@@ -172,8 +176,14 @@ _STRINGS: dict[str, dict[str, str]] = {
         "ru": "Обновить кэш SDK до релизного тега или develop",
     },
     "sdk_update_version_help": {
-        "en": "SDK version (release tag like 0.1.2 or 'develop'); defaults to [sdk] version in stmproject.toml",
-        "ru": "Версия SDK (тег вида 0.1.2 или 'develop'); по умолчанию — [sdk] version из stmproject.toml",
+        "en": (
+            "SDK version (release tag like 0.1.2 or 'develop'); "
+            "defaults to [sdk] version in stmproject.toml"
+        ),
+        "ru": (
+            "Версия SDK (тег вида 0.1.2 или 'develop'); "
+            "по умолчанию — [sdk] version из stmproject.toml"
+        ),
     },
     "sdk_list_versions_help": {
         "en": "List available SDK versions (git tags)",
@@ -199,6 +209,7 @@ _STRINGS: dict[str, dict[str, str]] = {
 
 
 def t(key: str, **kwargs: str) -> str:
+    """Translate ``key`` into the active language and substitute ``kwargs``."""
     entry = _STRINGS.get(key, {})
     text = entry.get(_LANG, entry.get("en", key))
     if kwargs:
