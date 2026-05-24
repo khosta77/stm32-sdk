@@ -6,24 +6,24 @@ Iterate through every template in `templates/` and try to build it
 locally against `STM32F407VG`. Mirrors the GitHub Actions matrix from
 `.github/workflows/build.yml`.
 
-For each template path (relative to the repository root):
+For each template name (the `[template].name` field in the
+template.toml, not the directory path):
 
-- `bare-metal/blink`
-- `bare-metal/i2c-scan`
-- `freertos/blink`
-- `freertos/mpu6050-uart`
-- `freertos/oled-display-test`
-- `freertos/w25q32-flash-test`
-- `freertos/imu-flash-oled-demo`
+- `blink`
+- `i2c-scan`
+- `freertos-blink`
+- `mpu6050-uart`
+- `oled-display-test`
+- `w25q32-flash-test`
+- `imu-flash-oled-demo`
 
 Run:
 
 ```bash
-TEMPLATE="<path>"
-SLUG="$(echo "$TEMPLATE" | tr '/' '-')"
-rm -rf /tmp/ci-$SLUG
-STMSDK_PATH="$(pwd)" stmtool project create "/tmp/ci-$SLUG" --chip STM32F407VG --template "$TEMPLATE"
-( cd "/tmp/ci-$SLUG" && STMSDK_PATH="$REPO_ROOT" stmtool build --native )
+TEMPLATE="<name>"
+rm -rf /tmp/ci-$TEMPLATE
+STMSDK_PATH="$(pwd)" stmtool project create "/tmp/ci-$TEMPLATE" --chip STM32F407VG --template "$TEMPLATE"
+( cd "/tmp/ci-$TEMPLATE" && STMSDK_PATH="$REPO_ROOT" stmtool build --native )
 ```
 
 Continue past failures so you can report the full pass/fail matrix.

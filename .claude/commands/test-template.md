@@ -4,15 +4,14 @@ argument-hint: <template-path> (e.g. bare-metal/blink)
 ---
 
 Generate and build one specific template against `STM32F407VG`. Use
-the argument supplied as the template path (categories/name, e.g.
-`bare-metal/i2c-scan` or `freertos/oled-display-test`).
+the argument supplied as the template name from `[template].name`
+in template.toml (e.g. `i2c-scan`, `freertos-blink`, `mpu6050-uart`).
 
 ```bash
 TEMPLATE="$ARGUMENTS"
-SLUG="$(echo "$TEMPLATE" | tr '/' '-')"
-rm -rf /tmp/test-$SLUG
-STMSDK_PATH="$(pwd)" stmtool project create "/tmp/test-$SLUG" --chip STM32F407VG --template "$TEMPLATE"
-cd "/tmp/test-$SLUG"
+rm -rf /tmp/test-$TEMPLATE
+STMSDK_PATH="$(pwd)" stmtool project create "/tmp/test-$TEMPLATE" --chip STM32F407VG --template "$TEMPLATE"
+cd "/tmp/test-$TEMPLATE"
 STMSDK_PATH="$REPO_ROOT" stmtool build --native
 arm-none-eabi-size build/*.elf
 ```

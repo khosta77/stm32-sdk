@@ -54,6 +54,10 @@ target_compile_options(stm32_core INTERFACE
     -fdata-sections
     -fsigned-char
     -fno-move-loop-invariants
+    -Wall
+    -Wextra
+    -Wpedantic
+    -Wshadow
     $<$<COMPILE_LANGUAGE:C>:-std=gnu11>
     $<$<COMPILE_LANGUAGE:CXX>:-std=gnu++20>
 )
@@ -89,6 +93,17 @@ target_include_directories(stm32_hal INTERFACE
 set_source_files_properties(
     ${STM32_HAL_DIR}/src/cmsis/${STM32_SYSTEM_FILE}
     PROPERTIES COMPILE_OPTIONS "-Wno-padded"
+)
+
+set_source_files_properties(
+    ${STM32_HAL_DIR}/src/cmsis/${STM32_VECTORS_FILE}
+    PROPERTIES COMPILE_OPTIONS "-Wno-pedantic"
+)
+
+set_source_files_properties(
+    ${_STM32_SDK_DIR}/core/src/diag/trace.c
+    ${_STM32_SDK_DIR}/core/src/diag/trace-impl.c
+    PROPERTIES COMPILE_OPTIONS "-Wno-pedantic"
 )
 
 add_library(stm32_link INTERFACE)
