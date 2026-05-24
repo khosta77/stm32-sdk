@@ -1,21 +1,26 @@
-[project]
+[tool.poetry]
 name = "stmtool"
-dynamic = ["version"]
+version = "0.0.0"
 description = "CLI tool for STM32-SDK bare-metal projects"
-requires-python = ">=3.10"
-dependencies = [
-    "typer[all]>=0.9",
-    "rich>=13.0",
-    "tomli>=2.0;python_version<'3.11'",
-]
+authors = ["khosta77"]
+readme = "../../README.md"
+license = "MIT"
+packages = [{ include = "stmtool" }]
 
-[project.scripts]
+[tool.poetry.dependencies]
+python = "^3.10"
+typer = { extras = ["all"], version = ">=0.9" }
+rich = ">=13.0"
+tomli = { version = ">=2.0", python = "<3.11" }
+
+[tool.poetry.scripts]
 stmtool = "stmtool.cli:app"
 
 [build-system]
-requires = ["setuptools>=68", "setuptools-scm>=8"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.9", "poetry-dynamic-versioning>=1.4"]
+build-backend = "poetry_dynamic_versioning.backend"
 
-[tool.setuptools_scm]
-root = "../.."
-version_file = "stmtool/_version.py"
+[tool.poetry-dynamic-versioning]
+enable = true
+vcs = "git"
+style = "pep440"
