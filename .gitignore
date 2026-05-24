@@ -26,3 +26,8 @@ gcm.cache/
 
 site/
 
+# Override the global ~/.gitignore_global rule that hides .claude/ —
+# project-level slash commands live there and SHOULD be tracked.
+!.claude/
+.claude/settings.local.json
+
