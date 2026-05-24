@@ -14,13 +14,13 @@ jobs:
       matrix:
         chip: [STM32F407VG]
         template:
-          - bare-metal/blink
-          - bare-metal/i2c-scan
-          - freertos/blink
-          - freertos/mpu6050-uart
-          - freertos/oled-display-test
-          - freertos/w25q32-flash-test
-          - freertos/imu-flash-oled-demo
+          - blink
+          - i2c-scan
+          - freertos-blink
+          - mpu6050-uart
+          - oled-display-test
+          - w25q32-flash-test
+          - imu-flash-oled-demo
 
     steps:
       - uses: actions/checkout@v4
@@ -38,13 +38,9 @@ jobs:
       - name: Install stmtool
         run: pip install ./tools/stmtool
 
-      - name: Compute slug
-        id: slug
-        run: echo "value=$(echo '${{ matrix.template }}' | tr '/' '-')" >> "$GITHUB_OUTPUT"
-
       - name: Create project
         run: |
-          stmtool project create "ci-${{ steps.slug.outputs.value }}" \
+          stmtool project create "ci-${{ matrix.template }}" \
             --chip ${{ matrix.chip }} \
             --template ${{ matrix.template }}
         env:
@@ -52,12 +48,12 @@ jobs:
 
       - name: Build
         run: |
-          cd "ci-${{ steps.slug.outputs.value }}"
+          cd "ci-${{ matrix.template }}"
           stmtool build --native
         env:
           STMSDK_PATH: ${{ github.workspace }}
 
       - name: Binary size
         run: |
-          cd "ci-${{ steps.slug.outputs.value }}"
+          cd "ci-${{ matrix.template }}"
           arm-none-eabi-size build/*.elf
