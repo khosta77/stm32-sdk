@@ -8,6 +8,7 @@ target_sources(stm32_drivers PUBLIC
         ${_STM32_SDK_DIR}/drivers/include/driver/reg.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/circular_buffer.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_gpio.cppm
+        ${_STM32_SDK_DIR}/drivers/include/driver/null_gpio.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_uart.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_i2c.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_spi.cppm
