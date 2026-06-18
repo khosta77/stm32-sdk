@@ -73,7 +73,10 @@ Highlights:
   `poe ci` on every PR touching `tools/stmtool/**`.
 - `.github/workflows/build.yml` rewritten: the chip matrix is now
   `[STM32F407VG]` only, and each PR builds **all 7 existing templates**
-  against it in parallel (`fail-fast: false`).
+  against it in parallel (`fail-fast: false`). The CI ARM toolchain was
+  bumped to `15.2.Rel1`; GCC 13 cannot scan C++20 module imports
+  (`-fdeps-format=p1689r5` is GCC 14+), so any template that links
+  `stm32_drivers` needs GCC >= 14. The documented minimum is now 14.
 - `-Wall -Wextra -Wpedantic -Wshadow -Werror` are now permanently
   enabled on `stm32_core` and propagate to drivers, RTOS, sensors,
   and user code. See [build-flags](build-flags.md) for the policy.

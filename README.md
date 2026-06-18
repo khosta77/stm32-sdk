@@ -51,7 +51,7 @@ mkdocs serve
 
 ## Requirements
 
-- `arm-none-eabi-gcc` >= 13
+- `arm-none-eabi-gcc` >= 14 (14+ required for C++20 module dependency scanning)
 - `cmake` >= 3.28 (needed for C++20 modules support)
 - `python` >= 3.10
 - `st-flash` (optional, for flashing via ST-Link)

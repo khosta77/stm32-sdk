@@ -4,7 +4,7 @@
 
 | Tool | Minimum version | Purpose |
 |------|-----------------|---------|
-| `arm-none-eabi-gcc` | 13 | Cross-compiler for Cortex-M |
+| `arm-none-eabi-gcc` | 14 | Cross-compiler for Cortex-M (14+ required for C++20 module scanning) |
 | `cmake` | 3.28 | C++20 modules support |
 | `python` | 3.10 | Runs `stmtool` |
 | `pipx` | any | Isolated install of `stmtool` (recommended) |

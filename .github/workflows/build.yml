@@ -28,7 +28,7 @@ jobs:
       - name: Install ARM toolchain
         uses: carlosperate/arm-none-eabi-gcc-action@v1
         with:
-          release: '13.2.Rel1'
+          release: '15.2.Rel1'
 
       - name: Set up Python
         uses: actions/setup-python@v5
