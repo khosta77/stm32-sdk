@@ -53,7 +53,7 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
-### v0.1.4 (preparing)
+### v0.1.4
 
 Focus: quality and infrastructure, no new SDK features beyond
 [issue #9](https://github.com/khosta77/stm32-sdk/issues/9).
@@ -107,7 +107,7 @@ Deferred to v0.1.5+:
 - `-Wconversion` warning flag (high noise on CMSIS-derived code,
   needs a separate cleanup pass).
 
-### v0.1.3 (preparing)
+### v0.1.3
 
 Highlights:
 
