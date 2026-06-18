@@ -73,7 +73,10 @@ style = "pep440"
   `poe ci` на каждом PR, затрагивающем `tools/stmtool/**`.
 - `.github/workflows/build.yml` переписан: chip-matrix теперь
   `[STM32F407VG]`, и каждый PR собирает **все 7 шаблонов** параллельно
-  (`fail-fast: false`).
+  (`fail-fast: false`). ARM-тулчейн в CI поднят до `15.2.Rel1`: GCC 13
+  не умеет сканировать импорты модулей C++20 (`-fdeps-format=p1689r5`
+  есть только с GCC 14), поэтому любой шаблон, линкующий `stm32_drivers`,
+  требует GCC >= 14. Документированный минимум теперь 14.
 - `-Wall -Wextra -Wpedantic -Wshadow -Werror` постоянно включены на
   `stm32_core` и пропагируются на драйверы, RTOS, сенсоры, пользовательский
   код. Политика — на странице [Compiler and warning flags](build-flags.md).
