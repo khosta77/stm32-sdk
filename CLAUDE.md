@@ -87,8 +87,12 @@ To cut a release:
 2. Tag the merge commit on `develop`:
    `git tag -a vMAJOR.MINOR.PATCH -m "Release vMAJOR.MINOR.PATCH" <sha>`.
 3. `git push origin vMAJOR.MINOR.PATCH`.
-4. Create the GitHub Release; copy notes from the new section in
-   `docs/release.md`.
+4. Create the GitHub Release with **bilingual** notes: an `## English`
+   section copied from the new block in `docs/release.md`, then a
+   `## Русский` section copied from `docs/release.ru.md`, separated by
+   `---`. Both come verbatim from the docs so the Release page and the
+   docs site stay in sync. Finish with a footer linking the docs release
+   page and the `vPREV...vNEW` changelog compare.
 
 The version number is derived from git tags via
 `poetry-dynamic-versioning` (the SDK side still picks the same tag) --
