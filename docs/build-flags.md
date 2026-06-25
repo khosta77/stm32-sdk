@@ -30,8 +30,8 @@ target_compile_options(stm32_core INTERFACE
 
 `-Wconversion` is intentionally NOT enabled — on hand-written embedded
 code that mixes 8/16/32-bit register fields, it produces a wall of
-noise without finding real bugs. It may return in v0.1.5 after a
-focused cleanup pass.
+noise without finding real bugs. It may return in a future release after
+a focused cleanup pass.
 
 ## `-Werror` policy
 
@@ -61,6 +61,22 @@ projects generated via `stmtool project create`.
 In downstream projects the same rule applies: if your application uses
 a vendor SDK that triggers warnings, suppress them locally on those
 sources, not on the whole target.
+
+## `[[nodiscard]]` enforcement (v0.1.5)
+
+`driver::Status` and `driver::Result<T>` are marked `[[nodiscard]]`. Combined
+with `-Werror`, this turns any ignored error return into a build failure —
+the compiler enforces that every `Status` is checked. When a discard is
+genuinely intended (e.g. dropping a byte in a full ISR ring buffer), make it
+explicit with `(void)`:
+
+```cpp
+(void) _rxBuf.push(byte);  // ISR: drop byte if RX buffer is full
+```
+
+This is a deliberate compile-time policy, not a warning to suppress. See
+[drivers](modules/drivers.md#error-handling-drivertypes-v015) for `Result<T>`
+and the `DRV_TRY` helpers.
 
 ## C++ language exceptions
 

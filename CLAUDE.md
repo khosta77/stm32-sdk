@@ -139,6 +139,13 @@ import driver.reg;
 - CMake does not support header units.
 - `#include` in global module fragment is the standard C++20 pattern.
 
+### Macros live in textual headers, not modules
+
+Macros are not exported across `import`. Any user-facing macro (e.g. the
+`DRV_TRY` / `DRV_TRY_ASSIGN` helpers in `driver/try.hpp`) must ship as a
+textual `#include` header, included after the relevant `import`, not defined
+inside a `.cppm`.
+
 ### TU-local limitations for templates
 
 CMSIS `__STATIC_INLINE` functions (`NVIC_SetPriority`, `__DSB`) are
