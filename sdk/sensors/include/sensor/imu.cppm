@@ -1,4 +1,5 @@
 module;
+#include <concepts>
 #include <cstdint>
 export module sensor.imu;
 
@@ -18,14 +19,15 @@ struct ImuData {
     float temp = 0.0f;
 };
 
-class IImu {
-public:
-    virtual ~IImu() = default;
-    virtual driver::Status init() = 0;
-    virtual driver::Status read(ImuData &out) = 0;
-    virtual driver::Status selfTest() = 0;
-    virtual void setAccelRange(uint8_t g) = 0;
-    virtual void setGyroRange(uint16_t dps) = 0;
+// Compile-time contract for an IMU (replaces the former virtual IImu base
+// class). A concrete sensor models it without inheritance.
+template <typename T>
+concept IImu = requires(T sensor, ImuData &out, uint8_t g, uint16_t dps) {
+    { sensor.init() } -> std::same_as<driver::Status>;
+    { sensor.read(out) } -> std::same_as<driver::Status>;
+    { sensor.selfTest() } -> std::same_as<driver::Status>;
+    { sensor.setAccelRange(g) } -> std::same_as<void>;
+    { sensor.setGyroRange(dps) } -> std::same_as<void>;
 };
 
 }  // namespace sensor

@@ -124,7 +124,7 @@ sensor::W25q32 g_flash{
     g_spi2,
     g_flashCs,
     {
-        .expectedJedecId = sensor::W25q32::JEDEC_W25Q32JV,
+        .expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
         .busyPollLoops = 5000000U,
     },
 };
@@ -134,14 +134,14 @@ void writeStr(const char *s) {
     while (s[n] != '\0') {
         ++n;
     }
-    g_uart2.write({reinterpret_cast<const uint8_t *>(s), n});
+    (void) g_uart2.write({reinterpret_cast<const uint8_t *>(s), n});
 }
 
 void writePrintf(const char *fmt, auto... args) {
     char buf[128];
     int len = snprintf(buf, sizeof(buf), fmt, args...);
     if (len > 0) {
-        g_uart2.write({reinterpret_cast<const uint8_t *>(buf), static_cast<size_t>(len)});
+        (void) g_uart2.write({reinterpret_cast<const uint8_t *>(buf), static_cast<size_t>(len)});
     }
 }
 
@@ -171,7 +171,7 @@ void taskFlashTest(void *) {
             "init() failed: status=%d, JEDEC ID 0x%06lX (expected 0x%06lX)\r\n",
             static_cast<int>(st),
             static_cast<unsigned long>(g_flash.jedecId()),
-            static_cast<unsigned long>(sensor::W25q32::JEDEC_W25Q32JV));
+            static_cast<unsigned long>(sensor::W25q32Spec::JEDEC_W25Q32JV));
         while (true) {
             rtos::Task::delay(pdMS_TO_TICKS(1000));
         }

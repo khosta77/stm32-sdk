@@ -1,4 +1,5 @@
 module;
+#include <concepts>
 #include <cstdint>
 export module driver.gpio;
 
@@ -64,13 +65,14 @@ consteval GpioConfig gpio(GpioConfig c) {
     return c;
 }
 
-class IGpioPin {
-public:
-    virtual ~IGpioPin() = default;
-    virtual void set() = 0;
-    virtual void reset() = 0;
-    virtual void toggle() = 0;
-    virtual Status read() = 0;
+// Compile-time contract for a single GPIO pin (replaces the former virtual
+// IGpioPin base class; satisfied by GpioPin / NullGpioPin without inheritance).
+template <typename T>
+concept IGpioPin = requires(T pin) {
+    { pin.set() } -> std::same_as<void>;
+    { pin.reset() } -> std::same_as<void>;
+    { pin.toggle() } -> std::same_as<void>;
+    { pin.read() } -> std::same_as<Status>;
 };
 
 }  // namespace driver

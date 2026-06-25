@@ -160,7 +160,7 @@ sensor::Mpu6050 g_mpu{
 };
 
 driver::Status readImu(sensor::ImuData &out, void *ctx) {
-    auto *mpu = static_cast<sensor::Mpu6050 *>(ctx);
+    auto *mpu = static_cast<decltype(&g_mpu)>(ctx);
     return mpu->read(out);
 }
 
@@ -178,7 +178,7 @@ void taskView(void *param) {
         int t = static_cast<int>(data.temp * 10);
         int len = snprintf(buf, sizeof(buf), "A:%d %d %d G:%d %d %d T:%d\r\n", ax, ay, az, gx, gy, gz, t);
         if (len > 0) {
-            g_uart2.write({ reinterpret_cast<const uint8_t *>(buf), static_cast<size_t>(len) });
+            (void) g_uart2.write({ reinterpret_cast<const uint8_t *>(buf), static_cast<size_t>(len) });
         }
         rtos::Task::delay(pdMS_TO_TICKS(100));
     }

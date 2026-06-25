@@ -180,13 +180,13 @@ sensor::W25q32 g_flash{
     g_spi2,
     g_flashCs,
     {
-        .expectedJedecId = sensor::W25q32::JEDEC_W25Q32JV,
+        .expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
         .busyPollLoops = 5000000U,
     },
 };
 
 driver::Status readImu(sensor::ImuData &out, void *ctx) {
-    auto *mpu = static_cast<sensor::Mpu6050 *>(ctx);
+    auto *mpu = static_cast<decltype(&g_mpu)>(ctx);
     return mpu->read(out);
 }
 
@@ -195,7 +195,7 @@ void writeStr(const char *s) {
     while (s[n] != '\0') {
         ++n;
     }
-    g_uart2.write({reinterpret_cast<const uint8_t *>(s), n});
+    (void) g_uart2.write({reinterpret_cast<const uint8_t *>(s), n});
 }
 
 void taskDisplay(void *param) {
@@ -251,7 +251,7 @@ void taskFlashLogger(void *param) {
     char buf[32];
     while (true) {
         rtos::Task::delay(pdMS_TO_TICKS(5000));
-        if (offset + sizeof(buf) > sensor::W25q32::SECTOR_SIZE) {
+        if (offset + sizeof(buf) > sensor::W25q32Spec::SECTOR_SIZE) {
             offset = 0;
             if (g_flash.eraseSector(0) != driver::Status::Ok) {
                 writeStr("flash re-erase failed\r\n");

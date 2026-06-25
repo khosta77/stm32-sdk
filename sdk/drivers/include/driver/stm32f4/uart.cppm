@@ -45,7 +45,7 @@ enum class UartMode : uint8_t {
 };
 
 template <size_t RxBufSize = 256, size_t TxBufSize = 256, UartMode Mode = UartMode::Interrupt>
-class Uart : public IUart {
+class Uart {
     static_assert((RxBufSize & (RxBufSize - 1)) == 0, "RxBufSize must be power of 2");
     static_assert((TxBufSize & (TxBufSize - 1)) == 0, "TxBufSize must be power of 2");
     static_assert(RxBufSize >= 16, "RxBufSize too small");
@@ -138,7 +138,7 @@ public:
     Uart(const Uart &) = delete;
     Uart &operator=(const Uart &) = delete;
 
-    size_t write(std::span<const uint8_t> data) override {
+    [[nodiscard]] size_t write(std::span<const uint8_t> data) {
 #ifdef STM32_USE_FREERTOS
         xSemaphoreTake(_mutex, portMAX_DELAY);
 #endif
@@ -164,7 +164,7 @@ public:
         return sent;
     }
 
-    size_t read(std::span<uint8_t> data) override {
+    [[nodiscard]] size_t read(std::span<uint8_t> data) {
         size_t received = 0;
         size_t total = data.size();
         while (received < total) {
@@ -188,7 +188,7 @@ public:
         return received;
     }
 
-    size_t writeNonBlocking(std::span<const uint8_t> data) override {
+    [[nodiscard]] size_t writeNonBlocking(std::span<const uint8_t> data) {
         size_t written = _txBuf.write(data.data(), data.size());
         if (written > 0) {
             reg::set(_periph.CR1, USART_CR1_TXEIE);
@@ -196,12 +196,12 @@ public:
         return written;
     }
 
-    size_t readNonBlocking(std::span<uint8_t> data) override { return _rxBuf.read(data.data(), data.size()); }
+    [[nodiscard]] size_t readNonBlocking(std::span<uint8_t> data) { return _rxBuf.read(data.data(), data.size()); }
 
-    size_t rxAvailable() const override { return _rxBuf.size(); }
-    size_t txFree() const override { return _txBuf.free_space(); }
+    [[nodiscard]] size_t rxAvailable() const { return _rxBuf.size(); }
+    [[nodiscard]] size_t txFree() const { return _txBuf.free_space(); }
 
-    void irqHandler() override {
+    void irqHandler() {
         const uint32_t sr = reg::get(_periph.SR);
 #ifdef STM32_USE_FREERTOS
         BaseType_t woken = pdFALSE;
@@ -246,7 +246,7 @@ public:
 };
 
 template <size_t RxBufSize, size_t TxBufSize>
-class Uart<RxBufSize, TxBufSize, UartMode::Dma> : public IUart {
+class Uart<RxBufSize, TxBufSize, UartMode::Dma> {
     static_assert((RxBufSize & (RxBufSize - 1)) == 0, "RxBufSize must be power of 2");
     static_assert(RxBufSize >= 16, "RxBufSize too small");
 
@@ -357,7 +357,7 @@ public:
     Uart(const Uart &) = delete;
     Uart &operator=(const Uart &) = delete;
 
-    size_t write(std::span<const uint8_t> data) override {
+    [[nodiscard]] size_t write(std::span<const uint8_t> data) {
         if (data.empty()) {
             return 0;
         }
@@ -387,7 +387,7 @@ public:
         return data.size();
     }
 
-    size_t read(std::span<uint8_t> data) override {
+    [[nodiscard]] size_t read(std::span<uint8_t> data) {
         size_t received = 0;
         size_t total = data.size();
         while (received < total) {
@@ -411,21 +411,21 @@ public:
         return received;
     }
 
-    size_t writeNonBlocking(std::span<const uint8_t> data) override {
+    [[nodiscard]] size_t writeNonBlocking(std::span<const uint8_t> data) {
         if (data.empty() || _txDma.isEnabled()) {
             return 0;
         }
         return write(data);
     }
 
-    size_t readNonBlocking(std::span<uint8_t> data) override {
+    [[nodiscard]] size_t readNonBlocking(std::span<uint8_t> data) {
         return _rxBuf.read(data.data(), data.size());
     }
 
-    size_t rxAvailable() const override { return _rxBuf.size(); }
-    size_t txFree() const override { return _txDma.isEnabled() ? 0 : SIZE_MAX; }
+    [[nodiscard]] size_t rxAvailable() const { return _rxBuf.size(); }
+    [[nodiscard]] size_t txFree() const { return _txDma.isEnabled() ? 0 : SIZE_MAX; }
 
-    void irqHandler() override {
+    void irqHandler() {
         const uint32_t sr = reg::get(_periph.SR);
 #ifdef STM32_USE_FREERTOS
         BaseType_t woken = pdFALSE;
@@ -468,6 +468,9 @@ public:
 #endif
     }
 };
+
+static_assert(IUart<Uart<>>, "Uart (interrupt mode) must model driver::IUart");
+static_assert(IUart<Uart<256, 256, UartMode::Dma>>, "Uart (DMA mode) must model driver::IUart");
 
 }  // namespace stm32f4
 }  // namespace driver

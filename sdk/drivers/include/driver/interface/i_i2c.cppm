@@ -1,4 +1,5 @@
 module;
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
 #include <span>
@@ -8,17 +9,16 @@ import driver.types;
 
 export namespace driver {
 
-class II2c {
-public:
-    virtual ~II2c() = default;
-
-    virtual Status write(uint8_t addr, std::span<const uint8_t> data) = 0;
-    virtual Status read(uint8_t addr, std::span<uint8_t> data) = 0;
-
-    virtual Status writeReg(uint8_t addr, uint8_t reg, std::span<const uint8_t> data) = 0;
-    virtual Status readReg(uint8_t addr, uint8_t reg, std::span<uint8_t> data) = 0;
-
-    virtual Status probe(uint8_t addr) = 0;
+// Compile-time contract for an I2C master bus (replaces the former virtual
+// II2c base class). A sensor templated on `II2c Bus` calls these directly.
+template <typename T>
+concept II2c = requires(T bus, uint8_t addr, uint8_t reg, std::span<const uint8_t> wr,
+                        std::span<uint8_t> rd) {
+    { bus.write(addr, wr) } -> std::same_as<Status>;
+    { bus.read(addr, rd) } -> std::same_as<Status>;
+    { bus.writeReg(addr, reg, wr) } -> std::same_as<Status>;
+    { bus.readReg(addr, reg, rd) } -> std::same_as<Status>;
+    { bus.probe(addr) } -> std::same_as<Status>;
 };
 
 }  // namespace driver
