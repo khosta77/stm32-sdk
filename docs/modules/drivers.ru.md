@@ -14,6 +14,68 @@ STM32F4 в `stm32f4/*.cppm`.
   всё время работы программы.
 - Никаких сырых указателей на периферию — только ссылки (`GPIO_TypeDef&`).
 
+## Обработка ошибок — `driver.types` (v0.1.5)
+
+Драйверы сообщают об ошибках через `enum class Status : uint8_t` (`Ok`,
+`None`, `Timeout`, `Nack`, `BusError`, `Busy`, `InvalidArg`,
+`HardwareError`). С v0.1.5 `Status` помечен `[[nodiscard]]`: каждый
+возвращаемый `Status` нужно потребить либо явно сбросить через `(void)`. Под
+`-Werror` проигнорированный `Status` — ошибка сборки.
+
+```cpp
+import driver.types;
+
+if (g_i2c.write(addr, payload) != driver::Status::Ok) { /* обработать */ }
+
+(void) _rxBuf.push(byte);  // намеренный сброс внутри ISR
+```
+
+### `Result<T>`
+
+`Result<T>` несёт **либо** значение `T`, **либо** ошибку `Status`
+(1-байтовый тег, без аллокаций, без исключений). Помечен `[[nodiscard]]` и
+полностью `constexpr`. `T` должен быть тривиально разрушаемым (что верно для
+POD-payload, возвращаемых драйверами).
+
+```cpp
+import driver.types;
+using driver::Result;
+using driver::Status;
+
+Result<uint16_t> r = readAdc();        // значение или ошибка
+if (r.ok()) {
+    uint16_t v = r.value();            // предусловие: ok() — иначе UB
+}
+uint16_t safe = r.valueOr(0);          // никогда не UB
+Status st = r.status();                // Ok при успехе, иначе — ошибка
+```
+
+`value()` при ошибке — неопределённое поведение (как `*std::optional`);
+используйте `valueOr()` или проверяйте `ok()`. Переданный как ошибка
+`Status::Ok` нормализуется в `None`, поэтому ошибочный `Result` никогда не
+сообщает `ok()`.
+
+### `DRV_TRY` / `DRV_TRY_ASSIGN` — ранний возврат
+
+Макросы не экспортируются модулем C++20, поэтому хелперы в стиле Rust-`?`
+лежат в текстовом заголовке `driver/try.hpp`. Подключайте его **после**
+`import driver.types;`; окружающая функция должна возвращать `Status` (или
+`Result<U>`).
+
+```cpp
+import driver.types;
+#include "driver/try.hpp"
+
+driver::Status configure() {
+    DRV_TRY(g_i2c.writeReg(addr, REG_CTRL, ctrl));   // вернуть Status, если не Ok
+
+    uint16_t raw = 0;
+    DRV_TRY_ASSIGN(raw, readAdc());                  // распаковать Result или вернуть ошибку
+    use(raw);
+    return driver::Status::Ok;
+}
+```
+
 ## GPIO — `driver.stm32f4.gpio`
 
 ```cpp

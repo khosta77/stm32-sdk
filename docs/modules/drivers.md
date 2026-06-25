@@ -14,6 +14,67 @@ implementation in `stm32f4/*.cppm`.
   lifetime of the program.
 - No raw pointers to peripherals — use references (`GPIO_TypeDef&`).
 
+## Error handling — `driver.types` (v0.1.5)
+
+Drivers report failures through `enum class Status : uint8_t` (`Ok`, `None`,
+`Timeout`, `Nack`, `BusError`, `Busy`, `InvalidArg`, `HardwareError`). Since
+v0.1.5 `Status` is `[[nodiscard]]`: every `Status`-returning call must be
+consumed, or the discard made explicit with `(void)`. With `-Werror` an
+ignored `Status` is a build error.
+
+```cpp
+import driver.types;
+
+if (g_i2c.write(addr, payload) != driver::Status::Ok) { /* handle */ }
+
+(void) _rxBuf.push(byte);  // intentional drop inside an ISR
+```
+
+### `Result<T>`
+
+`Result<T>` carries **either** a value of `T` **or** an error `Status`
+(1-byte tag, no allocation, no exceptions). It is `[[nodiscard]]` and fully
+`constexpr`. `T` must be trivially destructible (true for the POD payloads
+drivers return).
+
+```cpp
+import driver.types;
+using driver::Result;
+using driver::Status;
+
+Result<uint16_t> r = readAdc();        // value or error
+if (r.ok()) {
+    uint16_t v = r.value();            // precondition: ok() — UB otherwise
+}
+uint16_t safe = r.valueOr(0);          // never UB
+Status st = r.status();                // Ok on success, the error otherwise
+```
+
+`value()` on an error is undefined behaviour (like `*std::optional`); use
+`valueOr()` or check `ok()` first. Passing `Status::Ok` as an error is
+normalised to `None`, so an error `Result` never reports `ok()`.
+
+### `DRV_TRY` / `DRV_TRY_ASSIGN` — early return
+
+Macros cannot be exported by a C++20 module, so the Rust-`?`-style helpers
+live in the textual header `driver/try.hpp`. Include it **after**
+`import driver.types;`; the enclosing function must return `Status` (or
+`Result<U>`).
+
+```cpp
+import driver.types;
+#include "driver/try.hpp"
+
+driver::Status configure() {
+    DRV_TRY(g_i2c.writeReg(addr, REG_CTRL, ctrl));   // return Status if not Ok
+
+    uint16_t raw = 0;
+    DRV_TRY_ASSIGN(raw, readAdc());                  // unwrap Result or return err
+    use(raw);
+    return driver::Status::Ok;
+}
+```
+
 ## GPIO — `driver.stm32f4.gpio`
 
 ```cpp

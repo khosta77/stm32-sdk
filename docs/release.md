@@ -53,6 +53,34 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.5
+
+Focus: a unified, zero-overhead error-handling layer for `driver.types`
+([issue #15](https://github.com/khosta77/stm32-sdk/issues/15),
+[issue #16](https://github.com/khosta77/stm32-sdk/issues/16)).
+
+Highlights:
+
+- `driver::Result<T>` — carries either a value of `T` or an error `Status`
+  (1-byte tag, no allocation, no exceptions, fully `constexpr`). Marked
+  `[[nodiscard]]`; `T` must be trivially destructible. Helpers: `ok()`,
+  `status()`, `value()` (precondition `ok()`), `valueOr()`, `operator bool`.
+- `DRV_TRY(expr)` and `DRV_TRY_ASSIGN(var, expr)` — Rust-`?`-style early
+  return, in the textual header `driver/try.hpp` (macros cannot be exported
+  by a C++20 module; include it after `import driver.types;`).
+- `driver::Status` is now `[[nodiscard]]`. With the mandatory `-Werror` this
+  makes every ignored error a build failure. The in-tree templates were
+  updated accordingly: explicit `(void)` on the intentional byte-drop in the
+  UART RX ISR, and real error checks around `Mpu6050::init()` and
+  `W25q32::eraseSector()` in the FreeRTOS demos.
+
+Notes:
+
+- The `host` unit-test requested in #15/#16 is deferred to v0.1.10, where the
+  full host-test harness lands (mock buses #34, host-test CI job #35). For now
+  a `consteval` self-check inside `driver.types` validates the `Result<T>`
+  invariants at compile time on every ARM build.
+
 ### v0.1.4
 
 Focus: quality and infrastructure, no new SDK features beyond

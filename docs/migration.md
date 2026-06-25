@@ -14,6 +14,32 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## Upgrading to v0.1.5
+
+### `driver::Status` is now `[[nodiscard]]`
+
+`Status` (and the new `Result<T>`) carry the `[[nodiscard]]` attribute. Under
+the SDK's mandatory `-Werror`, any call site that **ignored** a `Status`
+return now fails to compile. This can surface in downstream code that called
+`write` / `read` / `eraseSector` / `init` and dropped the result.
+
+Fix each site one of two ways:
+
+```cpp
+// 1. Handle the error (preferred):
+if (g_flash.eraseSector(0) != driver::Status::Ok) {
+    // log / retry / halt
+}
+
+// 2. Explicitly discard, when the failure is genuinely irrelevant
+//    (e.g. dropping a byte in a full ISR ring buffer):
+(void) _rxBuf.push(byte);
+```
+
+`Result<T>`, `DRV_TRY`, and `DRV_TRY_ASSIGN` are new additive APIs — they do
+not break existing code. See
+[drivers](modules/drivers.md#error-handling-drivertypes-v015).
+
 ## Upgrading from v0.1.2
 
 ### `GpioConfig` is now an aggregate, validation through `gpio({...})`
