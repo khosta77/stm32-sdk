@@ -225,7 +225,7 @@ void taskDisplay(void *param) {
         snprintf(line, sizeof(line), "T %d.%dC", t / 10, t % 10 < 0 ? -t % 10 : t % 10);
         g_oled.drawText(0, 52, line);
 
-        g_oled.flush();
+        (void) g_oled.flush();
         rtos::Task::delay(pdMS_TO_TICKS(200));
     }
 }
@@ -240,7 +240,12 @@ void taskFlashLogger(void *param) {
         }
     }
     writeStr("flash ready, sector 0 reset\r\n");
-    g_flash.eraseSector(0);
+    if (g_flash.eraseSector(0) != driver::Status::Ok) {
+        writeStr("flash erase failed\r\n");
+        while (true) {
+            rtos::Task::delay(pdMS_TO_TICKS(1000));
+        }
+    }
 
     uint32_t offset = 0;
     char buf[32];
@@ -248,7 +253,9 @@ void taskFlashLogger(void *param) {
         rtos::Task::delay(pdMS_TO_TICKS(5000));
         if (offset + sizeof(buf) > sensor::W25q32::SECTOR_SIZE) {
             offset = 0;
-            g_flash.eraseSector(0);
+            if (g_flash.eraseSector(0) != driver::Status::Ok) {
+                writeStr("flash re-erase failed\r\n");
+            }
         }
         const auto data = cached->get();
         const int ax = static_cast<int>(data.accel.x * 100);
@@ -256,7 +263,10 @@ void taskFlashLogger(void *param) {
         const int az = static_cast<int>(data.accel.z * 100);
         const int len = snprintf(buf, sizeof(buf), "%+5d %+5d %+5d\n", ax, ay, az);
         if (len > 0) {
-            g_flash.writePage(offset, {reinterpret_cast<const uint8_t *>(buf), static_cast<size_t>(len)});
+            if (g_flash.writePage(offset, {reinterpret_cast<const uint8_t *>(buf),
+                                           static_cast<size_t>(len)}) != driver::Status::Ok) {
+                writeStr("flash write failed\r\n");
+            }
             offset += static_cast<uint32_t>(len);
         }
     }

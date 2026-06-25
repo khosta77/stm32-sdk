@@ -89,7 +89,7 @@ void taskDisplay(void *) {
 
         snprintf(buf, sizeof(buf), "uptime: %lus", static_cast<unsigned long>(counter));
         g_oled.drawText(0, 48, buf);
-        g_oled.flush();
+        (void) g_oled.flush();
 
         ++counter;
         rtos::Task::delay(pdMS_TO_TICKS(1000));
