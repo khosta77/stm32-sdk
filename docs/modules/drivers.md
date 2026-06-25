@@ -1,8 +1,17 @@
 # Drivers
 
-All drivers live under `sdk/drivers/include/driver/`. Each peripheral has an
-abstract interface in `interface/i_*.cppm` plus a concrete STM32F4
-implementation in `stm32f4/*.cppm`.
+All drivers live under `sdk/drivers/include/driver/`. Each peripheral has a
+C++20 **concept** in `interface/i_*.cppm` (the compile-time contract) plus a
+concrete STM32F4 implementation in `stm32f4/*.cppm` that models it.
+
+Since v0.1.7 the interfaces are **concepts, not virtual base classes**
+(`IGpioPin`, `II2c`, `ISpi`, `IUart`, `IFlash`). A driver simply provides the
+required methods — no inheritance, no vtable on bus calls. Code that needs a
+generic peripheral takes it as a constrained template parameter
+(`template <driver::II2c I2cDriver>`), and a test double is just a plain `struct`
+that satisfies the concept. Each implementation ends with a
+`static_assert(IXxx<Impl>)` self-check so a signature drift is a compile
+error.
 
 ## Rules
 
@@ -20,7 +29,10 @@ Drivers report failures through `enum class Status : uint8_t` (`Ok`, `None`,
 `Timeout`, `Nack`, `BusError`, `Busy`, `InvalidArg`, `HardwareError`). Since
 v0.1.5 `Status` is `[[nodiscard]]`: every `Status`-returning call must be
 consumed, or the discard made explicit with `(void)`. With `-Werror` an
-ignored `Status` is a build error.
+ignored `Status` is a build error. Since v0.1.7 **every value-returning driver
+and sensor method** is `[[nodiscard]]` too — including byte counts
+(`Uart::write`/`read`) and geometry (`Flash::sectorSize`, `Display::width`, …),
+so a fire-and-forget UART write needs an explicit `(void)`.
 
 ```cpp
 import driver.types;
@@ -110,25 +122,27 @@ port address and toggles the right `RCC_AHB1ENR_GPIOxEN` bit).
 
 ### `NullGpioPin` — `driver.null_gpio` (v0.1.4)
 
-A no-op implementation of `IGpioPin`. Use it when a sensor or driver
-takes an `IGpioPin&` for a CS line that is **hardwired** on the board
-(for example, an SPI flash whose CS is tied to GND through a jumper).
+A no-op `struct` that models the `IGpioPin` concept. Use it when a sensor
+takes a CS pin that is **hardwired** on the board (for example, an SPI flash
+whose CS is tied to GND through a jumper).
 
 ```cpp
 import driver.null_gpio;
 import driver.stm32f4.spi;
 
 driver::NullGpioPin null_cs;
-W25q32 flash{spi, null_cs, {.id = 0xEF4016}};  // hardware CS — no toggling
+// W25q32 is templated on its bus + CS types; CTAD deduces them from the args:
+sensor::W25q32 flash{spi, null_cs,
+                     {.expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
+                      .busyPollLoops = 5000000U}};  // hardware CS — no toggling
 ```
 
-All four `IGpioPin` methods (`set`, `reset`, `toggle`, `read`) are
-inline empty functions, so the compiler typically devirtualises them
-into nothing when the concrete type is known at the call site. There
-is no register access, no clock enable, and no peripheral state. It is
+The four pin methods (`set`, `reset`, `toggle`, `read`) are inline empty
+functions. Since v0.1.7 `NullGpioPin` is a plain `struct` (not a subclass of a
+virtual base), so there is no vtable at all — the calls compile to nothing.
+There is no register access, no clock enable, and no peripheral state. It is
 intentionally chip-agnostic and lives at the top of
-`sdk/drivers/include/driver/null_gpio.cppm` rather than under
-`stm32f4/`.
+`sdk/drivers/include/driver/null_gpio.cppm` rather than under `stm32f4/`.
 
 ## I2C — `driver.stm32f4.i2c`
 
@@ -145,7 +159,7 @@ I2c g_i2c1{
 };
 ```
 
-Methods (from `II2c`):
+Methods (required by the `II2c` concept):
 
 - `Status write(uint8_t addr, std::span<const uint8_t> data)`
 - `Status read(uint8_t addr, std::span<uint8_t> data)`

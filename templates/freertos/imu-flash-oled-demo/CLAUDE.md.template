@@ -89,6 +89,6 @@ the SDK. Common extensions:
 
 - Add UART logging by enabling `Uart<>` and printing samples (the I2C bus
   is already shared safely; UART is independent).
-- Add wear-leveling logic on top of `IExternalFlash` to cycle through
+- Add wear-leveling logic on top of the `IExternalFlash` concept to cycle through
   multiple sectors instead of overwriting one.
 - Add FFT or filtering between MPU read and OLED display.

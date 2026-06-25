@@ -180,10 +180,14 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 - `sdk/rtos/` — FreeRTOS (heap_4, 16 KB), RAII wrappers (`rtos.hpp`).
 - `sdk/drivers/include/driver/` — modules:
     - `types.cppm`, `reg.cppm`, `circular_buffer.cppm` — utilities.
-    - `interface/i_*.cppm` — interfaces (`IGpioPin`, `IUart`, `II2c`, `ISpi`, `IFlash`).
+    - `interface/i_*.cppm` — interface **concepts** (`IGpioPin`, `IUart`,
+      `II2c`, `ISpi`, `IFlash`), not virtual classes (since v0.1.7).
     - `stm32f4/*.cppm` — implementations (`GpioPin`, `Uart<>`, `I2c`, `Spi`,
-      `DmaStream`, `InternalFlash`, `clock`).
-- `sdk/sensors/` — sensor interfaces + implementations (MPU6050, SSD1306, W25Q32).
+      `DmaStream`, `InternalFlash`, `clock`); model the concepts without
+      inheritance, each ends with `static_assert(IXxx<Impl>)`.
+- `sdk/sensors/` — sensor concepts (`IImu`/`IDisplay`/`IExternalFlash`) +
+  implementations. Sensors are templates on their bus type
+  (`template <driver::II2c I2cDriver> class Mpu6050`); MPU6050, SSD1306, W25Q32.
 - `templates/` — 7 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
   `freertos/blink`, `freertos/mpu6050-uart`, `freertos/oled-display-test`,
   `freertos/w25q32-flash-test`, `freertos/imu-flash-oled-demo`).
@@ -192,6 +196,34 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 - `docs/` — MkDocs source (EN + RU via suffix mode).
 
 ## Driver patterns
+
+### Interfaces are concepts, not virtual classes (since v0.1.7)
+
+`interface/i_*.cppm` and `sensor/{imu,display,external_flash}.cppm` export
+C++20 **concepts** (`IGpioPin`, `II2c`, `ISpi`, `IUart`, `IFlash`, `IImu`,
+`IDisplay`, `IExternalFlash`), checked with `std::same_as` on each method
+(`<concepts>` works freestanding on arm-none-eabi GCC 15). Rules for new code:
+
+- A driver/sensor **models** the concept by providing the methods — no
+  inheritance, no `override`. End the module with `static_assert(IXxx<Impl>)`.
+- A consumer that needs a generic bus is a constrained template
+  (`template <driver::II2c I2cDriver> class Mpu6050 { I2cDriver &_i2c; ... }`). CTAD keeps
+  call sites unchanged (`sensor::Mpu6050 g{i2c, {...}}`); cast `void*` back with
+  `decltype(&g)`, not `sensor::Mpu6050*` (a template name needs args).
+- Style: use the **terse constrained type-parameter** form
+  (`template <driver::II2c I2cDriver>`), NOT `requires`-clauses or
+  `driver::II2c auto&`. Give the parameter a full descriptive name —
+  `I2cDriver` / `SpiDriver` / `GpioDriver` — never a terse `Bus` / `T`.
+- Every value-returning method on a driver/sensor is `[[nodiscard]]` (not only
+  the `Status` type — also `size_t`/`uint*` counts and geometry). Intentional
+  discards (e.g. a fire-and-forget `Uart::write`) use explicit `(void)`.
+- Non-template constants of a templated class go in a sibling non-template
+  struct (`sensor::W25q32Spec::SECTOR_SIZE`).
+- A test/mock bus is a plain `struct` that satisfies the concept; the sensor
+  modules keep a `namespace sensor::detail` mock + self-check.
+- Avoid range-for over `std::span` inside a **template** member: GCC 15 can't
+  resolve the iterator's `operator!=` across a module boundary at instantiation.
+  Use an index loop.
 
 ### Clock enable
 
