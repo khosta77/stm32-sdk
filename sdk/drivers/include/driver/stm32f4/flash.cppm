@@ -13,7 +13,7 @@ import driver.stm32f4.clock;
 export namespace driver {
 namespace stm32f4 {
 
-class InternalFlash : public IFlash {
+class InternalFlash {
     static constexpr uint32_t FLASH_KEY1 = 0x45670123;
     static constexpr uint32_t FLASH_KEY2 = 0xCDEF89AB;
     static constexpr uint32_t ERROR_MASK =
@@ -54,7 +54,7 @@ class InternalFlash : public IFlash {
 public:
     explicit InternalFlash(uint8_t numSectors = 12) : _numSectors(numSectors) {}
 
-    Status read(uint32_t addr, std::span<uint8_t> data) override {
+    [[nodiscard]] Status read(uint32_t addr, std::span<uint8_t> data) {
         const auto *src = memoryAt<uint8_t>(addr);
         for (size_t i = 0, I = data.size(); i < I; ++i) {
             data[i] = src[i];
@@ -62,7 +62,7 @@ public:
         return Status::Ok;
     }
 
-    Status write(uint32_t addr, std::span<const uint8_t> data) override {
+    [[nodiscard]] Status write(uint32_t addr, std::span<const uint8_t> data) {
         unlock();
         clearErrors();
 
@@ -85,7 +85,7 @@ public:
         return Status::Ok;
     }
 
-    Status eraseSector(uint8_t sector) override {
+    [[nodiscard]] Status eraseSector(uint8_t sector) {
         unlock();
         clearErrors();
 
@@ -101,7 +101,7 @@ public:
         return st;
     }
 
-    size_t sectorSize(uint8_t sector) const override {
+    [[nodiscard]] size_t sectorSize(uint8_t sector) const {
         if (sector < 4) {
             return 16 * 1024;
         }
@@ -111,8 +111,10 @@ public:
         return 128 * 1024;
     }
 
-    uint8_t sectorCount() const override { return _numSectors; }
+    [[nodiscard]] uint8_t sectorCount() const { return _numSectors; }
 };
+
+static_assert(IFlash<InternalFlash>, "InternalFlash must model driver::IFlash");
 
 }  // namespace stm32f4
 }  // namespace driver

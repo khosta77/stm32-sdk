@@ -10,7 +10,8 @@ import sensor.imu;
 
 export namespace sensor {
 
-class Mpu6050 : public IImu {
+template <driver::II2c I2cDriver>
+class Mpu6050 {
 public:
     struct Config {
         uint8_t addr;
@@ -32,7 +33,7 @@ private:
         static constexpr uint8_t WHO_AM_I = 0x75;
     };
 
-    driver::II2c &_i2c;
+    I2cDriver &_i2c;
     Config _cfg;
     float _accelScale = 16384.0f;
     float _gyroScale = 131.0f;
@@ -50,9 +51,9 @@ private:
     }
 
 public:
-    explicit Mpu6050(driver::II2c &i2c, const Config &cfg) : _i2c(i2c), _cfg(cfg) {}
+    explicit Mpu6050(I2cDriver &i2c, const Config &cfg) : _i2c(i2c), _cfg(cfg) {}
 
-    driver::Status init() override {
+    [[nodiscard]] driver::Status init() {
         driver::Status st;
 
         st = writeReg(Regs::PWR_MGMT_1, 0x80);
@@ -66,11 +67,11 @@ public:
         // i.e. ~150x below spec, so the chip silently stayed in default sleep
         // state on some boards: I2C slave kept ACKing at 0x68, but ACCEL/GYRO
         // data registers always returned 0x0000 (|a| == 0 even at rest, where
-        // gravity must give ~9.81 m/s^2). volatile counter prevents the loop
-        // from being elided under -O2/-O3.
+        // gravity must give ~9.81 m/s^2). The volatile asm nop in the body
+        // prevents the loop from being elided under -O2/-O3.
         // First reproduced and worked around in mpu-6050-logger/src/main.cpp
         // (mpuInitRobust() bypassed this init entirely with a DWT-based delay).
-        for (volatile uint32_t i = 0; i < 16000000U; ++i) {
+        for (uint32_t i = 0; i < 16000000U; ++i) {
             __asm volatile("nop");
         }
 
@@ -101,7 +102,7 @@ public:
         return (whoami == 0x68) ? driver::Status::Ok : driver::Status::HardwareError;
     }
 
-    driver::Status read(ImuData &out) override {
+    [[nodiscard]] driver::Status read(ImuData &out) {
         uint8_t buf[14];
         driver::Status st = readRegs(Regs::ACCEL_XOUT_H, buf, 14);
         if (st != driver::Status::Ok) {
@@ -122,7 +123,7 @@ public:
         return driver::Status::Ok;
     }
 
-    driver::Status selfTest() override {
+    [[nodiscard]] driver::Status selfTest() {
         uint8_t whoami = 0;
         driver::Status st = readRegs(Regs::WHO_AM_I, &whoami, 1);
         if (st != driver::Status::Ok) {
@@ -131,7 +132,7 @@ public:
         return (whoami == 0x68) ? driver::Status::Ok : driver::Status::HardwareError;
     }
 
-    void setAccelRange(uint8_t g) override {
+    void setAccelRange(uint8_t g) {
         uint8_t val;
         switch (g) {
             case 4:
@@ -151,10 +152,10 @@ public:
                 _accelScale = 16384.0f;
                 break;
         }
-        writeReg(Regs::ACCEL_CONFIG, val);
+        (void) writeReg(Regs::ACCEL_CONFIG, val);
     }
 
-    void setGyroRange(uint16_t dps) override {
+    void setGyroRange(uint16_t dps) {
         uint8_t val;
         switch (dps) {
             case 500:
@@ -174,8 +175,24 @@ public:
                 _gyroScale = 131.0f;
                 break;
         }
-        writeReg(Regs::GYRO_CONFIG, val);
+        (void) writeReg(Regs::GYRO_CONFIG, val);
     }
 };
 
 }  // namespace sensor
+
+namespace sensor::detail {
+
+// Zero-infra compile-time check: a trivial bus models driver::II2c, and
+// Mpu6050 instantiated on it models sensor::IImu. Catches signature drift on
+// every ARM build without hardware. Not exported.
+struct MockI2c {
+    driver::Status write(uint8_t, std::span<const uint8_t>) { return driver::Status::Ok; }
+    driver::Status read(uint8_t, std::span<uint8_t>) { return driver::Status::Ok; }
+    driver::Status writeReg(uint8_t, uint8_t, std::span<const uint8_t>) { return driver::Status::Ok; }
+    driver::Status readReg(uint8_t, uint8_t, std::span<uint8_t>) { return driver::Status::Ok; }
+    driver::Status probe(uint8_t) { return driver::Status::Ok; }
+};
+static_assert(IImu<Mpu6050<MockI2c>>, "Mpu6050 must model sensor::IImu");
+
+}  // namespace sensor::detail

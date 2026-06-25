@@ -20,7 +20,7 @@ namespace stm32f4 {
 // SPI DMA stream IDs are reserved in driver.stm32f4.dma (dmaMap::spi1_tx etc.).
 // Async transfer via DMA will land in a follow-up PR.
 
-class Spi : public ISpi {
+class Spi {
 public:
     struct Config {
         uint32_t clockHz;
@@ -132,7 +132,7 @@ public:
     Spi(const Spi &) = delete;
     Spi &operator=(const Spi &) = delete;
 
-    Status transfer(std::span<const uint8_t> txData, std::span<uint8_t> rxData) override {
+    [[nodiscard]] Status transfer(std::span<const uint8_t> txData, std::span<uint8_t> rxData) {
         lockBus();
 
         Status result = Status::Ok;
@@ -157,7 +157,7 @@ public:
         return result;
     }
 
-    Status write(std::span<const uint8_t> data) override {
+    [[nodiscard]] Status write(std::span<const uint8_t> data) {
         lockBus();
 
         Status result = Status::Ok;
@@ -180,7 +180,7 @@ public:
         return result;
     }
 
-    Status read(std::span<uint8_t> data) override {
+    [[nodiscard]] Status read(std::span<uint8_t> data) {
         lockBus();
 
         Status result = Status::Ok;
@@ -202,6 +202,8 @@ public:
         return result;
     }
 };
+
+static_assert(ISpi<Spi>, "Spi must model driver::ISpi");
 
 }  // namespace stm32f4
 }  // namespace driver

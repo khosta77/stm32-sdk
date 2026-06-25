@@ -1,4 +1,5 @@
 module;
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
 export module sensor.display;
@@ -7,19 +8,19 @@ import driver.types;
 
 export namespace sensor {
 
-class IDisplay {
-public:
-    virtual ~IDisplay() = default;
-
-    virtual driver::Status init() = 0;
-    virtual void clear() = 0;
-    virtual void setPixel(uint16_t x, uint16_t y, bool on) = 0;
-    virtual void drawChar(uint16_t x, uint16_t y, char c) = 0;
-    virtual void drawText(uint16_t x, uint16_t y, const char *text) = 0;
-    virtual driver::Status flush() = 0;
-
-    virtual uint16_t width() const = 0;
-    virtual uint16_t height() const = 0;
+// Compile-time contract for a monochrome display (replaces the former virtual
+// IDisplay base class). `width` / `height` are checked through a const object.
+template <typename T>
+concept IDisplay = requires(T disp, const T cdisp, uint16_t x, uint16_t y, bool on, char c,
+                            const char *text) {
+    { disp.init() } -> std::same_as<driver::Status>;
+    { disp.clear() } -> std::same_as<void>;
+    { disp.setPixel(x, y, on) } -> std::same_as<void>;
+    { disp.drawChar(x, y, c) } -> std::same_as<void>;
+    { disp.drawText(x, y, text) } -> std::same_as<void>;
+    { disp.flush() } -> std::same_as<driver::Status>;
+    { cdisp.width() } -> std::same_as<uint16_t>;
+    { cdisp.height() } -> std::same_as<uint16_t>;
 };
 
 }  // namespace sensor

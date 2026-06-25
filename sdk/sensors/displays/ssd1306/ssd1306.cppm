@@ -12,7 +12,8 @@ import sensor.font5x7;
 
 export namespace sensor {
 
-class Ssd1306 : public IDisplay {
+template <driver::II2c I2cDriver>
+class Ssd1306 {
 public:
     struct Config {
         uint8_t addr;       // 7-bit, 0x3C (default) or 0x3D (when SA0 tied high)
@@ -27,7 +28,7 @@ public:
     static constexpr size_t FRAMEBUFFER_SIZE = static_cast<size_t>(WIDTH) * PAGES;
 
 private:
-    driver::II2c &_i2c;
+    I2cDriver &_i2c;
     Config _cfg;
     uint8_t _fb[FRAMEBUFFER_SIZE]{};
 
@@ -37,12 +38,12 @@ private:
     };
 
 public:
-    Ssd1306(driver::II2c &i2c, const Config &cfg) : _i2c(i2c), _cfg(cfg) {}
+    Ssd1306(I2cDriver &i2c, const Config &cfg) : _i2c(i2c), _cfg(cfg) {}
 
     Ssd1306(const Ssd1306 &) = delete;
     Ssd1306 &operator=(const Ssd1306 &) = delete;
 
-    driver::Status init() override {
+    [[nodiscard]] driver::Status init() {
         const uint8_t segRemap = static_cast<uint8_t>(_cfg.flipH ? 0xA1 : 0xA0);
         const uint8_t comScan = static_cast<uint8_t>(_cfg.flipV ? 0xC8 : 0xC0);
 
@@ -68,11 +69,11 @@ public:
         return sendCommands({initSeq, sizeof(initSeq)});
     }
 
-    void clear() override {
+    void clear() {
         std::memset(_fb, 0, FRAMEBUFFER_SIZE);
     }
 
-    void setPixel(uint16_t x, uint16_t y, bool on) override {
+    void setPixel(uint16_t x, uint16_t y, bool on) {
         if (x >= WIDTH || y >= HEIGHT) {
             return;
         }
@@ -85,7 +86,7 @@ public:
         }
     }
 
-    void drawChar(uint16_t x, uint16_t y, char c) override {
+    void drawChar(uint16_t x, uint16_t y, char c) {
         const auto code = static_cast<uint8_t>(c);
         if (code < font5x7::firstChar || code > font5x7::lastChar) {
             return;
@@ -101,7 +102,7 @@ public:
         }
     }
 
-    void drawText(uint16_t x, uint16_t y, const char *text) override {
+    void drawText(uint16_t x, uint16_t y, const char *text) {
         uint16_t cursor = x;
         while (text != nullptr && *text != '\0') {
             if (cursor + font5x7::glyphWidth > WIDTH) {
@@ -113,7 +114,7 @@ public:
         }
     }
 
-    driver::Status flush() override {
+    [[nodiscard]] driver::Status flush() {
         const uint8_t addrSetup[] = {
             0x21, 0x00, static_cast<uint8_t>(WIDTH - 1),  // COLUMN_ADDR: 0..127
             0x22, 0x00, static_cast<uint8_t>(PAGES - 1),  // PAGE_ADDR: 0..7
@@ -125,12 +126,16 @@ public:
         return _i2c.writeReg(_cfg.addr, DATA_STREAM, {_fb, FRAMEBUFFER_SIZE});
     }
 
-    uint16_t width() const override { return WIDTH; }
-    uint16_t height() const override { return HEIGHT; }
+    [[nodiscard]] uint16_t width() const { return WIDTH; }
+    [[nodiscard]] uint16_t height() const { return HEIGHT; }
 
 private:
     driver::Status sendCommands(std::span<const uint8_t> cmds) {
-        for (uint8_t cmd : cmds) {
+        // Index loop, not range-for: across a module boundary GCC 15 fails to
+        // find operator!= for std::span<>::iterator when this template member
+        // is instantiated in the consumer TU.
+        for (size_t i = 0; i < cmds.size(); ++i) {
+            const uint8_t cmd = cmds[i];
             const auto st = _i2c.writeReg(_cfg.addr, CMD_STREAM, {&cmd, 1});
             if (st != driver::Status::Ok) {
                 return st;
@@ -141,3 +146,18 @@ private:
 };
 
 }  // namespace sensor
+
+namespace sensor::detail {
+
+// Zero-infra compile-time check (not exported): Ssd1306 on a trivial II2c bus
+// models sensor::IDisplay.
+struct MockI2c {
+    driver::Status write(uint8_t, std::span<const uint8_t>) { return driver::Status::Ok; }
+    driver::Status read(uint8_t, std::span<uint8_t>) { return driver::Status::Ok; }
+    driver::Status writeReg(uint8_t, uint8_t, std::span<const uint8_t>) { return driver::Status::Ok; }
+    driver::Status readReg(uint8_t, uint8_t, std::span<uint8_t>) { return driver::Status::Ok; }
+    driver::Status probe(uint8_t) { return driver::Status::Ok; }
+};
+static_assert(IDisplay<Ssd1306<MockI2c>>, "Ssd1306 must model sensor::IDisplay");
+
+}  // namespace sensor::detail

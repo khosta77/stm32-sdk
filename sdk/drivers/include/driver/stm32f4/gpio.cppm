@@ -10,7 +10,7 @@ import driver.reg;
 export namespace driver {
 namespace stm32f4 {
 
-class GpioPin : public IGpioPin {
+class GpioPin {
     GPIO_TypeDef &_port;
     uint8_t _pin;
 
@@ -49,11 +49,11 @@ public:
         }
     }
 
-    void set() override { _port.BSRR = (1U << _pin); }
+    void set() { _port.BSRR = (1U << _pin); }
 
-    void reset() override { _port.BSRR = (1U << (_pin + 16U)); }
+    void reset() { _port.BSRR = (1U << (_pin + 16U)); }
 
-    void toggle() override {
+    void toggle() {
         if (reg::read(_port.ODR, 1U << _pin)) {
             _port.BSRR = (1U << (_pin + 16U));
         } else {
@@ -61,8 +61,10 @@ public:
         }
     }
 
-    Status read() override { return reg::read(_port.IDR, 1U << _pin) ? Status::Ok : Status::None; }
+    [[nodiscard]] Status read() { return reg::read(_port.IDR, 1U << _pin) ? Status::Ok : Status::None; }
 };
+
+static_assert(IGpioPin<GpioPin>, "GpioPin must model driver::IGpioPin");
 
 }  // namespace stm32f4
 }  // namespace driver

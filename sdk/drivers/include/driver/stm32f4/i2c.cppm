@@ -17,7 +17,7 @@ import driver.stm32f4.clock;
 export namespace driver {
 namespace stm32f4 {
 
-class I2c : public II2c {
+class I2c {
 public:
     struct Config {
         uint32_t clockSpeed;
@@ -245,7 +245,7 @@ public:
     I2c(const I2c &) = delete;
     I2c &operator=(const I2c &) = delete;
 
-    Status write(uint8_t addr, std::span<const uint8_t> data) override {
+    [[nodiscard]] Status write(uint8_t addr, std::span<const uint8_t> data) {
         lockBus();
 
         Status result = Status::BusError;
@@ -276,7 +276,7 @@ public:
         return result;
     }
 
-    Status read(uint8_t addr, std::span<uint8_t> data) override {
+    [[nodiscard]] Status read(uint8_t addr, std::span<uint8_t> data) {
         lockBus();
 
         Status result = Status::BusError;
@@ -292,7 +292,7 @@ public:
         return result;
     }
 
-    Status writeReg(uint8_t addr, uint8_t reg, std::span<const uint8_t> data) override {
+    [[nodiscard]] Status writeReg(uint8_t addr, uint8_t reg, std::span<const uint8_t> data) {
         lockBus();
 
         Status result = Status::BusError;
@@ -328,7 +328,7 @@ public:
         return result;
     }
 
-    Status readReg(uint8_t addr, uint8_t reg, std::span<uint8_t> data) override {
+    [[nodiscard]] Status readReg(uint8_t addr, uint8_t reg, std::span<uint8_t> data) {
         lockBus();
 
         Status result = Status::BusError;
@@ -358,7 +358,7 @@ public:
         return result;
     }
 
-    Status probe(uint8_t addr) override {
+    [[nodiscard]] Status probe(uint8_t addr) {
         lockBus();
 
         Status result = Status::Nack;
@@ -376,6 +376,8 @@ public:
         return result;
     }
 };
+
+static_assert(II2c<I2c>, "I2c must model driver::II2c");
 
 }  // namespace stm32f4
 }  // namespace driver

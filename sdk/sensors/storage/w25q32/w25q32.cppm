@@ -11,12 +11,22 @@ import sensor.external_flash;
 
 export namespace sensor {
 
-class W25q32 : public IExternalFlash {
-public:
+// Device geometry / identity — non-template so user code can refer to it as
+// sensor::W25q32Spec::SECTOR_SIZE without naming the bus/CS template arguments.
+struct W25q32Spec {
     static constexpr uint32_t CAPACITY = 4U * 1024U * 1024U;  // 32 Mbit = 4 MiB
     static constexpr uint32_t SECTOR_SIZE = 4096U;
     static constexpr uint32_t PAGE_SIZE = 256U;
     static constexpr uint32_t JEDEC_W25Q32JV = 0xEF4016U;
+};
+
+template <driver::ISpi SpiDriver, driver::IGpioPin GpioDriver>
+class W25q32 {
+public:
+    static constexpr uint32_t CAPACITY = W25q32Spec::CAPACITY;
+    static constexpr uint32_t SECTOR_SIZE = W25q32Spec::SECTOR_SIZE;
+    static constexpr uint32_t PAGE_SIZE = W25q32Spec::PAGE_SIZE;
+    static constexpr uint32_t JEDEC_W25Q32JV = W25q32Spec::JEDEC_W25Q32JV;
 
     struct Config {
         uint32_t expectedJedecId;  // typically JEDEC_W25Q32JV
@@ -36,13 +46,13 @@ private:
         JEDEC_ID = 0x9F,
     };
 
-    driver::ISpi &_spi;
-    driver::IGpioPin &_cs;
+    SpiDriver &_spi;
+    GpioDriver &_cs;
     Config _cfg;
     uint32_t _jedec = 0;
 
 public:
-    W25q32(driver::ISpi &spi, driver::IGpioPin &cs, const Config &cfg)
+    W25q32(SpiDriver &spi, GpioDriver &cs, const Config &cfg)
         : _spi(spi), _cs(cs), _cfg(cfg) {
         _cs.set();  // CS is active-low; deselect at construction
     }
@@ -50,7 +60,7 @@ public:
     W25q32(const W25q32 &) = delete;
     W25q32 &operator=(const W25q32 &) = delete;
 
-    driver::Status init() override {
+    [[nodiscard]] driver::Status init() {
         const uint8_t cmd = JEDEC_ID;
         uint8_t id[3] = {0, 0, 0};
 
@@ -73,7 +83,7 @@ public:
         return driver::Status::Ok;
     }
 
-    driver::Status read(uint32_t addr, std::span<uint8_t> data) override {
+    [[nodiscard]] driver::Status read(uint32_t addr, std::span<uint8_t> data) {
         const uint8_t header[4] = {
             READ_DATA,
             static_cast<uint8_t>((addr >> 16) & 0xFFU),
@@ -89,7 +99,7 @@ public:
         return st;
     }
 
-    driver::Status writePage(uint32_t addr, std::span<const uint8_t> data) override {
+    [[nodiscard]] driver::Status writePage(uint32_t addr, std::span<const uint8_t> data) {
         if (data.empty()) {
             return driver::Status::Ok;
         }
@@ -125,7 +135,7 @@ public:
         return waitNotBusy();
     }
 
-    driver::Status eraseSector(uint32_t addr) override {
+    [[nodiscard]] driver::Status eraseSector(uint32_t addr) {
         auto st = sendSimpleCmd(WRITE_ENABLE);
         if (st != driver::Status::Ok) {
             return st;
@@ -147,7 +157,7 @@ public:
         return waitNotBusy();
     }
 
-    driver::Status chipErase() override {
+    [[nodiscard]] driver::Status chipErase() {
         auto st = sendSimpleCmd(WRITE_ENABLE);
         if (st != driver::Status::Ok) {
             return st;
@@ -159,10 +169,10 @@ public:
         return waitNotBusy();
     }
 
-    uint32_t capacity() const override { return CAPACITY; }
-    uint32_t sectorSize() const override { return SECTOR_SIZE; }
-    uint32_t pageSize() const override { return PAGE_SIZE; }
-    uint32_t jedecId() const override { return _jedec; }
+    [[nodiscard]] uint32_t capacity() const { return CAPACITY; }
+    [[nodiscard]] uint32_t sectorSize() const { return SECTOR_SIZE; }
+    [[nodiscard]] uint32_t pageSize() const { return PAGE_SIZE; }
+    [[nodiscard]] uint32_t jedecId() const { return _jedec; }
 
 private:
     driver::Status sendSimpleCmd(uint8_t cmd) {
@@ -199,3 +209,22 @@ private:
 };
 
 }  // namespace sensor
+
+namespace sensor::detail {
+
+// Zero-infra compile-time check (not exported): W25q32 on a trivial ISpi bus
+// and IGpioPin CS models sensor::IExternalFlash.
+struct MockSpi {
+    driver::Status transfer(std::span<const uint8_t>, std::span<uint8_t>) { return driver::Status::Ok; }
+    driver::Status write(std::span<const uint8_t>) { return driver::Status::Ok; }
+    driver::Status read(std::span<uint8_t>) { return driver::Status::Ok; }
+};
+struct MockCs {
+    void set() {}
+    void reset() {}
+    void toggle() {}
+    driver::Status read() { return driver::Status::None; }
+};
+static_assert(IExternalFlash<W25q32<MockSpi, MockCs>>, "W25q32 must model sensor::IExternalFlash");
+
+}  // namespace sensor::detail
