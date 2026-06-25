@@ -14,7 +14,73 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
-## Upgrading to v0.1.5
+## Upgrading to v0.1.7
+
+### Driver and sensor interfaces are now C++20 concepts
+
+The virtual base classes `IGpioPin`, `II2c`, `ISpi`, `IUart`, `IFlash`
+(drivers) and `IImu`, `IDisplay`, `IExternalFlash` (sensors) are now **C++20
+concepts**, not classes. Drivers and sensors no longer inherit from them; bus
+calls inside sensors are direct (no vtable).
+
+If your project only uses the concrete types (the common case — every in-tree
+template did), the only edits you may need are the `W25q32Spec` constant rename
+and any `sensor::Xxx*` raw-pointer casts below.
+
+- **You took an interface by reference** (`II2c&`, `ISpi&`, `IGpioPin&`, a
+  sensor interface, …). A concept is not a type, so `driver::II2c& bus` no
+  longer compiles. Take the concrete type, or make the function/class a
+  constrained template:
+
+  ```cpp
+  // before
+  void useBus(driver::II2c &bus);
+  // after — constrained template parameter (the style the SDK uses)
+  template <driver::II2c I2cDriver>
+  void useBus(I2cDriver &bus);
+  ```
+
+- **Sensors are now class templates on their bus type.** Construction is
+  unchanged thanks to CTAD: `sensor::Mpu6050 g{i2c, {...}}` still works and
+  deduces `Mpu6050<I2c>`. But you can no longer name the bare type — e.g.
+  `sensor::Mpu6050 *` is ill-formed. Use `decltype(&g)`:
+
+  ```cpp
+  // before
+  auto *mpu = static_cast<sensor::Mpu6050 *>(ctx);
+  // after
+  auto *mpu = static_cast<decltype(&g_mpu)>(ctx);
+  ```
+
+- **`W25q32` device constants moved to `sensor::W25q32Spec`.** Since `W25q32`
+  is now a template, `sensor::W25q32::SECTOR_SIZE` would need template
+  arguments. The constants live in the non-template `sensor::W25q32Spec`:
+
+  ```cpp
+  // before
+  sensor::W25q32::JEDEC_W25Q32JV
+  // after
+  sensor::W25q32Spec::JEDEC_W25Q32JV       // also CAPACITY, SECTOR_SIZE, PAGE_SIZE
+  ```
+
+- **`NullGpioPin` is now a plain `struct`** (no longer derives a virtual base).
+  Usage is unchanged.
+
+### Every value-returning driver/sensor method is now `[[nodiscard]]`
+
+Previously only the `Status` return type carried `[[nodiscard]]`. Now the
+methods themselves are marked, including the ones that return a count or a
+geometry value (`Uart::write`/`read` → `size_t`, `Flash::sectorSize`/
+`sectorCount`, `Display::width`/`height`, `IExternalFlash::capacity`/
+`jedecId`, …). Under `-Werror` an ignored result is a build error. The common
+case is a fire-and-forget UART write — discard it explicitly:
+
+```cpp
+// before
+g_uart2.write({data, len});
+// after
+(void) g_uart2.write({data, len});
+```
 
 ### `driver::Status` is now `[[nodiscard]]`
 

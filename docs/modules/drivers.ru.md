@@ -1,8 +1,17 @@
 # Драйверы
 
 Все драйверы лежат в `sdk/drivers/include/driver/`. Для каждой периферии
-есть абстрактный интерфейс в `interface/i_*.cppm` и конкретная реализация для
-STM32F4 в `stm32f4/*.cppm`.
+есть C++20-**концепт** в `interface/i_*.cppm` (compile-time контракт) и
+конкретная реализация для STM32F4 в `stm32f4/*.cppm`, которая ему
+удовлетворяет.
+
+С v0.1.7 интерфейсы — это **концепты, а не виртуальные базовые классы**
+(`IGpioPin`, `II2c`, `ISpi`, `IUart`, `IFlash`). Драйвер просто предоставляет
+нужные методы — без наследования, без vtable на вызовах шины. Код, которому
+нужна обобщённая периферия, принимает её как ограниченный параметр шаблона
+(`template <driver::II2c I2cDriver>`), а тестовый дубль — это обычный `struct`,
+удовлетворяющий концепту. Каждая реализация заканчивается self-check'ом
+`static_assert(IXxx<Impl>)`, поэтому дрейф сигнатуры — ошибка компиляции.
 
 ## Правила
 
@@ -20,7 +29,11 @@ STM32F4 в `stm32f4/*.cppm`.
 `None`, `Timeout`, `Nack`, `BusError`, `Busy`, `InvalidArg`,
 `HardwareError`). С v0.1.5 `Status` помечен `[[nodiscard]]`: каждый
 возвращаемый `Status` нужно потребить либо явно сбросить через `(void)`. Под
-`-Werror` проигнорированный `Status` — ошибка сборки.
+`-Werror` проигнорированный `Status` — ошибка сборки. С v0.1.7 `[[nodiscard]]`
+помечен **каждый возвращающий значение метод драйвера и сенсора** — включая
+счётчики байт (`Uart::write`/`read`) и геометрию (`Flash::sectorSize`,
+`Display::width`, …), поэтому fire-and-forget запись в UART требует явного
+`(void)`.
 
 ```cpp
 import driver.types;
@@ -111,21 +124,24 @@ Output / AlternateFunction, `af > 15` для AF.
 
 ### `NullGpioPin` — `driver.null_gpio` (v0.1.4)
 
-Пустая реализация `IGpioPin`. Используйте, когда сенсор или драйвер
-принимает `IGpioPin&` под CS-линию, **впаянную** в плату (например, SPI
-flash с CS, подтянутым к GND джампером).
+Пустой `struct`, удовлетворяющий концепту `IGpioPin`. Используйте, когда
+сенсор принимает CS-пин, **впаянный** в плату (например, SPI flash с CS,
+подтянутым к GND джампером).
 
 ```cpp
 import driver.null_gpio;
 import driver.stm32f4.spi;
 
 driver::NullGpioPin null_cs;
-W25q32 flash{spi, null_cs, {.id = 0xEF4016}};  // CS hardwired — без переключений
+// W25q32 — шаблон по типам шины и CS; CTAD выводит их из аргументов:
+sensor::W25q32 flash{spi, null_cs,
+                     {.expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
+                      .busyPollLoops = 5000000U}};  // CS hardwired — без переключений
 ```
 
-Все четыре метода `IGpioPin` (`set`, `reset`, `toggle`, `read`) — это
-inline-пустышки, поэтому компилятор обычно девиртуализует их в ничто,
-если конкретный тип известен в точке вызова. Никакого доступа к
+Четыре метода пина (`set`, `reset`, `toggle`, `read`) — inline-пустышки.
+С v0.1.7 `NullGpioPin` — обычный `struct` (а не наследник виртуальной базы),
+поэтому vtable нет вовсе — вызовы компилируются в ничто. Никакого доступа к
 регистрам, тактирования и состояния периферии. Модуль сознательно
 chip-agnostic и лежит на верхнем уровне в
 `sdk/drivers/include/driver/null_gpio.cppm`, а не под `stm32f4/`.
@@ -145,7 +161,7 @@ I2c g_i2c1{
 };
 ```
 
-Методы (из `II2c`):
+Методы (требуемые концептом `II2c`):
 
 - `Status write(uint8_t addr, std::span<const uint8_t> data)`
 - `Status read(uint8_t addr, std::span<uint8_t> data)`

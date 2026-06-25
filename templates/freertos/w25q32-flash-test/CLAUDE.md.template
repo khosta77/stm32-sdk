@@ -30,7 +30,7 @@ stmtool sdk update          # if [sdk] version = "develop"
 
 ## This template
 
-Exercises the `sensor.w25q32` driver and the `IExternalFlash` interface.
+Exercises the `sensor.w25q32` driver and the `IExternalFlash` concept.
 Run once at boot, output goes over USART2 (115200 baud, interrupt mode).
 
 ### Pinout (SPI2)

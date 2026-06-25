@@ -53,6 +53,43 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.7
+
+Focus: migrate driver and sensor interfaces from virtual base classes to
+**C++20 concepts** — no vtable on bus calls (issues #17–#25).
+
+Highlights:
+
+- Driver interfaces `IGpioPin`, `II2c`, `ISpi`, `IUart`, `IFlash` are now
+  concepts (`interface/i_*.cppm`); `GpioPin`, `I2c`, `Spi`, `Uart`,
+  `InternalFlash` drop inheritance and `override`, each guarded by a
+  `static_assert(IXxx<Impl>)` self-check. `NullGpioPin` is now a plain `struct`.
+- Sensor interfaces `IImu`, `IDisplay`, `IExternalFlash` are now concepts;
+  `Mpu6050`, `Ssd1306`, `W25q32` become class templates parameterised on their
+  bus (`template <driver::II2c I2cDriver> class Mpu6050`, …). Bus calls are direct.
+  CTAD keeps construction unchanged (`sensor::Mpu6050 g{i2c, {...}}`). Each
+  sensor module carries a compile-time `static_assert` self-check against a
+  trivial mock bus.
+- `W25q32` device constants moved to the non-template `sensor::W25q32Spec`
+  (`CAPACITY`, `SECTOR_SIZE`, `PAGE_SIZE`, `JEDEC_W25Q32JV`).
+- Every value-returning driver/sensor method is now `[[nodiscard]]` (not only
+  the `Status` type): ignoring a `Uart::write` byte count or a flash geometry
+  value is a build error. Fire-and-forget UART writes use explicit `(void)`.
+- Latent bugs surfaced by templating and fixed: `Mpu6050::setAccelRange` /
+  `setGyroRange` ignored a `[[nodiscard]] Status`; the init delay loop used a
+  deprecated `volatile` increment; `Ssd1306::sendCommands` used a range-for over
+  `std::span` that GCC 15 cannot resolve across a module boundary in a template
+  member (switched to an index loop).
+
+Notes:
+
+- Source-breaking only for code that named an interface type directly
+  (`II2c&`, `sensor::Mpu6050*`) or the moved `W25q32` constants. All in-tree
+  templates use the concrete types and needed only the `W25q32Spec` rename and
+  pointer-cast tweaks. See [migration](migration.md#upgrading-to-v017).
+- No runtime polymorphism / heterogeneous bus containers (not needed on a
+  single target). CMake is unchanged — module file names and module names stay.
+
 ### v0.1.6
 
 Focus: process and documentation only — no SDK or API changes.
