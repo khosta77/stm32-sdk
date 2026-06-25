@@ -223,7 +223,10 @@ extern "C" void DMA1_Stream6_IRQHandler() {
 }
 
 int main() {
-    g_mpu.init();
+    if (g_mpu.init() != driver::Status::Ok) {
+        while (true) {
+        }  // MPU init failed — halt
+    }
 
     static sensor::CachedSensor<sensor::ImuData> cachedImu(10, readImu, &g_mpu, "imu", 256, 2);
 
