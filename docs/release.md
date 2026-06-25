@@ -53,6 +53,22 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.6
+
+Focus: process and documentation only — no SDK or API changes.
+
+Highlights:
+
+- The release process now mandates **bilingual** GitHub Release notes: an
+  `## English` section copied verbatim from `docs/release.md` and a `## Русский`
+  section from `docs/release.ru.md`, separated by `---`, with a footer linking
+  the docs release page and the `vPREV...vNEW` changelog. Recorded in `CLAUDE.md`
+  (Release process, step 4).
+
+Notes:
+
+- Source-compatible with v0.1.5; downstream projects need no recompilation.
+
 ### v0.1.5
 
 Focus: a unified, zero-overhead error-handling layer for `driver.types`
