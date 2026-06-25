@@ -209,7 +209,7 @@ public:
 
         if (sr & USART_SR_RXNE) {
             const uint8_t byte = static_cast<uint8_t>(reg::get(_periph.DR));
-            _rxBuf.push(byte);
+            (void) _rxBuf.push(byte);  // ISR: drop byte if RX buffer is full
 #ifdef STM32_USE_FREERTOS
             BaseType_t w = pdFALSE;
             if (_rxSem) {
@@ -433,7 +433,7 @@ public:
 
         if (sr & USART_SR_RXNE) {
             const uint8_t byte = static_cast<uint8_t>(reg::get(_periph.DR));
-            _rxBuf.push(byte);
+            (void) _rxBuf.push(byte);  // ISR: drop byte if RX buffer is full
 #ifdef STM32_USE_FREERTOS
             BaseType_t w = pdFALSE;
             if (_rxSem) {
