@@ -1,9 +1,10 @@
 #include "cmsis/stm32f4xx.h"
 #include "rtos/rtos.hpp"
-#include "sensor/cached_sensor.hpp"
 
 import driver.types;
 import driver.gpio;
+import driver.i2c;
+import driver.spi;
 import driver.reg;
 import driver.uart;
 import driver.stm32f4.gpio;
@@ -16,13 +17,14 @@ import sensor.display;
 import sensor.ssd1306;
 import sensor.external_flash;
 import sensor.w25q32;
+import system.component;
+import system.bootstrap;
 
 extern "C" {
 int snprintf(char *str, size_t size, const char *format, ...);
 }
 
 using driver::gpio;
-using driver::GpioConfig;
 using driver::OutputSpeed;
 using driver::OutputType;
 using driver::Parity;
@@ -42,251 +44,376 @@ extern "C" void __initialize_hardware() {
 
 namespace {
 
-GpioPin g_uartTx{
-    *GPIOA,
-    gpio({
-        .pin = 2,
-        .mode = PinMode::AlternateFunction,
-        .pull = PullMode::None,
-        .speed = OutputSpeed::VeryHigh,
-        .type = OutputType::PushPull,
-        .af = 7,
-    }),
-};
-GpioPin g_uartRx{
-    *GPIOA,
-    gpio({
-        .pin = 3,
-        .mode = PinMode::AlternateFunction,
-        .pull = PullMode::None,
-        .speed = OutputSpeed::VeryHigh,
-        .type = OutputType::PushPull,
-        .af = 7,
-    }),
-};
-GpioPin g_i2cScl{
-    *GPIOB,
-    gpio({
-        .pin = 6,
-        .mode = PinMode::AlternateFunction,
-        .pull = PullMode::PullUp,
-        .speed = OutputSpeed::VeryHigh,
-        .type = OutputType::OpenDrain,
-        .af = 4,
-    }),
-};
-GpioPin g_i2cSda{
-    *GPIOB,
-    gpio({
-        .pin = 7,
-        .mode = PinMode::AlternateFunction,
-        .pull = PullMode::PullUp,
-        .speed = OutputSpeed::VeryHigh,
-        .type = OutputType::OpenDrain,
-        .af = 4,
-    }),
-};
-GpioPin g_spiSck{
-    *GPIOB,
-    gpio({
-        .pin = 13,
-        .mode = PinMode::AlternateFunction,
-        .pull = PullMode::None,
-        .speed = OutputSpeed::VeryHigh,
-        .type = OutputType::PushPull,
-        .af = 5,
-    }),
-};
-GpioPin g_spiMiso{
-    *GPIOB,
-    gpio({
-        .pin = 14,
-        .mode = PinMode::AlternateFunction,
-        .pull = PullMode::None,
-        .speed = OutputSpeed::VeryHigh,
-        .type = OutputType::PushPull,
-        .af = 5,
-    }),
-};
-GpioPin g_spiMosi{
-    *GPIOB,
-    gpio({
-        .pin = 15,
-        .mode = PinMode::AlternateFunction,
-        .pull = PullMode::None,
-        .speed = OutputSpeed::VeryHigh,
-        .type = OutputType::PushPull,
-        .af = 5,
-    }),
-};
-GpioPin g_flashCs{
-    *GPIOB,
-    gpio({
-        .pin = 12,
-        .mode = PinMode::Output,
-        .pull = PullMode::None,
-        .speed = OutputSpeed::VeryHigh,
-        .type = OutputType::PushPull,
-    }),
+template <driver::II2c I2cDriver>
+class ImuSampler : public system::ComponentBase {
+public:
+    struct Config {
+        system::ComponentConfig base;
+        uint32_t periodMs;
+    };
+    struct Environment {
+        I2cDriver &i2c;
+    };
+
+    ImuSampler(const Config &cfg, const Environment &env)
+        : system::ComponentBase(cfg.base),
+          _periodMs(cfg.periodMs),
+          _mpu(
+              env.i2c,
+              {
+                  .addr = 0x68,
+                  .accelRange = 2,
+                  .gyroRange = 250,
+                  .sampleRateDiv = 7,
+                  .dlpfMode = 6,
+              }) {}
+
+    driver::Status onRegister() { return driver::Status::Ok; }
+    driver::Status onInit() { return _mpu.init(); }
+    driver::Status onBind() { return driver::Status::Ok; }
+    driver::Status onStart() { return driver::Status::Ok; }
+
+    void run() {
+        while (true) {
+            sensor::ImuData sample;
+            if (_mpu.read(sample) == driver::Status::Ok) {
+                rtos::LockGuard lock(_mtx);
+                _latest = sample;
+            }
+            rtos::Task::delay(pdMS_TO_TICKS(_periodMs));
+        }
+    }
+
+    [[nodiscard]] sensor::ImuData latest() {
+        rtos::LockGuard lock(_mtx);
+        return _latest;
+    }
+
+private:
+    uint32_t _periodMs;
+    sensor::Mpu6050<I2cDriver> _mpu;
+    rtos::Mutex _mtx;
+    sensor::ImuData _latest{};
 };
 
-I2c g_i2c1{
-    *I2C1,
-    {
-        .clockSpeed = 400000,
-        .fastMode = true,
-    },
-};
-Spi g_spi2{
-    *SPI2,
-    {
-        .clockHz = 10000000,
-        .mode = 0,
-        .lsbFirst = false,
-        .dataSize = 8,
-    },
-};
-Uart<> g_uart2{
-    *USART2,
-    USART2_IRQn,
-    {
-        .baudrate = 115200,
-        .dataBits = 8,
-        .stopBits = 1,
-        .parity = Parity::None,
-    },
+template <driver::II2c I2cDriver>
+class DisplayView : public system::ComponentBase {
+public:
+    struct Config {
+        system::ComponentConfig base;
+        uint32_t periodMs;
+    };
+    struct Environment {
+        I2cDriver &i2c;
+        ImuSampler<I2cDriver> &imu;
+    };
+
+    DisplayView(const Config &cfg, const Environment &env)
+        : system::ComponentBase(cfg.base),
+          _periodMs(cfg.periodMs),
+          _imu(env.imu),
+          _oled(
+              env.i2c,
+              {
+                  .addr = 0x3C,
+                  .contrast = 0x7F,
+                  .flipH = false,
+                  .flipV = false,
+              }) {}
+
+    driver::Status onRegister() { return driver::Status::Ok; }
+    driver::Status onInit() { return _oled.init(); }
+    driver::Status onBind() { return driver::Status::Ok; }
+    driver::Status onStart() { return driver::Status::Ok; }
+
+    void run() {
+        char line[32];
+        while (true) {
+            const sensor::ImuData data = _imu.latest();
+            const int ax = static_cast<int>(data.accel.x * 100);
+            const int ay = static_cast<int>(data.accel.y * 100);
+            const int az = static_cast<int>(data.accel.z * 100);
+            const int t = static_cast<int>(data.temp * 10);
+
+            _oled.clear();
+            _oled.drawText(0, 0, "MPU-6050 cm/s2");
+            snprintf(line, sizeof(line), "ax %+5d", ax);
+            _oled.drawText(0, 16, line);
+            snprintf(line, sizeof(line), "ay %+5d", ay);
+            _oled.drawText(0, 26, line);
+            snprintf(line, sizeof(line), "az %+5d", az);
+            _oled.drawText(0, 36, line);
+            snprintf(line, sizeof(line), "T %d.%dC", t / 10, t % 10 < 0 ? -t % 10 : t % 10);
+            _oled.drawText(0, 52, line);
+
+            (void) _oled.flush();
+            rtos::Task::delay(pdMS_TO_TICKS(_periodMs));
+        }
+    }
+
+private:
+    uint32_t _periodMs;
+    ImuSampler<I2cDriver> &_imu;
+    sensor::Ssd1306<I2cDriver> _oled;
 };
 
-sensor::Mpu6050 g_mpu{
-    g_i2c1,
-    {
-        .addr = 0x68,
-        .accelRange = 2,
-        .gyroRange = 250,
-        .sampleRateDiv = 7,
-        .dlpfMode = 6,
-    },
-};
-sensor::Ssd1306 g_oled{
-    g_i2c1,
-    {
-        .addr = 0x3C,
-        .contrast = 0x7F,
-        .flipH = false,
-        .flipV = false,
-    },
-};
-sensor::W25q32 g_flash{
-    g_spi2,
-    g_flashCs,
-    {
-        .expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
-        .busyPollLoops = 5000000U,
-    },
+template <driver::ISpi SpiDriver, driver::IGpioPin CsPin, driver::II2c I2cDriver>
+class FlashLogger : public system::ComponentBase {
+public:
+    struct Config {
+        system::ComponentConfig base;
+        uint32_t periodMs;
+    };
+    struct Environment {
+        SpiDriver &spi;
+        CsPin &cs;
+        ImuSampler<I2cDriver> &imu;
+    };
+
+    FlashLogger(const Config &cfg, const Environment &env)
+        : system::ComponentBase(cfg.base),
+          _periodMs(cfg.periodMs),
+          _imu(env.imu),
+          _flash(
+              env.spi,
+              env.cs,
+              {
+                  .expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
+                  .busyPollLoops = 5000000U,
+              }) {}
+
+    driver::Status onRegister() { return driver::Status::Ok; }
+    driver::Status onInit() {
+        const driver::Status st = _flash.init();
+        if (st != driver::Status::Ok) {
+            return st;
+        }
+        return _flash.eraseSector(0);
+    }
+    driver::Status onBind() { return driver::Status::Ok; }
+    driver::Status onStart() { return driver::Status::Ok; }
+
+    void run() {
+        uint32_t offset = 0;
+        char buf[32];
+        while (true) {
+            rtos::Task::delay(pdMS_TO_TICKS(_periodMs));
+            if (offset + sizeof(buf) > sensor::W25q32Spec::SECTOR_SIZE) {
+                offset = 0;
+                (void) _flash.eraseSector(0);
+            }
+            const sensor::ImuData data = _imu.latest();
+            const int ax = static_cast<int>(data.accel.x * 100);
+            const int ay = static_cast<int>(data.accel.y * 100);
+            const int az = static_cast<int>(data.accel.z * 100);
+            const int len = snprintf(buf, sizeof(buf), "%+5d %+5d %+5d\n", ax, ay, az);
+            if (len > 0) {
+                (void) _flash.writePage(
+                    offset,
+                    {reinterpret_cast<const uint8_t *>(buf), static_cast<size_t>(len)});
+                offset += static_cast<uint32_t>(len);
+            }
+        }
+    }
+
+private:
+    uint32_t _periodMs;
+    ImuSampler<I2cDriver> &_imu;
+    sensor::W25q32<SpiDriver, CsPin> _flash;
 };
 
-driver::Status readImu(sensor::ImuData &out, void *ctx) {
-    auto *mpu = static_cast<decltype(&g_mpu)>(ctx);
-    return mpu->read(out);
-}
+struct DemoApp {
+    GpioPin uartTx{
+        *GPIOA,
+        gpio({
+            .pin = 2,
+            .mode = PinMode::AlternateFunction,
+            .pull = PullMode::None,
+            .speed = OutputSpeed::VeryHigh,
+            .type = OutputType::PushPull,
+            .af = 7,
+        }),
+    };
+    GpioPin uartRx{
+        *GPIOA,
+        gpio({
+            .pin = 3,
+            .mode = PinMode::AlternateFunction,
+            .pull = PullMode::None,
+            .speed = OutputSpeed::VeryHigh,
+            .type = OutputType::PushPull,
+            .af = 7,
+        }),
+    };
+    GpioPin i2cScl{
+        *GPIOB,
+        gpio({
+            .pin = 6,
+            .mode = PinMode::AlternateFunction,
+            .pull = PullMode::PullUp,
+            .speed = OutputSpeed::VeryHigh,
+            .type = OutputType::OpenDrain,
+            .af = 4,
+        }),
+    };
+    GpioPin i2cSda{
+        *GPIOB,
+        gpio({
+            .pin = 7,
+            .mode = PinMode::AlternateFunction,
+            .pull = PullMode::PullUp,
+            .speed = OutputSpeed::VeryHigh,
+            .type = OutputType::OpenDrain,
+            .af = 4,
+        }),
+    };
+    GpioPin spiSck{
+        *GPIOB,
+        gpio({
+            .pin = 13,
+            .mode = PinMode::AlternateFunction,
+            .pull = PullMode::None,
+            .speed = OutputSpeed::VeryHigh,
+            .type = OutputType::PushPull,
+            .af = 5,
+        }),
+    };
+    GpioPin spiMiso{
+        *GPIOB,
+        gpio({
+            .pin = 14,
+            .mode = PinMode::AlternateFunction,
+            .pull = PullMode::None,
+            .speed = OutputSpeed::VeryHigh,
+            .type = OutputType::PushPull,
+            .af = 5,
+        }),
+    };
+    GpioPin spiMosi{
+        *GPIOB,
+        gpio({
+            .pin = 15,
+            .mode = PinMode::AlternateFunction,
+            .pull = PullMode::None,
+            .speed = OutputSpeed::VeryHigh,
+            .type = OutputType::PushPull,
+            .af = 5,
+        }),
+    };
+    GpioPin flashCs{
+        *GPIOB,
+        gpio({
+            .pin = 12,
+            .mode = PinMode::Output,
+            .pull = PullMode::None,
+            .speed = OutputSpeed::VeryHigh,
+            .type = OutputType::PushPull,
+        }),
+    };
+
+    I2c i2c1{
+        *I2C1,
+        {
+            .clockSpeed = 400000,
+            .fastMode = true,
+        },
+    };
+    Spi spi2{
+        *SPI2,
+        {
+            .clockHz = 10000000,
+            .mode = 0,
+            .lsbFirst = false,
+            .dataSize = 8,
+        },
+    };
+    Uart<> uart2{
+        *USART2,
+        USART2_IRQn,
+        {
+            .baudrate = 115200,
+            .dataBits = 8,
+            .stopBits = 1,
+            .parity = Parity::None,
+        },
+    };
+
+    ImuSampler<I2c> imu{
+        {
+            .base = {.name = "imu", .criticality = system::Criticality::Critical},
+            .periodMs = 20,
+        },
+        {.i2c = i2c1},
+    };
+    DisplayView<I2c> view{
+        {
+            .base = {.name = "oled", .criticality = system::Criticality::Common},
+            .periodMs = 200,
+        },
+        {.i2c = i2c1, .imu = imu},
+    };
+    FlashLogger<Spi, GpioPin, I2c> logger{
+        {
+            .base = {.name = "flash", .criticality = system::Criticality::Common},
+            .periodMs = 5000,
+        },
+        {.spi = spi2, .cs = flashCs, .imu = imu},
+    };
+
+    [[nodiscard]] system::BootReport boot() { return system::bootstrap(imu, view, logger); }
+};
+
+static_assert(system::Component<ImuSampler<I2c>>);
+static_assert(system::Component<DisplayView<I2c>>);
+static_assert(system::Component<FlashLogger<Spi, GpioPin, I2c>>);
+
+DemoApp app;
 
 void writeStr(const char *s) {
     size_t n = 0;
     while (s[n] != '\0') {
         ++n;
     }
-    (void) g_uart2.write({reinterpret_cast<const uint8_t *>(s), n});
+    (void) app.uart2.write({reinterpret_cast<const uint8_t *>(s), n});
 }
 
-void taskDisplay(void *param) {
-    auto *cached = static_cast<sensor::CachedSensor<sensor::ImuData> *>(param);
-    if (g_oled.init() != driver::Status::Ok) {
-        writeStr("OLED init failed\r\n");
-        while (true) {
-            rtos::Task::delay(pdMS_TO_TICKS(1000));
-        }
-    }
-    char line[32];
-    while (true) {
-        const auto data = cached->get();
-        const int ax = static_cast<int>(data.accel.x * 100);
-        const int ay = static_cast<int>(data.accel.y * 100);
-        const int az = static_cast<int>(data.accel.z * 100);
-        const int t = static_cast<int>(data.temp * 10);
-
-        g_oled.clear();
-        g_oled.drawText(0, 0, "MPU-6050 cm/s2");
-        snprintf(line, sizeof(line), "ax %+5d", ax);
-        g_oled.drawText(0, 16, line);
-        snprintf(line, sizeof(line), "ay %+5d", ay);
-        g_oled.drawText(0, 26, line);
-        snprintf(line, sizeof(line), "az %+5d", az);
-        g_oled.drawText(0, 36, line);
-        snprintf(line, sizeof(line), "T %d.%dC", t / 10, t % 10 < 0 ? -t % 10 : t % 10);
-        g_oled.drawText(0, 52, line);
-
-        (void) g_oled.flush();
-        rtos::Task::delay(pdMS_TO_TICKS(200));
+void writePrintf(const char *fmt, auto... args) {
+    char buf[96];
+    const int len = snprintf(buf, sizeof(buf), fmt, args...);
+    if (len > 0) {
+        (void) app.uart2.write({reinterpret_cast<const uint8_t *>(buf), static_cast<size_t>(len)});
     }
 }
 
-void taskFlashLogger(void *param) {
-    auto *cached = static_cast<sensor::CachedSensor<sensor::ImuData> *>(param);
-    rtos::Task::delay(pdMS_TO_TICKS(500));
-    if (g_flash.init() != driver::Status::Ok) {
-        writeStr("flash init failed (check JEDEC)\r\n");
-        while (true) {
-            rtos::Task::delay(pdMS_TO_TICKS(1000));
-        }
-    }
-    writeStr("flash ready, sector 0 reset\r\n");
-    if (g_flash.eraseSector(0) != driver::Status::Ok) {
-        writeStr("flash erase failed\r\n");
-        while (true) {
-            rtos::Task::delay(pdMS_TO_TICKS(1000));
-        }
-    }
-
-    uint32_t offset = 0;
-    char buf[32];
-    while (true) {
-        rtos::Task::delay(pdMS_TO_TICKS(5000));
-        if (offset + sizeof(buf) > sensor::W25q32Spec::SECTOR_SIZE) {
-            offset = 0;
-            if (g_flash.eraseSector(0) != driver::Status::Ok) {
-                writeStr("flash re-erase failed\r\n");
-            }
-        }
-        const auto data = cached->get();
-        const int ax = static_cast<int>(data.accel.x * 100);
-        const int ay = static_cast<int>(data.accel.y * 100);
-        const int az = static_cast<int>(data.accel.z * 100);
-        const int len = snprintf(buf, sizeof(buf), "%+5d %+5d %+5d\n", ax, ay, az);
-        if (len > 0) {
-            if (g_flash.writePage(offset, {reinterpret_cast<const uint8_t *>(buf),
-                                           static_cast<size_t>(len)}) != driver::Status::Ok) {
-                writeStr("flash write failed\r\n");
-            }
-            offset += static_cast<uint32_t>(len);
-        }
-    }
-}
+void imuEntry(void *p) { static_cast<decltype(&app.imu)>(p)->run(); }
+void viewEntry(void *p) { static_cast<decltype(&app.view)>(p)->run(); }
+void loggerEntry(void *p) { static_cast<decltype(&app.logger)>(p)->run(); }
 
 }  // namespace
 
 extern "C" void USART2_IRQHandler() {
-    g_uart2.irqHandler();
+    app.uart2.irqHandler();
 }
 
 int main() {
-    if (g_mpu.init() != driver::Status::Ok) {
-        writeStr("MPU init failed\r\n");
+    const system::BootReport report = app.boot();
+
+    writeStr("\r\n=== imu-flash-oled-demo bootstrap ===\r\n");
+    if (report.status != driver::Status::Ok) {
+        writePrintf(
+            "CRITICAL: %s failed (status=%d, phase=%d)\r\n",
+            report.failedComponent,
+            static_cast<int>(report.status),
+            static_cast<int>(report.failedPhase));
+    } else if (report.degraded > 0) {
+        writePrintf("degraded: %u component(s) failed, continuing\r\n", report.degraded);
+    } else {
+        writeStr("all components started\r\n");
     }
 
-    static sensor::CachedSensor<sensor::ImuData> cachedImu(50, readImu, &g_mpu, "imu", 384, 2);
-
-    static rtos::Task display("display", 512, 1, taskDisplay, &cachedImu);
-    static rtos::Task logger("logger", 512, 1, taskFlashLogger, &cachedImu);
+    static rtos::Task tImu("imu", 384, 2, imuEntry, &app.imu);
+    static rtos::Task tView("view", 512, 1, viewEntry, &app.view);
+    static rtos::Task tLogger("logger", 512, 1, loggerEntry, &app.logger);
 
     rtos::Task::startScheduler();
 

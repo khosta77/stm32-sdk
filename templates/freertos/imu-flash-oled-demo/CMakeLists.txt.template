@@ -14,6 +14,7 @@ set(STM32_CHIP "@STM32_CHIP@" CACHE STRING "Target STM32 chip")
 set(STM32_USE_FREERTOS ON CACHE BOOL "Enable FreeRTOS")
 set(STM32_USE_DRIVERS ON CACHE BOOL "Enable drivers")
 set(STM32_USE_SENSORS ON CACHE BOOL "Enable sensors")
+set(STM32_USE_SYSTEM ON CACHE BOOL "Enable system framework")
 include(${STM32_SDK}/cmake/stm32_sdk.cmake)
 
 add_executable(${PROJECT_NAME}.elf
@@ -30,6 +31,7 @@ target_link_libraries(${PROJECT_NAME}.elf PRIVATE
     stm32_rtos
     stm32_drivers
     stm32_sensors
+    stm32_system
     stm32_link
 )
 
