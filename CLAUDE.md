@@ -188,6 +188,10 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 - `sdk/sensors/` — sensor concepts (`IImu`/`IDisplay`/`IExternalFlash`) +
   implementations. Sensors are templates on their bus type
   (`template <driver::II2c I2cDriver> class Mpu6050`); MPU6050, SSD1306, W25Q32.
+- `sdk/system/` — component framework (since v0.1.8, `STM32_USE_SYSTEM`):
+  `component.cppm` (`system::Component` concept + `ComponentBase` +
+  `ComponentState`/`Criticality`), `bootstrap.cppm` (variadic
+  `bootstrap(...)` + `BootReport`). Zero vtable, depends only on `driver.types`.
 - `templates/` — 7 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
   `freertos/blink`, `freertos/mpu6050-uart`, `freertos/oled-display-test`,
   `freertos/w25q32-flash-test`, `freertos/imu-flash-oled-demo`).
@@ -319,6 +323,34 @@ extern "C" void USART2_IRQHandler() { g_uart2.irqHandler(); }
 
 Direct reference to the global object (not a pointer). Null-check semaphores
 inside ISRs to guard against spurious interrupts.
+
+## System / Component framework (v0.1.8)
+
+Optional layer under `sdk/system/`, enabled by `STM32_USE_SYSTEM` (requires
+`STM32_USE_DRIVERS`), linked as `stm32_system`. Mirrors the v0.1.7 concept
+style — **zero vtable, no heap**. Full guide: `docs/modules/system.md`.
+
+- **`Component` is a concept, not a virtual base.** A component models it by
+  providing `onRegister/onInit/onBind/onStart` (each returns `driver::Status`)
+  plus state/criticality/name accessors — the accessors come free from the
+  non-virtual `system::ComponentBase` mix-in. Hooks are `on*`-prefixed because
+  `register` is a C++ keyword. End every component with
+  `static_assert(system::Component<Foo>)`.
+- **DI via `Config` + `Environment`.** `Config` = compile-time constants
+  (embed `system::ComponentConfig base` for name + criticality); `Environment` =
+  references to dependencies. A component needing a generic bus is a constrained
+  template (`template <driver::II2c I2cDriver>`), same terse style as sensors.
+- **Composition root is a `struct`.** Members = the dependency graph, built in
+  declaration order; later members reference earlier ones by ref. The single
+  `system::bootstrap(a, b, c)` argument list is the one source of truth — no
+  manual registration list.
+- **`bootstrap` is a variadic fold** (no `<tuple>`, no runtime registry). It
+  runs the four phases as a barrier and returns a `BootReport`. `Criticality`:
+  `Critical` failure aborts; `Common` failure is counted (`degraded`) and the
+  component skipped in later phases while the system continues.
+- FreeRTOS tasks created before `startScheduler()` don't run until it starts, so
+  `boot()` (the four hooks) and task creation both happen in `main` pre-scheduler.
+  Task entry is a static trampoline; cast `void*` with `decltype(&app.member)`.
 
 ## CMake
 

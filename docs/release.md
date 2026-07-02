@@ -53,6 +53,44 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.8
+
+Focus: a zero-cost application framework — component lifecycle, DI convention,
+composition root (issues #26–#29).
+
+Highlights:
+
+- New `sdk/system/` layer, enabled by `STM32_USE_SYSTEM` (requires
+  `STM32_USE_DRIVERS`), linked as `stm32_system`. Two modules:
+  `system.component` and `system.bootstrap`.
+- `system::Component` is a **C++20 concept** (not a virtual base): a component
+  provides `onRegister/onInit/onBind/onStart` (each returning `driver::Status`)
+  plus state/criticality/name accessors — the latter free from the non-virtual
+  `system::ComponentBase` mix-in. Zero vtable, in the spirit of the v0.1.7
+  concept migration.
+- Fixed lifecycle phases `Register → Init → Bind → Start`, run as a barrier by
+  `system::bootstrap(components...)`, with **criticality**: a `Critical` failure
+  aborts bootstrap; a `Common` failure is counted and skipped while the system
+  continues degraded. `bootstrap` returns a `BootReport`
+  (`status`, `failedComponent`, `failedPhase`, `degraded`).
+- DI convention `Config` + `Environment`: compile-time constants vs.
+  reference-passed dependencies; a component that needs a generic bus is a
+  constrained template (`template <driver::II2c I2cDriver>`).
+- Composition root as a `struct`: the dependency graph is the member list
+  (constructed in declaration order); the single `bootstrap(...)` argument list
+  is the one source of truth for the component set — no manual registration list.
+- The `imu-flash-oled-demo` template is rewritten on the framework
+  (`ImuSampler` + `DisplayView` + `FlashLogger`) as the worked example.
+
+Notes:
+
+- **Additive** — the framework is opt-in. Every other template is unchanged and
+  stays green; only `imu-flash-oled-demo` moved to components. See
+  [migration](migration.md#new-in-v018).
+- No `<tuple>`, no heap, no runtime polymorphism — `bootstrap` is a variadic
+  fold over the component pack. The `system.*` modules depend only on
+  `driver.types`, keeping them host-testable for a future release.
+
 ### v0.1.7
 
 Focus: migrate driver and sensor interfaces from virtual base classes to

@@ -109,7 +109,7 @@ mkdocs serve
 | `freertos/mpu6050-uart` | MPU6050 sampling at 10 Hz, USART2 TX via DMA |
 | `freertos/oled-display-test` | SSD1306 with uptime counter and static text |
 | `freertos/w25q32-flash-test` | W25Q32 round-trip: erase, page-program, read, verify |
-| `freertos/imu-flash-oled-demo` | Combined MPU + OLED + W25Q32 on one board |
+| `freertos/imu-flash-oled-demo` | MPU + OLED + W25Q32 on one board, built on the `system` component framework |
 
 ## Supported chips
 
