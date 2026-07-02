@@ -3,7 +3,8 @@
 The SDK defines its compile flags on a single CMake INTERFACE target,
 `stm32_core`, in `sdk/cmake/stm32_sdk.cmake`. Every other library
 (`stm32_hal`, `stm32_drivers`, `stm32_rtos`, `stm32_sensors`,
-`stm32_storage`) — and every user-app `target_link_libraries(... stm32_core)`
+`stm32_storage`, `stm32_system`) — and every user-app
+`target_link_libraries(... stm32_core)`
 in a project template — inherits the same set. There is no separate
 "SDK-only" vs "user-app" warning policy.
 

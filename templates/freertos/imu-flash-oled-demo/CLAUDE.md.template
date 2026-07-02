@@ -25,6 +25,7 @@ stmtool sdk update          # if [sdk] version = "develop"
 ## SDK reference
 
 - Documentation: <https://khosta77.github.io/stm32-sdk/>
+- System / component framework: <https://khosta77.github.io/stm32-sdk/modules/system/>
 - MPU6050: <https://khosta77.github.io/stm32-sdk/sensors/mpu6050/>
 - SSD1306: <https://khosta77.github.io/stm32-sdk/sensors/ssd1306/>
 - W25Q32: <https://khosta77.github.io/stm32-sdk/sensors/w25q32/>
@@ -61,18 +62,41 @@ to SPI2 as in the `w25q32-flash-test` template.
 
 ### What `main.cpp` does
 
-1. `__initialize_hardware()` enables GPIOA/B/D, I2C1, USART2, SPI2, DMA1 clocks.
-2. Globals: GPIO pins, I2C bus, SPI bus, MPU, OLED, W25Q32 instances.
-3. `taskDisplay`: reads MPU samples, renders accel/gyro values on the OLED,
-   updates once per ~100 ms.
-4. `taskLogger`: appends samples to the W25Q32 once per second, advancing the
-   address pointer; when a sector boundary is reached, erases the next sector.
+This template is built on the SDK **component framework** (`STM32_USE_SYSTEM`,
+`import system.component; import system.bootstrap;`). Instead of free tasks over
+globals, the work is split into three components, each a constrained template on
+its bus (`system::ComponentBase` + `onRegister/onInit/onBind/onStart`):
+
+- `ImuSampler<I2c>` — owns the MPU-6050, polls it, caches the latest sample
+  under a mutex; `latest()` is the thread-safe read for the others. **Critical**.
+- `DisplayView<I2c>` — owns the SSD1306, renders `imu.latest()`. **Common**.
+- `FlashLogger<Spi, GpioPin, I2c>` — owns the W25Q32, appends samples once every
+  few seconds, erasing the sector at the boundary. **Common**.
+
+Flow:
+
+1. `__initialize_hardware()` enables GPIOA/B/D, I2C1, USART2, SPI2 clocks.
+2. `struct DemoApp` is the composition root: GPIO pins, I2C/SPI/UART buses, then
+   the three components — each wired by reference to earlier members via
+   designated initializers.
+3. `app.boot()` runs `system::bootstrap(imu, view, logger)`: the four phases
+   `Register → Init → Bind → Start` across all components. `onInit` brings up
+   each sensor. A `Critical` failure (no IMU) aborts and is reported; a `Common`
+   failure (OLED/flash absent) is counted and skipped — the demo runs degraded.
+4. `main` prints the `BootReport` over USART2, then creates the FreeRTOS tasks
+   (each a trampoline into a component's `run()`) and starts the scheduler.
 
 ### Expected behaviour
 
+- On boot, USART2 prints one of:
+  `all components started`, `degraded: N component(s) failed, continuing`, or
+  `CRITICAL: imu failed (status=..., phase=...)`.
 - OLED shows live MPU data: tilt the board, the displayed values change.
 - After several seconds, the W25Q32 contains a contiguous log of binary
   samples (no visible feedback unless you dump the flash separately).
+- Unplug the OLED or flash: the demo degrades (that component is skipped) but the
+  IMU + remaining paths keep running. Unplug the IMU: bootstrap reports the
+  critical failure.
 
 ### How to verify
 

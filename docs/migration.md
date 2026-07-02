@@ -14,6 +14,28 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.1.8
+
+v0.1.8 adds the optional `sdk/system/` component framework. It is **additive**:
+nothing in your existing project breaks, and no edits are required to upgrade.
+Every in-tree template except `imu-flash-oled-demo` is byte-for-byte unchanged.
+
+If you want to adopt the framework in your own project:
+
+1. Enable it in `CMakeLists.txt`: `set(STM32_USE_SYSTEM ON ...)` (requires
+   `STM32_USE_DRIVERS`), and add `stm32_system` to `target_link_libraries`.
+2. `import system.component;` / `import system.bootstrap;`.
+3. Model `system::Component` — inherit `system::ComponentBase` and implement
+   `onRegister/onInit/onBind/onStart`; end with
+   `static_assert(system::Component<Foo>)`.
+4. Assemble the graph in a composition-root `struct` and drive it with
+   `system::bootstrap(...)`. See [System](modules/system.md).
+
+The `imu-flash-oled-demo` template was rewritten on the framework. If you had
+copied the old free-tasks-plus-globals version of that demo, it still compiles
+against the SDK — you are not forced onto components. The new version is the
+reference for how the pieces fit together.
+
 ## Upgrading to v0.1.7
 
 ### Driver and sensor interfaces are now C++20 concepts
