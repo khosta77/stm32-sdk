@@ -5,6 +5,19 @@ set(_STM32_SDK_INCLUDED TRUE)
 
 get_filename_component(_STM32_SDK_DIR "${CMAKE_CURRENT_LIST_DIR}/.." ABSOLUTE)
 
+# Minimum arm-none-eabi-gcc: C++20 module dependency scanning needs GCC >= 14
+# (-fdeps-format=p1689r5); GCC 13 silently fails to scan `import`. The pinned
+# toolchain version is a single source of truth in docker/Dockerfile.build
+# (ARG ARM_GCC_VERSION); this guard only enforces the floor. Checked here rather
+# than in stm32_toolchain.cmake because CMAKE_CXX_COMPILER_VERSION is populated
+# only after the compiler is identified (project()/enable_language).
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14)
+    message(FATAL_ERROR
+        "arm-none-eabi-g++ ${CMAKE_CXX_COMPILER_VERSION} is too old: STM32-SDK "
+        "requires GCC >= 14 for C++20 modules. Build via the SDK Docker image "
+        "or upgrade your local toolchain.")
+endif()
+
 if(NOT DEFINED STM32_CHIP)
     message(FATAL_ERROR "STM32_CHIP is not defined. Set -DSTM32_CHIP=STM32F407VG (or similar)")
 endif()
