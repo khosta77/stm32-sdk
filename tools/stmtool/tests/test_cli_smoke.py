@@ -134,11 +134,11 @@ def test_build_without_chip_exits_nonzero(
         lambda **_: project_workdir / "fake-sdk",
     )
     (project_workdir / "fake-sdk").mkdir()
-    result = runner.invoke(app, ["build", "--native"])
+    result = runner.invoke(app, ["build"])
     assert result.exit_code != 0
 
 
-def test_build_native_invokes_cmake(
+def test_build_runs_in_docker(
     project_workdir: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -158,9 +158,38 @@ def test_build_native_invokes_cmake(
         return _R()
 
     monkeypatch.setattr("stmtool.cli.subprocess.run", fake_run)
-    result = runner.invoke(app, ["build", "--native", "--chip", "STM32F407VG"])
+    result = runner.invoke(app, ["build", "--chip", "STM32F407VG"])
     assert result.exit_code == 0
-    assert any("cmake" in c[0] for c in captured)
+    assert captured, "docker was never invoked"
+    docker_cmd = captured[-1]
+    assert docker_cmd[0] == "docker"
+    assert "cmake" in docker_cmd[-1]
+
+
+def test_build_honours_docker_image_env(
+    project_workdir: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("STMTOOL_DOCKER_IMAGE", "stm32-sdk-build:ci")
+    monkeypatch.setattr(
+        "stmtool.cli.resolve_sdk_root",
+        lambda **_: project_workdir / "fake-sdk",
+    )
+    (project_workdir / "fake-sdk").mkdir()
+    captured: list[list[str]] = []
+
+    def fake_run(cmd: Any, **_kwargs: Any) -> Any:
+        captured.append(list(cmd))
+
+        class _R:
+            returncode = 0
+
+        return _R()
+
+    monkeypatch.setattr("stmtool.cli.subprocess.run", fake_run)
+    result = runner.invoke(app, ["build", "--chip", "STM32F407VG"])
+    assert result.exit_code == 0
+    assert "stm32-sdk-build:ci" in captured[-1]
 
 
 def test_flash_unknown_tool(project_workdir: Path) -> None:

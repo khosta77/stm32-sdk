@@ -25,7 +25,12 @@ app.add_typer(sdk_app, name="sdk")
 
 console = Console()
 
-DOCKER_IMAGE = "ghcr.io/khosta77/stm32-sdk-build:latest"
+DEFAULT_DOCKER_IMAGE = "ghcr.io/khosta77/stm32-sdk-build:latest"
+
+
+def _docker_image() -> str:
+    """Return the SDK build image, overridable via ``STMTOOL_DOCKER_IMAGE`` (CI/tests)."""
+    return os.environ.get("STMTOOL_DOCKER_IMAGE", DEFAULT_DOCKER_IMAGE)
 
 
 @project_app.command("create", help=t("project_create_help"))
@@ -90,31 +95,6 @@ def _resolve_target_chip(chip: str | None, config: dict[str, object]) -> str:
     return target_chip
 
 
-def _build_native(
-    target_chip: str, sdk_dir: Path, build_type: str, verbose: bool
-) -> subprocess.CompletedProcess[bytes]:
-    """Run ``cmake`` configure + build locally without Docker."""
-    configure_cmd: list[str] = [
-        "cmake",
-        "-G",
-        "Ninja",
-        "-B",
-        "build",
-        f"-DSTM32_CHIP={target_chip}",
-        f"-DSTM32_SDK={sdk_dir}",
-        f"-DCMAKE_BUILD_TYPE={build_type}",
-    ]
-    build_cmd: list[str] = ["cmake", "--build", "build"]
-    if verbose:
-        build_cmd.append("--verbose")
-    msg = t("building", chip=target_chip, build_type=build_type, mode=t("mode_local"))
-    console.print(f"[bold green]{msg}[/bold green]")
-    result = subprocess.run(configure_cmd, check=False)
-    if result.returncode == 0:
-        result = subprocess.run(build_cmd, check=False)
-    return result
-
-
 def _build_docker(
     target_chip: str, sdk_root: Path, build_type: str, verbose_flag: str
 ) -> subprocess.CompletedProcess[bytes]:
@@ -133,7 +113,7 @@ def _build_docker(
         f"{sdk_root}:/sdk-repo:ro",
         "-w",
         "/workspace",
-        DOCKER_IMAGE,
+        _docker_image(),
         "bash",
         "-c",
         cmake_cmd,
@@ -146,12 +126,11 @@ def _build_docker(
 @app.command(help=t("build_help"))
 def build(
     release: bool = typer.Option(False, "--release", help=t("build_release")),
-    native: bool = typer.Option(False, "--native", help=t("build_native")),
     verbose: bool = typer.Option(False, "--verbose", "-v", help=t("build_verbose")),
     chip: str = typer.Option(None, "--chip", help=t("build_chip"), autocompletion=complete_chip),
     clean: bool = typer.Option(False, "--clean", help=t("build_clean")),
 ) -> None:
-    """Configure and build the current project (Docker by default)."""
+    """Configure and build the current project inside the SDK Docker image."""
     config: dict[str, object] = {}
     config_path = Path("stmproject.toml")
     if config_path.exists():
@@ -176,10 +155,7 @@ def build(
     build_type = "Release" if release else "Debug"
     verbose_flag = "--verbose" if verbose else ""
 
-    if native:
-        result = _build_native(target_chip, sdk_root / "sdk", build_type, verbose)
-    else:
-        result = _build_docker(target_chip, sdk_root, build_type, verbose_flag)
+    result = _build_docker(target_chip, sdk_root, build_type, verbose_flag)
 
     raise typer.Exit(code=result.returncode)
 
