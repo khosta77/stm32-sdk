@@ -10,7 +10,9 @@ import testing.mock;
 using driver::Status;
 
 namespace {
-void put(const char *s) { std::fputs(s, stdout); }
+void put(const char *s) {
+  std::fputs(s, stdout);
+}
 }  // namespace
 
 TEST(mock_i2c_scripts_reads_and_captures_writes) {

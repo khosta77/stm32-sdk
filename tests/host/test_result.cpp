@@ -13,8 +13,12 @@ using driver::Status;
 
 namespace {
 
-Status okStep() { return Status::Ok; }
-Status failStep() { return Status::Timeout; }
+Status okStep() {
+  return Status::Ok;
+}
+Status failStep() {
+  return Status::Timeout;
+}
 
 Status chainOk() {
   DRV_TRY(okStep());
@@ -39,7 +43,9 @@ Status useAssign(int &out, bool ok) {
   return Status::Ok;
 }
 
-void put(const char *s) { std::fputs(s, stdout); }
+void put(const char *s) {
+  std::fputs(s, stdout);
+}
 
 }  // namespace
 

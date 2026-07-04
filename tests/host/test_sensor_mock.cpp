@@ -21,7 +21,9 @@ constexpr sensor::Mpu6050<testing::MockI2c>::Config kCfg{
     .dlpfMode = 0,
 };
 
-void put(const char *s) { std::fputs(s, stdout); }
+void put(const char *s) {
+  std::fputs(s, stdout);
+}
 
 }  // namespace
 
