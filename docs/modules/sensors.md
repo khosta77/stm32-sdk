@@ -14,16 +14,17 @@ different display, as long as both model `IDisplay`.
 ```cpp
 import sensor.display;
 
-// Any type that provides these methods models sensor::IDisplay — no inheritance.
+// Any type that provides these methods models sensor::IDisplay — no
+// inheritance.
 struct MyDisplay {
-    driver::Status init();
-    void clear();
-    void setPixel(uint16_t x, uint16_t y, bool on);
-    void drawChar(uint16_t x, uint16_t y, char c);
-    void drawText(uint16_t x, uint16_t y, const char *text);
-    driver::Status flush();
-    uint16_t width() const;
-    uint16_t height() const;
+  driver::Status init();
+  void clear();
+  void setPixel(uint16_t x, uint16_t y, bool on);
+  void drawChar(uint16_t x, uint16_t y, char c);
+  void drawText(uint16_t x, uint16_t y, const char *text);
+  driver::Status flush();
+  uint16_t width() const;
+  uint16_t height() const;
 };
 static_assert(sensor::IDisplay<MyDisplay>);
 ```
@@ -41,15 +42,15 @@ Existing implementation: `sensor.ssd1306`.
 import sensor.external_flash;
 
 struct MyFlash {
-    driver::Status init();
-    driver::Status read(uint32_t addr, std::span<uint8_t> data);
-    driver::Status writePage(uint32_t addr, std::span<const uint8_t> data);
-    driver::Status eraseSector(uint32_t addr);
-    driver::Status chipErase();
-    uint32_t capacity() const;
-    uint32_t sectorSize() const;
-    uint32_t pageSize() const;
-    uint32_t jedecId() const;
+  driver::Status init();
+  driver::Status read(uint32_t addr, std::span<uint8_t> data);
+  driver::Status writePage(uint32_t addr, std::span<const uint8_t> data);
+  driver::Status eraseSector(uint32_t addr);
+  driver::Status chipErase();
+  uint32_t capacity() const;
+  uint32_t sectorSize() const;
+  uint32_t pageSize() const;
+  uint32_t jedecId() const;
 };
 static_assert(sensor::IExternalFlash<MyFlash>);
 ```
@@ -68,14 +69,14 @@ them without spelling out the bus/CS template arguments.
 ```cpp
 import sensor.imu;
 
-// sensor::IImu requires: init, read(ImuData&), selfTest (all -> driver::Status),
-// setAccelRange(uint8_t), setGyroRange(uint16_t) (-> void).
+// sensor::IImu requires: init, read(ImuData&), selfTest (all ->
+// driver::Status), setAccelRange(uint8_t), setGyroRange(uint16_t) (-> void).
 struct MyImu {
-    driver::Status init();
-    driver::Status read(sensor::ImuData &out);
-    driver::Status selfTest();
-    void setAccelRange(uint8_t g);
-    void setGyroRange(uint16_t dps);
+  driver::Status init();
+  driver::Status read(sensor::ImuData &out);
+  driver::Status selfTest();
+  void setAccelRange(uint8_t g);
+  void setGyroRange(uint16_t dps);
 };
 static_assert(sensor::IImu<MyImu>);
 ```
@@ -85,8 +86,14 @@ Existing implementation: `sensor.mpu6050`
 (`template <driver::II2c I2cDriver> class Mpu6050`):
 
 ```cpp
-sensor::Mpu6050 imu{i2c, {.addr = 0x68, .accelRange = 2, .gyroRange = 250,
-                          .sampleRateDiv = 7, .dlpfMode = 6}};  // Mpu6050<I2c> via CTAD
+sensor::Mpu6050 imu{
+    i2c,
+    {.addr = 0x68,
+     .accelRange = 2,
+     .gyroRange = 250,
+     .sampleRateDiv = 7,
+     .dlpfMode = 6}
+};  // Mpu6050<I2c> via CTAD
 ```
 
 ## Adding a new sensor

@@ -17,18 +17,19 @@ FreeRTOS подключается опционально: `-DSTM32_USE_FREERTOS=
 `vTaskStartScheduler()`:
 
 ```cpp
-import rtos;  // приносит rtos::Task, rtos::Mutex, rtos::Semaphore
+import rtos; // приносит rtos::Task, rtos::Mutex, rtos::Semaphore
 
 void taskFn(void *) {
-    while (true) {
-        rtos::Task::delay(pdMS_TO_TICKS(100));
-    }
+  while (true) {
+    rtos::Task::delay(pdMS_TO_TICKS(100));
+  }
 }
 
 int main() {
-    static rtos::Task t("blink", 256, 1, taskFn);
-    rtos::Task::startScheduler();
-    while (true) {}
+  static rtos::Task t("blink", 256, 1, taskFn);
+  rtos::Task::startScheduler();
+  while (true) {
+  }
 }
 ```
 
@@ -39,8 +40,8 @@ int main() {
 ```cpp
 rtos::Mutex m;
 {
-    rtos::MutexGuard guard{m};   // scoped lock
-    // критическая секция
+  rtos::MutexGuard guard{m};  // scoped lock
+  // критическая секция
 }
 
 rtos::Semaphore sem(0, 1);       // binary семафор, initial = 0
@@ -60,22 +61,23 @@ sem.takeFromIsr(&hpw);           // из ISR
 
 ```cpp
 extern "C" void __initialize_hardware() {
-    SystemCoreClockUpdate();
-    driver::reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIODEN);
-    driver::reg::set(RCC->APB1ENR, RCC_APB1ENR_I2C1EN | RCC_APB1ENR_USART2EN);
-    __DSB();
+  SystemCoreClockUpdate();
+  driver::reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIODEN);
+  driver::reg::set(RCC->APB1ENR, RCC_APB1ENR_I2C1EN | RCC_APB1ENR_USART2EN);
+  __DSB();
 }
 
 namespace {
 GpioPin g_led{*GPIOD, gpio({.pin = 12, ...})};
 I2c g_i2c1{*I2C1, {.clockSpeed = 400000, .fastMode = true}};
 Uart<> g_uart2{*USART2, USART2_IRQn, {...}};
-}
+}  // namespace
 
 int main() {
-    static rtos::Task t("worker", 512, 2, workerTask);
-    rtos::Task::startScheduler();
-    while (true) {}
+  static rtos::Task t("worker", 512, 2, workerTask);
+  rtos::Task::startScheduler();
+  while (true) {
+  }
 }
 ```
 

@@ -37,7 +37,8 @@ so a fire-and-forget UART write needs an explicit `(void)`.
 ```cpp
 import driver.types;
 
-if (g_i2c.write(addr, payload) != driver::Status::Ok) { /* handle */ }
+if (g_i2c.write(addr, payload) != driver::Status::Ok) { /* handle */
+}
 
 (void) _rxBuf.push(byte);  // intentional drop inside an ISR
 ```
@@ -54,12 +55,12 @@ import driver.types;
 using driver::Result;
 using driver::Status;
 
-Result<uint16_t> r = readAdc();        // value or error
+Result<uint16_t> r = readAdc();  // value or error
 if (r.ok()) {
-    uint16_t v = r.value();            // precondition: ok() — UB otherwise
+  uint16_t v = r.value();  // precondition: ok() — UB otherwise
 }
-uint16_t safe = r.valueOr(0);          // never UB
-Status st = r.status();                // Ok on success, the error otherwise
+uint16_t safe = r.valueOr(0);  // never UB
+Status st = r.status();        // Ok on success, the error otherwise
 ```
 
 `value()` on an error is undefined behaviour (like `*std::optional`); use
@@ -78,12 +79,12 @@ import driver.types;
 #include "driver/try.hpp"
 
 driver::Status configure() {
-    DRV_TRY(g_i2c.writeReg(addr, REG_CTRL, ctrl));   // return Status if not Ok
+  DRV_TRY(g_i2c.writeReg(addr, REG_CTRL, ctrl));  // return Status if not Ok
 
-    uint16_t raw = 0;
-    DRV_TRY_ASSIGN(raw, readAdc());                  // unwrap Result or return err
-    use(raw);
-    return driver::Status::Ok;
+  uint16_t raw = 0;
+  DRV_TRY_ASSIGN(raw, readAdc());  // unwrap Result or return err
+  use(raw);
+  return driver::Status::Ok;
 }
 ```
 
@@ -92,11 +93,11 @@ driver::Status configure() {
 ```cpp
 import driver.stm32f4.gpio;
 using driver::gpio;
-using driver::stm32f4::GpioPin;
-using driver::PinMode;
-using driver::PullMode;
 using driver::OutputSpeed;
 using driver::OutputType;
+using driver::PinMode;
+using driver::PullMode;
+using driver::stm32f4::GpioPin;
 
 GpioPin g_led{
     *GPIOD,
@@ -132,9 +133,12 @@ import driver.stm32f4.spi;
 
 driver::NullGpioPin null_cs;
 // W25q32 is templated on its bus + CS types; CTAD deduces them from the args:
-sensor::W25q32 flash{spi, null_cs,
-                     {.expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
-                      .busyPollLoops = 5000000U}};  // hardware CS — no toggling
+sensor::W25q32 flash{
+    spi,
+    null_cs,
+    {.expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
+     .busyPollLoops = 5000000U}
+};  // hardware CS — no toggling
 ```
 
 The four pin methods (`set`, `reset`, `toggle`, `read`) are inline empty
@@ -147,7 +151,7 @@ intentionally chip-agnostic and lives at the top of
 ## I2C — `driver.stm32f4.i2c`
 
 ```cpp
-import driver.i2c;             // I2cConfig + the i2c() validator
+import driver.i2c; // I2cConfig + the i2c() validator
 import driver.stm32f4.i2c;
 using driver::i2c;
 using driver::stm32f4::I2c;
@@ -191,18 +195,19 @@ driver::reg::set(RCC->APB1ENR, RCC_APB1ENR_I2C1EN);
 ## UART — `driver.stm32f4.uart`
 
 ```cpp
-import driver.uart;           // UartConfig, DataBits/StopBits/Parity, uart()
+import driver.uart; // UartConfig, DataBits/StopBits/Parity, uart()
 import driver.stm32f4.uart;
+using driver::DataBits;
+using driver::Parity;
+using driver::StopBits;
+using driver::uart;
 using driver::stm32f4::Uart;
 using driver::stm32f4::UartMode;
-using driver::DataBits;
-using driver::StopBits;
-using driver::Parity;
-using driver::uart;
 
 // Interrupt mode (default)
 Uart<512, 256> g_uart2{
-    *USART2, USART2_IRQn,
+    *USART2,
+    USART2_IRQn,
     uart({
         .baudrate = 115200,
         .dataBits = DataBits::Eight,
@@ -211,7 +216,9 @@ Uart<512, 256> g_uart2{
     }),
 };
 
-extern "C" void USART2_IRQHandler() { g_uart2.irqHandler(); }
+extern "C" void USART2_IRQHandler() {
+  g_uart2.irqHandler();
+}
 ```
 
 `uart({...})` is a `consteval` validator: it throws at compile time on
@@ -227,13 +234,20 @@ DMA mode requires extra ctor arguments and DMA ISR registration:
 
 ```cpp
 Uart<512, 256, UartMode::Dma> g_uart2{
-    *USART2, USART2_IRQn,
+    *USART2,
+    USART2_IRQn,
     driver::stm32f4::dmaMap::usart2_tx,
-    uart({ .baudrate = 115200, .dataBits = DataBits::Eight,
-           .stopBits = StopBits::One, .parity = Parity::None }),
+    uart(
+        {.baudrate = 115200,
+         .dataBits = DataBits::Eight,
+         .stopBits = StopBits::One,
+         .parity = Parity::None}
+    ),
 };
 
-extern "C" void DMA1_Stream6_IRQHandler() { g_uart2.dmaTxIrqHandler(); }
+extern "C" void DMA1_Stream6_IRQHandler() {
+  g_uart2.dmaTxIrqHandler();
+}
 ```
 
 DMA TX issues one transfer-complete IRQ per `write()` call (vs one IRQ per byte
@@ -243,12 +257,12 @@ drops from ~11 ms to under 50 µs.
 ## SPI — `driver.stm32f4.spi`
 
 ```cpp
-import driver.spi;            // SpiConfig, SpiMode/SpiDataSize, spi()
+import driver.spi; // SpiConfig, SpiMode/SpiDataSize, spi()
 import driver.stm32f4.spi;
-using driver::stm32f4::Spi;
-using driver::SpiMode;
-using driver::SpiDataSize;
 using driver::spi;
+using driver::SpiDataSize;
+using driver::SpiMode;
+using driver::stm32f4::Spi;
 
 Spi g_spi2{
     *SPI2,
@@ -276,10 +290,10 @@ reserved in `driver.stm32f4.dma::dmaMap` for a future PR.
 
 ```cpp
 import driver.stm32f4.dma;
-using driver::stm32f4::DmaStream;
 using driver::stm32f4::DmaConfig;
 using driver::stm32f4::DmaDir;
 using driver::stm32f4::DmaPrio;
+using driver::stm32f4::DmaStream;
 
 DmaStream txDma{
     driver::stm32f4::dmaMap::usart2_tx,
@@ -347,9 +361,12 @@ ExtiLine g_button = ExtiLine::bind<&App::onButton>(
         .trigger = ExtiTrigger::Rising,
         .priority = 6,
     }),
-    app);
+    app
+);
 
-extern "C" void EXTI0_IRQHandler() { g_button.irqHandler(); }
+extern "C" void EXTI0_IRQHandler() {
+  g_button.irqHandler();
+}
 ```
 
 - `exti({...})` is a `consteval` validator: it throws (at compile time) on

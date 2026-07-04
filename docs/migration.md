@@ -68,9 +68,11 @@ import driver.stm32f4.uart;
 
 I2c g_i2c1{*I2C1, {.clockSpeed = 400000, .fastMode = true}};
 Spi g_spi1{*SPI1, {.mode = 0, .dataSize = 8, ...}};
-Uart<> g_uart2{*USART2, USART2_IRQn,
-               {.baudrate = 115200, .dataBits = 8, .stopBits = 1,
-                .parity = Parity::None}};
+Uart<> g_uart2{
+    *USART2,
+    USART2_IRQn,
+    {.baudrate = 115200, .dataBits = 8, .stopBits = 1, .parity = Parity::None}
+};
 ```
 
 After:
@@ -84,10 +86,20 @@ import driver.stm32f4.spi;
 import driver.stm32f4.uart;
 
 I2c g_i2c1{*I2C1, i2c({.clockSpeed = 400000, .fastMode = true})};
-Spi g_spi1{*SPI1, spi({.mode = SpiMode::Mode0, .dataSize = SpiDataSize::Bits8, ...})};
-Uart<> g_uart2{*USART2, USART2_IRQn,
-               uart({.baudrate = 115200, .dataBits = DataBits::Eight,
-                     .stopBits = StopBits::One, .parity = Parity::None})};
+Spi g_spi1{
+    *SPI1,
+    spi({.mode = SpiMode::Mode0, .dataSize = SpiDataSize::Bits8, ...})
+};
+Uart<> g_uart2{
+    *USART2,
+    USART2_IRQn,
+    uart(
+        {.baudrate = 115200,
+         .dataBits = DataBits::Eight,
+         .stopBits = StopBits::One,
+         .parity = Parity::None}
+    )
+};
 ```
 
 Field mapping for the enum conversion:
@@ -262,7 +274,7 @@ Fix each site one of two ways:
 ```cpp
 // 1. Handle the error (preferred):
 if (g_flash.eraseSector(0) != driver::Status::Ok) {
-    // log / retry / halt
+  // log / retry / halt
 }
 
 // 2. Explicitly discard, when the failure is genuinely irrelevant
@@ -285,16 +297,31 @@ required at every call site.
 **Before (v0.1.2):**
 
 ```cpp
-GpioPin led{*GPIOD, GpioConfig{12, PinMode::Output, PullMode::None,
-                               OutputSpeed::Low, OutputType::PushPull}};
+GpioPin led{
+    *GPIOD,
+    GpioConfig{
+        12,
+        PinMode::Output,
+        PullMode::None,
+        OutputSpeed::Low,
+        OutputType::PushPull
+    }
+};
 ```
 
 **After (latest):**
 
 ```cpp
-GpioPin led{*GPIOD, gpio({.pin = 12, .mode = PinMode::Output,
-                          .pull = PullMode::None, .speed = OutputSpeed::Low,
-                          .type = OutputType::PushPull})};
+GpioPin led{
+    *GPIOD,
+    gpio(
+        {.pin = 12,
+         .mode = PinMode::Output,
+         .pull = PullMode::None,
+         .speed = OutputSpeed::Low,
+         .type = OutputType::PushPull}
+    )
+};
 ```
 
 Trailing comma after the last designated initializer keeps clang-format from
@@ -327,7 +354,7 @@ g_pa5.write(true);
 work unchanged. DMA TX is opt-in:
 
 ```cpp
-Uart<512, 256, UartMode::Dma> g_uart2{ ... };
+Uart<512, 256, UartMode::Dma> g_uart2{...};
 ```
 
 ## New modules available

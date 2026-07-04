@@ -22,22 +22,34 @@ Enable it with `STM32_USE_SYSTEM` (requires `STM32_USE_DRIVERS`), link
 
 ```cpp
 enum class ComponentState : uint8_t {
-    New, Registered, Initialized, Bound, Started, Stopped, Failed
+  New,
+  Registered,
+  Initialized,
+  Bound,
+  Started,
+  Stopped,
+  Failed
 };
-enum class Criticality : uint8_t { Critical, Common };
+enum class Criticality : uint8_t {
+  Critical,
+  Common
+};
 
-struct ComponentConfig { const char *name; Criticality criticality; };
+struct ComponentConfig {
+  const char *name;
+  Criticality criticality;
+};
 
 template <typename T>
 concept Component = requires(T c, ComponentState s) {
-    { c.onRegister() } -> std::same_as<driver::Status>;
-    { c.onInit() }     -> std::same_as<driver::Status>;
-    { c.onBind() }     -> std::same_as<driver::Status>;
-    { c.onStart() }    -> std::same_as<driver::Status>;
-    { c.name() }        -> std::same_as<const char *>;
-    { c.criticality() } -> std::same_as<Criticality>;
-    { c.state() }       -> std::same_as<ComponentState>;
-    { c.setState(s) }   -> std::same_as<void>;
+  { c.onRegister() } -> std::same_as<driver::Status>;
+  { c.onInit() } -> std::same_as<driver::Status>;
+  { c.onBind() } -> std::same_as<driver::Status>;
+  { c.onStart() } -> std::same_as<driver::Status>;
+  { c.name() } -> std::same_as<const char *>;
+  { c.criticality() } -> std::same_as<Criticality>;
+  { c.state() } -> std::same_as<ComponentState>;
+  { c.setState(s) } -> std::same_as<void>;
 };
 ```
 
@@ -46,15 +58,16 @@ itself. In practice you get the four accessors for free from `ComponentBase`
 and only write the four lifecycle hooks:
 
 ```cpp
-class ComponentBase {                 // non-virtual mix-in, no vtable
-    ComponentConfig _cfg;
-    ComponentState _state{ComponentState::New};
+class ComponentBase {  // non-virtual mix-in, no vtable
+  ComponentConfig _cfg;
+  ComponentState _state{ComponentState::New};
+
 public:
-    explicit ComponentBase(const ComponentConfig &cfg) : _cfg(cfg) {}
-    [[nodiscard]] const char *name() const;
-    [[nodiscard]] Criticality criticality() const;
-    [[nodiscard]] ComponentState state() const;
-    void setState(ComponentState s);
+  explicit ComponentBase(const ComponentConfig &cfg) : _cfg(cfg) {}
+  [[nodiscard]] const char *name() const;
+  [[nodiscard]] Criticality criticality() const;
+  [[nodiscard]] ComponentState state() const;
+  void setState(ComponentState s);
 };
 ```
 
@@ -92,10 +105,10 @@ Each component declares `Criticality::Critical` or `Criticality::Common`:
 
 ```cpp
 struct BootReport {
-    driver::Status status;        // Ok unless a Critical component failed
-    const char *failedComponent;  // name of the first Critical failure, else nullptr
-    ComponentState failedPhase;   // which phase it failed in
-    uint8_t degraded;             // how many Common components degraded
+  driver::Status status;        // Ok unless a Critical component failed
+  const char *failedComponent;  // name of the first Critical failure, else nullptr
+  ComponentState failedPhase;   // which phase it failed in
+  uint8_t degraded;             // how many Common components degraded
 };
 
 template <system::Component... Cs>
@@ -117,18 +130,24 @@ no runtime):
 template <driver::II2c I2cDriver>
 class ImuSampler : public system::ComponentBase {
 public:
-    struct Config { system::ComponentConfig base; uint32_t periodMs; };
-    struct Environment { I2cDriver &i2c; };
+  struct Config {
+    system::ComponentConfig base;
+    uint32_t periodMs;
+  };
+  struct Environment {
+    I2cDriver &i2c;
+  };
 
-    ImuSampler(const Config &cfg, const Environment &env)
-        : system::ComponentBase(cfg.base), _periodMs(cfg.periodMs),
-          _mpu(env.i2c, {/* sensor config */}) {}
+  ImuSampler(const Config &cfg, const Environment &env)
+      : system::ComponentBase(cfg.base),
+        _periodMs(cfg.periodMs),
+        _mpu(env.i2c, {/* sensor config */}) {}
 
-    driver::Status onRegister() { return driver::Status::Ok; }
-    driver::Status onInit()     { return _mpu.init(); }
-    driver::Status onBind()     { return driver::Status::Ok; }
-    driver::Status onStart()    { return driver::Status::Ok; }
-    // ...
+  driver::Status onRegister() { return driver::Status::Ok; }
+  driver::Status onInit() { return _mpu.init(); }
+  driver::Status onBind() { return driver::Status::Ok; }
+  driver::Status onStart() { return driver::Status::Ok; }
+  // ...
 };
 ```
 
@@ -145,17 +164,23 @@ compile-time wiring — no runtime IoC.
 
 ```cpp
 struct DemoApp {
-    I2c  i2c1{*I2C1, {/* ... */}};
-    Spi  spi2{*SPI2, {/* ... */}};
+  I2c i2c1{*I2C1, {/* ... */}};
+  Spi spi2{*SPI2, {/* ... */}};
 
-    ImuSampler<I2c> imu{
-        {.base = {.name = "imu", .criticality = system::Criticality::Critical}, .periodMs = 20},
-        {.i2c = i2c1}};
-    DisplayView<I2c> view{
-        {.base = {.name = "oled", .criticality = system::Criticality::Common}, .periodMs = 200},
-        {.i2c = i2c1, .imu = imu}};
+  ImuSampler<I2c> imu{
+      {.base = {.name = "imu", .criticality = system::Criticality::Critical},
+       .periodMs = 20},
+      {.i2c = i2c1}
+  };
+  DisplayView<I2c> view{
+      {.base = {.name = "oled", .criticality = system::Criticality::Common},
+       .periodMs = 200},
+      {.i2c = i2c1, .imu = imu}
+  };
 
-    [[nodiscard]] system::BootReport boot() { return system::bootstrap(imu, view); }
+  [[nodiscard]] system::BootReport boot() {
+    return system::bootstrap(imu, view);
+  }
 };
 ```
 
@@ -174,12 +199,13 @@ and task creation can both happen before the scheduler:
 
 ```cpp
 int main() {
-    const system::BootReport report = app.boot();   // Register→Init→Bind→Start
-    // report.status / report.degraded → log over UART
-    static rtos::Task tImu("imu", 384, 2, imuEntry, &app.imu);
-    static rtos::Task tView("view", 512, 1, viewEntry, &app.view);
-    rtos::Task::startScheduler();
-    while (true) {}
+  const system::BootReport report = app.boot();  // Register→Init→Bind→Start
+  // report.status / report.degraded → log over UART
+  static rtos::Task tImu("imu", 384, 2, imuEntry, &app.imu);
+  static rtos::Task tView("view", 512, 1, viewEntry, &app.view);
+  rtos::Task::startScheduler();
+  while (true) {
+  }
 }
 ```
 
@@ -225,15 +251,15 @@ system::WorkItem item = system::WorkItem::bind<&MyType::onWork>(myObject);
 `WorkQueue` is a non-template intrusive list ordered by due-tick:
 
 ```cpp
-void   schedule(WorkItem&);                       // FIFO, due at epoch (super-loop)
-void   schedulePriority(WorkItem&);               // jump ahead of equal-due items
-void   scheduleAt(WorkItem&, uint32_t due, bool priority);  // absolute tick
-void   scheduleAfter(WorkItem&, uint32_t now, uint32_t delay);
-void   cancel(WorkItem&);
-size_t runDue(uint32_t now);                       // run everything due ≤ now
-size_t runOnce();                                  // drain all, ignoring due-tick (super-loop)
-bool   nextDue(uint32_t& out) const;
-bool   pending() const;
+void schedule(WorkItem &);          // FIFO, due at epoch (super-loop)
+void schedulePriority(WorkItem &);  // jump ahead of equal-due items
+void scheduleAt(WorkItem &, uint32_t due, bool priority);  // absolute tick
+void scheduleAfter(WorkItem &, uint32_t now, uint32_t delay);
+void cancel(WorkItem &);
+size_t runDue(uint32_t now);  // run everything due ≤ now
+size_t runOnce();             // drain all, ignoring due-tick (super-loop)
+bool nextDue(uint32_t &out) const;
+bool pending() const;
 ```
 
 Two properties are load-bearing:
@@ -362,9 +388,9 @@ in `main`:
 
 ```cpp
 driver::Status onStart() {
-    return _task.create(_name, _stack, _prio, &trampoline, this)
-               ? driver::Status::Ok
-               : driver::Status::HardwareError;
+  return _task.create(_name, _stack, _prio, &trampoline, this)
+             ? driver::Status::Ok
+             : driver::Status::HardwareError;
 }
 // ...
 rtos::Task _task;  // default-constructed member, started in onStart()

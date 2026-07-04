@@ -69,9 +69,11 @@ import driver.stm32f4.uart;
 
 I2c g_i2c1{*I2C1, {.clockSpeed = 400000, .fastMode = true}};
 Spi g_spi1{*SPI1, {.mode = 0, .dataSize = 8, ...}};
-Uart<> g_uart2{*USART2, USART2_IRQn,
-               {.baudrate = 115200, .dataBits = 8, .stopBits = 1,
-                .parity = Parity::None}};
+Uart<> g_uart2{
+    *USART2,
+    USART2_IRQn,
+    {.baudrate = 115200, .dataBits = 8, .stopBits = 1, .parity = Parity::None}
+};
 ```
 
 Стало:
@@ -85,10 +87,20 @@ import driver.stm32f4.spi;
 import driver.stm32f4.uart;
 
 I2c g_i2c1{*I2C1, i2c({.clockSpeed = 400000, .fastMode = true})};
-Spi g_spi1{*SPI1, spi({.mode = SpiMode::Mode0, .dataSize = SpiDataSize::Bits8, ...})};
-Uart<> g_uart2{*USART2, USART2_IRQn,
-               uart({.baudrate = 115200, .dataBits = DataBits::Eight,
-                     .stopBits = StopBits::One, .parity = Parity::None})};
+Spi g_spi1{
+    *SPI1,
+    spi({.mode = SpiMode::Mode0, .dataSize = SpiDataSize::Bits8, ...})
+};
+Uart<> g_uart2{
+    *USART2,
+    USART2_IRQn,
+    uart(
+        {.baudrate = 115200,
+         .dataBits = DataBits::Eight,
+         .stopBits = StopBits::One,
+         .parity = Parity::None}
+    )
+};
 ```
 
 Соответствие полей для перехода на enum:
@@ -264,7 +276,7 @@ g_uart2.write({data, len});
 ```cpp
 // 1. Обработать ошибку (предпочтительно):
 if (g_flash.eraseSector(0) != driver::Status::Ok) {
-    // лог / повтор / halt
+  // лог / повтор / halt
 }
 
 // 2. Явно сбросить, когда ошибка действительно неважна
@@ -286,16 +298,31 @@ if (g_flash.eraseSector(0) != driver::Status::Ok) {
 **Было (v0.1.2):**
 
 ```cpp
-GpioPin led{*GPIOD, GpioConfig{12, PinMode::Output, PullMode::None,
-                               OutputSpeed::Low, OutputType::PushPull}};
+GpioPin led{
+    *GPIOD,
+    GpioConfig{
+        12,
+        PinMode::Output,
+        PullMode::None,
+        OutputSpeed::Low,
+        OutputType::PushPull
+    }
+};
 ```
 
 **Стало (latest):**
 
 ```cpp
-GpioPin led{*GPIOD, gpio({.pin = 12, .mode = PinMode::Output,
-                          .pull = PullMode::None, .speed = OutputSpeed::Low,
-                          .type = OutputType::PushPull})};
+GpioPin led{
+    *GPIOD,
+    gpio(
+        {.pin = 12,
+         .mode = PinMode::Output,
+         .pull = PullMode::None,
+         .speed = OutputSpeed::Low,
+         .type = OutputType::PushPull}
+    )
+};
 ```
 
 Trailing comma после последнего designated-инициализатора удерживает
@@ -328,7 +355,7 @@ g_pa5.write(true);
 без правок. DMA TX — opt-in:
 
 ```cpp
-Uart<512, 256, UartMode::Dma> g_uart2{ ... };
+Uart<512, 256, UartMode::Dma> g_uart2{...};
 ```
 
 ## Новые доступные модули

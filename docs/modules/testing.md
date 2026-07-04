@@ -27,17 +27,17 @@ using driver::Result;
 using driver::Status;
 
 TEST(result_ok_carries_value) {
-    Result<int> r{42};
-    ASSERT_TRUE(r.ok());          // stops this test on failure
-    EXPECT_EQ(r.value(), 42);     // records failure, keeps going
-    EXPECT_EQ(r.valueOr(0), 42);
+  Result<int> r{42};
+  ASSERT_TRUE(r.ok());       // stops this test on failure
+  EXPECT_EQ(r.value(), 42);  // records failure, keeps going
+  EXPECT_EQ(r.valueOr(0), 42);
 }
 
 TEST(result_error_reports_status) {
-    Result<int> r{Status::Timeout};
-    ASSERT_FALSE(r.ok());
-    EXPECT_EQ(r.status(), Status::Timeout);
-    EXPECT_EQ(r.valueOr(7), 7);
+  Result<int> r{Status::Timeout};
+  ASSERT_FALSE(r.ok());
+  EXPECT_EQ(r.status(), Status::Timeout);
+  EXPECT_EQ(r.valueOr(7), 7);
 }
 ```
 
@@ -58,17 +58,18 @@ keeps ordering deterministic and avoids static constructors running before
 `main()` on bare metal.
 
 ```cpp
-void uartWrite(const char *s);   // your sink: pushes bytes to USART
+void uartWrite(const char *s);  // your sink: pushes bytes to USART
 
 int main() {
-    testing::TestRunner runner{uartWrite};
+  testing::TestRunner runner{uartWrite};
 
-    RUN_TEST(runner, result_ok_carries_value);
-    RUN_TEST(runner, result_error_reports_status);
+  RUN_TEST(runner, result_ok_carries_value);
+  RUN_TEST(runner, result_error_reports_status);
 
-    const bool ok = runner.summary();   // "N passed, M failed"
-    // ok == true when every test passed
-    while (true) {}
+  const bool ok = runner.summary();  // "N passed, M failed"
+  // ok == true when every test passed
+  while (true) {
+  }
 }
 ```
 
@@ -90,12 +91,14 @@ compiler:
 #include <cstdio>
 #include "testing/unit_test.hpp"
 
-static void stdoutWriter(const char *s) { std::fputs(s, stdout); }
+static void stdoutWriter(const char *s) {
+  std::fputs(s, stdout);
+}
 
 int main() {
-    testing::TestRunner runner{stdoutWriter};
-    RUN_TEST(runner, result_ok_carries_value);
-    return runner.summary() ? 0 : 1;   // non-zero exit on any failure
+  testing::TestRunner runner{stdoutWriter};
+  RUN_TEST(runner, result_ok_carries_value);
+  return runner.summary() ? 0 : 1;  // non-zero exit on any failure
 }
 ```
 

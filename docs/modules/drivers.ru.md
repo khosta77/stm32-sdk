@@ -38,7 +38,8 @@
 ```cpp
 import driver.types;
 
-if (g_i2c.write(addr, payload) != driver::Status::Ok) { /* обработать */ }
+if (g_i2c.write(addr, payload) != driver::Status::Ok) { /* обработать */
+}
 
 (void) _rxBuf.push(byte);  // намеренный сброс внутри ISR
 ```
@@ -55,12 +56,12 @@ import driver.types;
 using driver::Result;
 using driver::Status;
 
-Result<uint16_t> r = readAdc();        // значение или ошибка
+Result<uint16_t> r = readAdc();  // значение или ошибка
 if (r.ok()) {
-    uint16_t v = r.value();            // предусловие: ok() — иначе UB
+  uint16_t v = r.value();  // предусловие: ok() — иначе UB
 }
-uint16_t safe = r.valueOr(0);          // никогда не UB
-Status st = r.status();                // Ok при успехе, иначе — ошибка
+uint16_t safe = r.valueOr(0);  // никогда не UB
+Status st = r.status();        // Ok при успехе, иначе — ошибка
 ```
 
 `value()` при ошибке — неопределённое поведение (как `*std::optional`);
@@ -80,12 +81,12 @@ import driver.types;
 #include "driver/try.hpp"
 
 driver::Status configure() {
-    DRV_TRY(g_i2c.writeReg(addr, REG_CTRL, ctrl));   // вернуть Status, если не Ok
+  DRV_TRY(g_i2c.writeReg(addr, REG_CTRL, ctrl));  // вернуть Status, если не Ok
 
-    uint16_t raw = 0;
-    DRV_TRY_ASSIGN(raw, readAdc());                  // распаковать Result или вернуть ошибку
-    use(raw);
-    return driver::Status::Ok;
+  uint16_t raw = 0;
+  DRV_TRY_ASSIGN(raw, readAdc());  // распаковать Result или вернуть ошибку
+  use(raw);
+  return driver::Status::Ok;
 }
 ```
 
@@ -94,11 +95,11 @@ driver::Status configure() {
 ```cpp
 import driver.stm32f4.gpio;
 using driver::gpio;
-using driver::stm32f4::GpioPin;
-using driver::PinMode;
-using driver::PullMode;
 using driver::OutputSpeed;
 using driver::OutputType;
+using driver::PinMode;
+using driver::PullMode;
+using driver::stm32f4::GpioPin;
 
 GpioPin g_led{
     *GPIOD,
@@ -134,9 +135,12 @@ import driver.stm32f4.spi;
 
 driver::NullGpioPin null_cs;
 // W25q32 — шаблон по типам шины и CS; CTAD выводит их из аргументов:
-sensor::W25q32 flash{spi, null_cs,
-                     {.expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
-                      .busyPollLoops = 5000000U}};  // CS hardwired — без переключений
+sensor::W25q32 flash{
+    spi,
+    null_cs,
+    {.expectedJedecId = sensor::W25q32Spec::JEDEC_W25Q32JV,
+     .busyPollLoops = 5000000U}
+};  // CS hardwired — без переключений
 ```
 
 Четыре метода пина (`set`, `reset`, `toggle`, `read`) — inline-пустышки.
@@ -149,7 +153,7 @@ chip-agnostic и лежит на верхнем уровне в
 ## I2C — `driver.stm32f4.i2c`
 
 ```cpp
-import driver.i2c;             // I2cConfig + валидатор i2c()
+import driver.i2c; // I2cConfig + валидатор i2c()
 import driver.stm32f4.i2c;
 using driver::i2c;
 using driver::stm32f4::I2c;
@@ -192,18 +196,19 @@ driver::reg::set(RCC->APB1ENR, RCC_APB1ENR_I2C1EN);
 ## UART — `driver.stm32f4.uart`
 
 ```cpp
-import driver.uart;           // UartConfig, DataBits/StopBits/Parity, uart()
+import driver.uart; // UartConfig, DataBits/StopBits/Parity, uart()
 import driver.stm32f4.uart;
+using driver::DataBits;
+using driver::Parity;
+using driver::StopBits;
+using driver::uart;
 using driver::stm32f4::Uart;
 using driver::stm32f4::UartMode;
-using driver::DataBits;
-using driver::StopBits;
-using driver::Parity;
-using driver::uart;
 
 // Interrupt mode (по умолчанию)
 Uart<512, 256> g_uart2{
-    *USART2, USART2_IRQn,
+    *USART2,
+    USART2_IRQn,
     uart({
         .baudrate = 115200,
         .dataBits = DataBits::Eight,
@@ -212,7 +217,9 @@ Uart<512, 256> g_uart2{
     }),
 };
 
-extern "C" void USART2_IRQHandler() { g_uart2.irqHandler(); }
+extern "C" void USART2_IRQHandler() {
+  g_uart2.irqHandler();
+}
 ```
 
 `uart({...})` — `consteval`-валидатор: бросает на этапе компиляции при
@@ -228,13 +235,20 @@ DMA-режим требует дополнительных параметров 
 
 ```cpp
 Uart<512, 256, UartMode::Dma> g_uart2{
-    *USART2, USART2_IRQn,
+    *USART2,
+    USART2_IRQn,
     driver::stm32f4::dmaMap::usart2_tx,
-    uart({ .baudrate = 115200, .dataBits = DataBits::Eight,
-           .stopBits = StopBits::One, .parity = Parity::None }),
+    uart(
+        {.baudrate = 115200,
+         .dataBits = DataBits::Eight,
+         .stopBits = StopBits::One,
+         .parity = Parity::None}
+    ),
 };
 
-extern "C" void DMA1_Stream6_IRQHandler() { g_uart2.dmaTxIrqHandler(); }
+extern "C" void DMA1_Stream6_IRQHandler() {
+  g_uart2.dmaTxIrqHandler();
+}
 ```
 
 DMA TX выдаёт одно transfer-complete IRQ на `write()` (vs одно IRQ на байт
@@ -244,12 +258,12 @@ DMA TX выдаёт одно transfer-complete IRQ на `write()` (vs одно I
 ## SPI — `driver.stm32f4.spi`
 
 ```cpp
-import driver.spi;            // SpiConfig, SpiMode/SpiDataSize, spi()
+import driver.spi; // SpiConfig, SpiMode/SpiDataSize, spi()
 import driver.stm32f4.spi;
-using driver::stm32f4::Spi;
-using driver::SpiMode;
-using driver::SpiDataSize;
 using driver::spi;
+using driver::SpiDataSize;
+using driver::SpiMode;
+using driver::stm32f4::Spi;
 
 Spi g_spi2{
     *SPI2,
@@ -277,10 +291,10 @@ DMA для SPI пока не реализован; mapping stream/channel зар
 
 ```cpp
 import driver.stm32f4.dma;
-using driver::stm32f4::DmaStream;
 using driver::stm32f4::DmaConfig;
 using driver::stm32f4::DmaDir;
 using driver::stm32f4::DmaPrio;
+using driver::stm32f4::DmaStream;
 
 DmaStream txDma{
     driver::stm32f4::dmaMap::usart2_tx,
@@ -348,9 +362,12 @@ ExtiLine g_button = ExtiLine::bind<&App::onButton>(
         .trigger = ExtiTrigger::Rising,
         .priority = 6,
     }),
-    app);
+    app
+);
 
-extern "C" void EXTI0_IRQHandler() { g_button.irqHandler(); }
+extern "C" void EXTI0_IRQHandler() {
+  g_button.irqHandler();
+}
 ```
 
 - `exti({...})` — `consteval`-валидатор: бросает (на этапе компиляции) при

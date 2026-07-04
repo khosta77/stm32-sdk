@@ -27,17 +27,17 @@ using driver::Result;
 using driver::Status;
 
 TEST(result_ok_carries_value) {
-    Result<int> r{42};
-    ASSERT_TRUE(r.ok());          // при провале останавливает этот тест
-    EXPECT_EQ(r.value(), 42);     // фиксирует провал, продолжает
-    EXPECT_EQ(r.valueOr(0), 42);
+  Result<int> r{42};
+  ASSERT_TRUE(r.ok());       // при провале останавливает этот тест
+  EXPECT_EQ(r.value(), 42);  // фиксирует провал, продолжает
+  EXPECT_EQ(r.valueOr(0), 42);
 }
 
 TEST(result_error_reports_status) {
-    Result<int> r{Status::Timeout};
-    ASSERT_FALSE(r.ok());
-    EXPECT_EQ(r.status(), Status::Timeout);
-    EXPECT_EQ(r.valueOr(7), 7);
+  Result<int> r{Status::Timeout};
+  ASSERT_FALSE(r.ok());
+  EXPECT_EQ(r.status(), Status::Timeout);
+  EXPECT_EQ(r.valueOr(7), 7);
 }
 ```
 
@@ -58,17 +58,18 @@ TEST(result_error_reports_status) {
 bare-metal.
 
 ```cpp
-void uartWrite(const char *s);   // ваш сток: шлёт байты в USART
+void uartWrite(const char *s);  // ваш сток: шлёт байты в USART
 
 int main() {
-    testing::TestRunner runner{uartWrite};
+  testing::TestRunner runner{uartWrite};
 
-    RUN_TEST(runner, result_ok_carries_value);
-    RUN_TEST(runner, result_error_reports_status);
+  RUN_TEST(runner, result_ok_carries_value);
+  RUN_TEST(runner, result_error_reports_status);
 
-    const bool ok = runner.summary();   // «N passed, M failed»
-    // ok == true, когда все тесты прошли
-    while (true) {}
+  const bool ok = runner.summary();  // «N passed, M failed»
+  // ok == true, когда все тесты прошли
+  while (true) {
+  }
 }
 ```
 
@@ -90,12 +91,14 @@ int main() {
 #include <cstdio>
 #include "testing/unit_test.hpp"
 
-static void stdoutWriter(const char *s) { std::fputs(s, stdout); }
+static void stdoutWriter(const char *s) {
+  std::fputs(s, stdout);
+}
 
 int main() {
-    testing::TestRunner runner{stdoutWriter};
-    RUN_TEST(runner, result_ok_carries_value);
-    return runner.summary() ? 0 : 1;   // ненулевой код возврата при любом провале
+  testing::TestRunner runner{stdoutWriter};
+  RUN_TEST(runner, result_ok_carries_value);
+  return runner.summary() ? 0 : 1;  // ненулевой код возврата при любом провале
 }
 ```
 

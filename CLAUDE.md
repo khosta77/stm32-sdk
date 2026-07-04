@@ -140,14 +140,14 @@ Architecture: interface modules (`.cppm`) + implementation modules (`.cppm`).
 
 ```cpp
 module;
-#include <cstdint>              // STL — ONLY via #include in global module fragment
-#include "cmsis/stm32f4xx.h"    // CMSIS — also #include (macros are not exported)
+#include <cstdint>  // STL — ONLY via #include in global module fragment
+#include "cmsis/stm32f4xx.h"  // CMSIS — also #include (macros are not exported)
 #ifdef STM32_USE_FREERTOS
 #include "FreeRTOS.h"
 #endif
 export module driver.stm32f4.i2c;
 
-import driver.types;             // our modules — through import
+import driver.types; // our modules — through import
 import driver.i2c;
 import driver.reg;
 ```
@@ -279,12 +279,26 @@ out-of-range or unset field fails to compile. SPI/UART fields are strong enums
 validator rejects:
 
 ```cpp
-I2c  g_i2c{*I2C1, i2c({.clockSpeed = 400000, .fastMode = true})};
-Spi  g_spi{*SPI2, spi({.clockHz = 10000000, .mode = SpiMode::Mode0,
-                       .lsbFirst = false, .dataSize = SpiDataSize::Bits8})};
-Uart<> g_uart{*USART2, USART2_IRQn,
-              uart({.baudrate = 115200, .dataBits = DataBits::Eight,
-                    .stopBits = StopBits::One, .parity = Parity::None})};
+I2c g_i2c{*I2C1, i2c({.clockSpeed = 400000, .fastMode = true})};
+Spi g_spi{
+    *SPI2,
+    spi(
+        {.clockHz = 10000000,
+         .mode = SpiMode::Mode0,
+         .lsbFirst = false,
+         .dataSize = SpiDataSize::Bits8}
+    )
+};
+Uart<> g_uart{
+    *USART2,
+    USART2_IRQn,
+    uart(
+        {.baudrate = 115200,
+         .dataBits = DataBits::Eight,
+         .stopBits = StopBits::One,
+         .parity = Parity::None}
+    )
+};
 ```
 
 The validator and enums come from the interface module (`driver.i2c` /
@@ -321,8 +335,8 @@ preserves multi-line formatting and won't collapse the call into one line.
 ### `Uart` — template buffer sizes and mode
 
 ```cpp
-Uart<512, 256> uart{...};                          // interrupt mode, default
-Uart<512, 256, UartMode::Dma> uartDma{...};        // DMA TX
+Uart<512, 256> uart{...};                    // interrupt mode, default
+Uart<512, 256, UartMode::Dma> uartDma{...};  // DMA TX
 ```
 
 `static_assert`s enforce: buffer sizes are powers of two, minimum 16. Mode is
@@ -342,17 +356,17 @@ drivers go through this layer.
 
 ```cpp
 extern "C" void __initialize_hardware() {
-    SystemCoreClockUpdate();
-    driver::reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIODEN);
-    driver::reg::set(RCC->APB1ENR, RCC_APB1ENR_I2C1EN | RCC_APB1ENR_USART2EN);
-    __DSB();
+  SystemCoreClockUpdate();
+  driver::reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOAEN | RCC_AHB1ENR_GPIODEN);
+  driver::reg::set(RCC->APB1ENR, RCC_APB1ENR_I2C1EN | RCC_APB1ENR_USART2EN);
+  __DSB();
 }
 
 namespace {
 GpioPin g_led{*GPIOD, gpio({.pin = 12, .mode = PinMode::Output, ...})};
 I2c g_i2c1{*I2C1, {.clockSpeed = 400000, .fastMode = true}};
 Uart<> g_uart2{*USART2, USART2_IRQn, {...}};
-}
+}  // namespace
 ```
 
 `__initialize_hardware()` is weak in the SDK; the application overrides it.
