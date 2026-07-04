@@ -8,6 +8,12 @@
 `target_link_libraries(... stm32_core)`, — наследует тот же набор. Отдельной
 политики «только для SDK» против «только для приложения» нет.
 
+Внутри `stm32_system` модули компилируются условно: `system.component`,
+`system.bootstrap` и `system.work_queue` строятся всегда при включённом
+`STM32_USE_SYSTEM`, а `system.executor` и `system.signal_bus` (которым нужны
+обёртки FreeRTOS) — только когда дополнительно включён `STM32_USE_FREERTOS`;
+ядро очереди остаётся пригодным для bare-metal-сборок.
+
 ## Активные флаги (v0.1.4)
 
 ```cmake
