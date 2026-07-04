@@ -21,7 +21,12 @@ FetchContent_Declare(
     GIT_SHALLOW    TRUE
 )
 
-cmake_policy(SET CMP0169 OLD)
+# CMP0169 (deprecation of single-arg FetchContent_Populate) only exists in CMake
+# >= 3.30; the image ships 3.28 (the SDK baseline for C++20 modules), where the
+# policy is unknown and the call is not deprecated. Guard so both versions work.
+if(POLICY CMP0169)
+    cmake_policy(SET CMP0169 OLD)
+endif()
 FetchContent_Populate(freertos_kernel)
 
 if(STM32_ARCH_FLAGS MATCHES "mfloat-abi=hard" OR STM32_ARCH_FLAGS MATCHES "mfloat-abi=softfp")
