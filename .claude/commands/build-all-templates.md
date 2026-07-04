@@ -16,6 +16,7 @@ template.toml, not the directory path):
 - `oled-display-test`
 - `w25q32-flash-test`
 - `imu-flash-oled-demo`
+- `signal-bus-demo`
 
 Run:
 
