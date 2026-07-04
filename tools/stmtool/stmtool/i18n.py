@@ -25,10 +25,6 @@ _STRINGS: dict[str, dict[str, str]] = {
         "en": "Release build",
         "ru": "Релизная сборка",
     },
-    "build_native": {
-        "en": "Build locally without Docker",
-        "ru": "Собрать локально без Docker",
-    },
     "build_verbose": {
         "en": "Verbose CMake output",
         "ru": "Подробный вывод CMake",
@@ -86,10 +82,6 @@ _STRINGS: dict[str, dict[str, str]] = {
     "building": {
         "en": "Building {chip} ({build_type}){mode}...",
         "ru": "Сборка {chip} ({build_type}){mode}...",
-    },
-    "mode_local": {
-        "en": " locally",
-        "ru": " локально",
     },
     "mode_docker": {
         "en": " in Docker",
