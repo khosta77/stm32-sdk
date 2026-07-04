@@ -51,7 +51,7 @@ def test_doctor_reports_versions() -> None:
 
 
 def test_flash_no_bin_files(project_workdir: Path) -> None:
-    (project_workdir / "build").mkdir()
+    (project_workdir / "out").mkdir()
     result = runner.invoke(app, ["flash"])
     assert result.exit_code == 1
 
@@ -193,9 +193,9 @@ def test_build_honours_docker_image_env(
 
 
 def test_flash_unknown_tool(project_workdir: Path) -> None:
-    build_dir = project_workdir / "build"
-    build_dir.mkdir()
-    (build_dir / "firmware.bin").write_bytes(b"\x00")
+    out_dir = project_workdir / "out"
+    out_dir.mkdir()
+    (out_dir / "firmware.bin").write_bytes(b"\x00")
     result = runner.invoke(app, ["flash", "--tool", "openocd"])
     assert result.exit_code == 1
 
@@ -204,9 +204,9 @@ def test_flash_stlink_invokes_st_flash(
     project_workdir: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    build_dir = project_workdir / "build"
-    build_dir.mkdir()
-    (build_dir / "firmware.bin").write_bytes(b"\x00")
+    out_dir = project_workdir / "out"
+    out_dir.mkdir()
+    (out_dir / "firmware.bin").write_bytes(b"\x00")
     calls: list[list[str]] = []
 
     def fake_run(cmd: Any, **_kwargs: Any) -> Any:
