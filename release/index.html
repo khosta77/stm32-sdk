@@ -1,0 +1,2117 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Bare-metal C++20 SDK for STM32 microcontrollers">
+      
+      
+      
+        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/release/">
+      
+      
+        <link rel="prev" href="../sensors/w25q32/">
+      
+      
+        <link rel="next" href="../migration/">
+      
+      
+        
+          <link rel="alternate" href="./" hreflang="en">
+        
+          <link rel="alternate" href="../ru/release/" hreflang="ru">
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Release - stm32-sdk</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#release-process" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="stm32-sdk" class="md-header__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            stm32-sdk
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Release
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Select language">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="../ru/release/" hreflang="ru" class="md-select__link">
+              Русский
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/khosta77/stm32-sdk" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    khosta77/stm32-sdk
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../stmtool/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  stmtool
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../build-flags/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Build flags
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../modules/drivers/" class="md-tabs__link">
+          
+  
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../chips/" class="md-tabs__link">
+          
+  
+  
+  Chips
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../sensors/" class="md-tabs__link">
+          
+  
+  
+  Sensors
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Upgrade notes
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="stm32-sdk" class="md-nav__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    stm32-sdk
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/khosta77/stm32-sdk" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    khosta77/stm32-sdk
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../stmtool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stmtool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../build-flags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build flags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Modules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/drivers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drivers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/sensors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/freertos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FreeRTOS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modules/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chips
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chips
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chips/datasheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datasheets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../chips/stm32f4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32F4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensors
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sensors
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sensors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sensors/mpu6050/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MPU6050
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sensors/ssd1306/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSD1306
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sensors/w25q32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    W25Q32
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#versioning-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release history
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Release history">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v0112" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.12
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v0111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.11
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v0110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.10
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v019" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.9
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v018" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.8
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v017" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.7
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v016" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.6
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v013" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v011" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#versioning-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Versioning policy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooling
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-procedure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release procedure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#release-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release history
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Release history">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v0112" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.12
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v0111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.11
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v0110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.10
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v019" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.9
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v018" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.8
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v017" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.7
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v016" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.6
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v013" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v012" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v011" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v010" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitHub Pages
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/release.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="release-process">Release process<a class="headerlink" href="#release-process" title="Permanent link">&para;</a></h1>
+<h2 id="versioning-policy">Versioning policy<a class="headerlink" href="#versioning-policy" title="Permanent link">&para;</a></h2>
+<p>Releases use SemVer (<code>vMAJOR.MINOR.PATCH</code>). The project is currently pre-1.0:
+patch and minor releases may both introduce small source-side changes. Where
+exactly the line falls between "patch" and "minor" is at the maintainer's
+discretion until the API stabilises (target: v1.0).</p>
+<p>Practical advice for downstream projects:</p>
+<ul>
+<li>Pin a specific tag in <code>stmproject.toml</code> (<code>[sdk] version = "0.1.2"</code>) instead of
+  <code>develop</code>.</li>
+<li>Before bumping, read the <a href="../migration/">upgrade notes</a> for source-side changes.</li>
+<li>Use <code>stmtool sdk update --version &lt;tag&gt;</code> to refresh the cache in lockstep.</li>
+</ul>
+<h2 id="tooling">Tooling<a class="headerlink" href="#tooling" title="Permanent link">&para;</a></h2>
+<p>The version number is derived from git tags via <code>poetry-dynamic-versioning</code>
+(switched from <code>setuptools-scm</code> in v0.1.4). There is no hand-edited version
+constant anywhere — tagging the repository is what creates a release for
+<code>stmtool</code> consumers.</p>
+<p><code>tools/stmtool/pyproject.toml</code> configures:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">[build-system]</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;poetry-core&gt;=1.9&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;poetry-dynamic-versioning&gt;=1.4&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;poetry_dynamic_versioning.backend&quot;</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">[tool.poetry-dynamic-versioning]</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">vcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git&quot;</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep440&quot;</span>
+</code></pre></div>
+<p>The plugin walks up from <code>tools/stmtool/pyproject.toml</code> to find the
+repository <code>.git</code> and picks up the latest <code>vMAJOR.MINOR.PATCH</code> tag —
+the same source of truth the SDK CMake side already uses.</p>
+<h2 id="release-procedure">Release procedure<a class="headerlink" href="#release-procedure" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Make sure <code>develop</code> is green on CI (build matrix on F407VG/F401CE/F411CE).</li>
+<li>Locally preview docs with <code>mkdocs serve</code>.</li>
+<li>Tag the merge commit on <code>develop</code>:
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v0.1.3<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release v0.1.3&quot;</span><span class="w"> </span>&lt;commit&gt;
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.1.3
+</code></pre></div></li>
+<li>Create the GitHub Release using notes from this page's "Release history".</li>
+<li>The <code>docs.yml</code> workflow rebuilds the site automatically; verify
+   <a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a> picks up the new content.</li>
+</ol>
+<h2 id="release-history">Release history<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h2>
+<h3 id="v0112">v0.1.12<a class="headerlink" href="#v0112" title="Permanent link">&para;</a></h3>
+<p>Focus: a single, enforced code style. One clang-format configuration applied
+across the whole tree, plus mandatory pre-commit hooks so the style and the
+commit history cannot drift again (issues #59, #60).</p>
+<p>Highlights:</p>
+<ul>
+<li><strong>Unified clang-format style, Google 2-space / 80-column.</strong> <code>.clang-format</code>
+  moved to the Google defaults it was closest to: <code>IndentWidth</code> / <code>TabWidth</code> 2,
+  <code>ColumnLimit</code> 80, <code>AccessModifierOffset</code> -2, and — the actual bug behind #59 —
+  <code>Cpp11BracedListStyle: true</code>. The previous explicit <code>Cpp11BracedListStyle:
+  false</code> contradicted the code, which was written <code>{nullptr}</code> (no inner spaces),
+  and drifted against clang-format 19; braced-init lists now format the Google
+  way. The whole SDK and all ten templates were reformatted in one mechanical
+  sweep — no behavioural changes.</li>
+<li><strong>Vendor sources kept out of the formatter.</strong> A new <code>.clang-format-ignore</code>
+  excludes the third-party CMSIS core / device headers, the newlib / Cortex-M
+  runtime glue and the generated font table, so they stay pristine and diffable
+  against upstream. clang-format's <code>*</code> matches within a single path segment, so
+  the patterns spell the depth out explicitly.</li>
+<li><strong>Mandatory pre-commit hooks.</strong> A new <code>.pre-commit-config.yaml</code> wires three
+  gates: <code>clang-format</code> pinned to 19.1.3 (so the hook, CI and the tree agree
+  byte-for-byte) over C / C++ / <code>.cppm</code> sources, <code>conventional-pre-commit</code> on the
+  commit message, and a pre-push <code>poe ci</code> run scoped to <code>tools/stmtool</code>. Install
+  once with <code>pip install pre-commit &amp;&amp; pre-commit install --hook-type pre-commit
+  --hook-type commit-msg</code>.</li>
+<li><strong>CI format gate.</strong> A new <code>Format</code> workflow runs the same pinned clang-format
+  hook on every push and PR to <code>develop</code>, so a drifting style fails CI instead
+  of landing.</li>
+<li><strong>Contributor guide.</strong> A new <code>CONTRIBUTING.md</code> documents the workflow: install
+  the hooks, English Conventional Commits, Russian PR descriptions, <code>poe ci</code> for
+  <code>stmtool</code>.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>No source-behaviour or API changes — this release is formatting and tooling
+  only. Existing downstream projects need no code edits; re-running
+  <code>clang-format -i</code> with the new config reflows to 2-space / 80-column.</li>
+<li><code>.clang-format-ignore</code> needs clang-format 18+; the pinned hook uses 19.1.3.</li>
+</ul>
+<h3 id="v0111">v0.1.11<a class="headerlink" href="#v0111" title="Permanent link">&para;</a></h3>
+<p>Focus: quality and type safety — <code>consteval</code> validators for the I2C / SPI / UART
+configs, thread-safety annotations, and on-device unit-test helpers
+(issues #56–#58).</p>
+<p>Highlights:</p>
+<ul>
+<li><strong><code>consteval</code> config validators <code>i2c()</code> / <code>spi()</code> / <code>uart()</code>.</strong> Previously only
+  <code>GpioConfig</code> / <code>ExtiConfig</code> had compile-time validation. The I2C / SPI / UART
+  configs are now free structs in the interface modules — <code>driver::I2cConfig</code>,
+  <code>driver::SpiConfig</code>, <code>driver::UartConfig</code> — moved out of the implementation
+  types (was <code>I2c::Config</code>), each next to a free <code>consteval</code> validator
+  (<code>driver::i2c()</code> / <code>driver::spi()</code> / <code>driver::uart()</code>) in the same style as
+  <code>gpio()</code> / <code>exti()</code>. SPI / UART fields became strong enums with a <code>None</code>
+  sentinel: <code>SpiMode</code> (<code>Mode0</code>..<code>Mode3</code>), <code>SpiDataSize</code> (<code>Bits8</code> / <code>Bits16</code>),
+  <code>DataBits</code> (<code>Eight</code> / <code>Nine</code>), <code>StopBits</code> (<code>One</code> / <code>Two</code>). An invalid config no
+  longer compiles. The UART <code>Config</code>, previously duplicated between the primary
+  template and the DMA specialisation, is now single-sourced.</li>
+<li><strong>Thread-safety annotations.</strong> A new pure-preprocessor header
+  <code>util/thread_safety.hpp</code> (in <code>sdk/core/include/util/</code>) wraps the Clang
+  thread-safety attributes: <code>CAPABILITY</code>, <code>SCOPED_CAPABILITY</code>, <code>GUARDED_BY</code>,
+  <code>REQUIRES</code>, <code>ACQUIRE</code>, <code>RELEASE</code>, <code>EXCLUDES</code>, <code>NO_THREAD_SAFETY_ANALYSIS</code> and
+  more. Under Clang (<code>-Wthread-safety</code>) they drive static analysis; under GCC
+  (which builds the SDK) they are no-ops. Annotated: <code>rtos::Mutex</code> (<code>CAPABILITY</code>)
+  and <code>rtos::LockGuard</code> (<code>SCOPED_CAPABILITY</code>) in <code>rtos.hpp</code>; the PRIMASK critical
+  section modelled as a named capability (<code>system::detail::g_criticalSection</code>),
+  <code>enterCritical</code> / <code>leaveCritical</code> as <code>ACQUIRE</code> / <code>RELEASE</code>, and <code>WorkQueue::_head</code>
+  / <code>Channel::_ring</code> as <code>GUARDED_BY</code>. This is groundwork — the actual Clang
+  analysis pass arrives with clang-tidy in CI (#73); for now everything compiles
+  cleanly under GCC <code>-Werror</code> and codegen is unchanged (the macros expand to
+  nothing).</li>
+<li><strong>On-device unit-test helpers.</strong> A new header-only <code>testing/unit_test.hpp</code> (in
+  <code>sdk/testing/include/testing/</code>, INTERFACE target <code>stm32_testing</code>, flag
+  <code>STM32_USE_TESTING</code>). GTest-like <code>ASSERT_*</code> / <code>EXPECT_*</code> with no exceptions, no
+  heap, no dynamic linking: <code>ASSERT_</code> returns from the test function, <code>EXPECT_</code>
+  continues. <code>TEST(name){...}</code> defines a test as a function; <code>TestRunner
+  runner{writer}</code> takes an injectable <code>Writer</code> (<code>void(*)(const char*)</code>);
+  <code>RUN_TEST(runner, name)</code> runs a test; <code>runner.summary()</code> prints "N passed, M
+  failed" and returns a bool. Integer formatting is done by hand (no <code>snprintf</code>),
+  so the same test code compiles and runs both on the host (writer → stdout) and
+  on the device (writer → UART). A new <code>bare-metal/unit-test-demo</code> template shows
+  it off (tests over <code>driver::Result&lt;T&gt;</code>). Complements the future host tests
+  (#34 / #35).</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><strong>Breaking for driver call sites.</strong> The I2C / SPI / UART configs must now be
+  wrapped in their validator (<code>I2c g{*I2C1, i2c({...})}</code>), SPI / UART fields are
+  enums, and the config type moved (<code>I2c::Config</code> → <code>driver::I2cConfig</code>, needing
+  <code>import driver.i2c;</code>). See <a href="../migration/#new-in-v0111">migration</a>.</li>
+<li>The thread-safety and testing additions are purely additive — new headers, no
+  edits required for existing code.</li>
+</ul>
+<h3 id="v0110">v0.1.10<a class="headerlink" href="#v0110" title="Permanent link">&para;</a></h3>
+<p>Focus: finishing the concurrency layer — an EXTI driver, a software <code>Timer</code>,
+component-owned tasks and a ring-mode signal channel (issues #52–#55).</p>
+<p>Highlights:</p>
+<ul>
+<li>New <strong>EXTI driver</strong> <code>driver.stm32f4.exti</code> (+ concept <code>driver::IExti</code>,
+  <code>ExtiConfig</code> aggregate and <code>consteval exti({...})</code> validator). Routes a GPIO
+  pin to an EXTI line, configures the edge, and dispatches to a captureless
+  callback from <code>irqHandler()</code>. CMSIS-only, <code>reg::*</code> for all MMIO. Pairs with
+  <code>executor.postFromISR</code> for the classic defer-out-of-ISR pattern.</li>
+<li>New <strong><code>system::Timer</code></strong> (<code>system.timer</code>, FreeRTOS only): a thin, type-safe
+  wrapper over the executor's <code>postAfter</code> / <code>addPeriodic</code> / <code>cancel</code>. Thunk
+  callback, no <code>std::function</code>. <code>start</code> / <code>startPeriodic</code> / <code>stop</code> / <code>active</code>.</li>
+<li><strong><code>Channel&lt;Event, MaxSubs, RingDepth = 1&gt;</code></strong> gained a ring mode. The default is
+  the v0.1.9 coalescing slot; <code>RingDepth &gt; 1</code> delivers every event in FIFO order
+  (drop-oldest on overflow, no heap). Ordering is checked by a <code>consteval</code>
+  self-test on a standalone <code>detail::EventRing</code>.</li>
+<li><strong>Deferred-start <code>rtos::Task</code></strong>: default-constructible plus an idempotent
+  <code>create(...)</code>, so a component can own its worker task and start it in
+  <code>onStart()</code> instead of in <code>main</code>.</li>
+<li>New <code>button-events-demo</code> template: EXTI button → <code>postFromISR</code> → debounce
+  <code>Timer</code> → ring <code>Channel</code> → LED, plus a <code>Heartbeat</code> component that owns its own
+  deferred-start task.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><strong>Additive</strong> — the EXTI driver builds with <code>STM32_USE_DRIVERS</code>; <code>Timer</code> follows
+  the executor under <code>STM32_USE_FREERTOS</code>. The <code>Channel</code> change is
+  source-compatible (new trailing template parameter defaults to the old
+  behaviour) and the new <code>rtos::Task</code> members don't touch existing call sites.
+  See <a href="../migration/#new-in-v0110">migration</a>.</li>
+<li>EXTI ISR priority must be numerically ≥
+  <code>configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY</code> (5 on F4) to call <code>postFromISR</code>.</li>
+</ul>
+<h3 id="v019">v0.1.9<a class="headerlink" href="#v019" title="Permanent link">&para;</a></h3>
+<p>Focus: a zero-cost concurrency layer on top of the component framework —
+work queue, single-thread executor, type-safe signal bus (issues #30–#32).</p>
+<p>Highlights:</p>
+<ul>
+<li>Three new modules in <code>stm32_system</code>: <code>system.work_queue</code>, <code>system.executor</code>,
+  <code>system.signal_bus</code>. Same zero-vtable / zero-heap style as v0.1.7/v0.1.8 —
+  callables are <code>void(*)(void*)</code> thunks, not <code>std::function</code>.</li>
+<li><code>WorkQueue</code> + <code>WorkItem</code>: an <strong>intrusive, client-owned</strong> deferred-work queue
+  (no heap). <code>schedule</code> / <code>schedulePriority</code> / <code>scheduleAfter</code> / <code>cancel</code>,
+  <code>runDue(now)</code> for tick-driven dispatch and <code>runOnce()</code> for bare-metal
+  super-loops. Scheduling is idempotent; ordering is verified by a <code>consteval</code>
+  self-check.</li>
+<li><code>SingleThreadExecutor</code>: binds a <code>WorkQueue</code> to one <code>rtos::Task</code> + wake
+  semaphore. Handlers run <strong>serially on one task</strong> (no per-handler mutex);
+  <code>post</code> / <code>postAfter</code> / <code>addPeriodic</code> / <code>postFromISR</code>.</li>
+<li><code>Channel&lt;Event, MaxSubs&gt;</code>: <strong>type-safe</strong> pub/sub — an event is a
+  trivially-copyable tag struct, subscribers live in a fixed array (no heap),
+  fan-out is dispatched on the executor so subscribers never race. Diverges from
+  the reference on purpose: no string publisher names, no <code>reinterpret_cast</code>.</li>
+<li>New <code>signal-bus-demo</code> template: a <code>Producer</code> (own task) publishes and a
+  reactive <code>Consumer</code> (no task of its own) handles events on the executor,
+  subscribing in <code>onBind()</code>.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><strong>Additive</strong> — the layer is opt-in. The queue core is RTOS-free (CMSIS PRIMASK
+  only) and builds always; the executor and signal bus compile only under
+  <code>STM32_USE_FREERTOS</code>. All existing templates stay unchanged and green. See
+  <a href="../migration/#new-in-v019">migration</a>.</li>
+<li>No <code>&lt;tuple&gt;</code>, no heap, no runtime polymorphism. <code>system.work_queue</code> depends on
+  CMSIS only, keeping the queue core host-testable for a future release.</li>
+</ul>
+<h3 id="v018">v0.1.8<a class="headerlink" href="#v018" title="Permanent link">&para;</a></h3>
+<p>Focus: a zero-cost application framework — component lifecycle, DI convention,
+composition root (issues #26–#29).</p>
+<p>Highlights:</p>
+<ul>
+<li>New <code>sdk/system/</code> layer, enabled by <code>STM32_USE_SYSTEM</code> (requires
+  <code>STM32_USE_DRIVERS</code>), linked as <code>stm32_system</code>. Two modules:
+  <code>system.component</code> and <code>system.bootstrap</code>.</li>
+<li><code>system::Component</code> is a <strong>C++20 concept</strong> (not a virtual base): a component
+  provides <code>onRegister/onInit/onBind/onStart</code> (each returning <code>driver::Status</code>)
+  plus state/criticality/name accessors — the latter free from the non-virtual
+  <code>system::ComponentBase</code> mix-in. Zero vtable, in the spirit of the v0.1.7
+  concept migration.</li>
+<li>Fixed lifecycle phases <code>Register → Init → Bind → Start</code>, run as a barrier by
+  <code>system::bootstrap(components...)</code>, with <strong>criticality</strong>: a <code>Critical</code> failure
+  aborts bootstrap; a <code>Common</code> failure is counted and skipped while the system
+  continues degraded. <code>bootstrap</code> returns a <code>BootReport</code>
+  (<code>status</code>, <code>failedComponent</code>, <code>failedPhase</code>, <code>degraded</code>).</li>
+<li>DI convention <code>Config</code> + <code>Environment</code>: compile-time constants vs.
+  reference-passed dependencies; a component that needs a generic bus is a
+  constrained template (<code>template &lt;driver::II2c I2cDriver&gt;</code>).</li>
+<li>Composition root as a <code>struct</code>: the dependency graph is the member list
+  (constructed in declaration order); the single <code>bootstrap(...)</code> argument list
+  is the one source of truth for the component set — no manual registration list.</li>
+<li>The <code>imu-flash-oled-demo</code> template is rewritten on the framework
+  (<code>ImuSampler</code> + <code>DisplayView</code> + <code>FlashLogger</code>) as the worked example.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><strong>Additive</strong> — the framework is opt-in. Every other template is unchanged and
+  stays green; only <code>imu-flash-oled-demo</code> moved to components. See
+  <a href="../migration/#new-in-v018">migration</a>.</li>
+<li>No <code>&lt;tuple&gt;</code>, no heap, no runtime polymorphism — <code>bootstrap</code> is a variadic
+  fold over the component pack. The <code>system.*</code> modules depend only on
+  <code>driver.types</code>, keeping them host-testable for a future release.</li>
+</ul>
+<h3 id="v017">v0.1.7<a class="headerlink" href="#v017" title="Permanent link">&para;</a></h3>
+<p>Focus: migrate driver and sensor interfaces from virtual base classes to
+<strong>C++20 concepts</strong> — no vtable on bus calls (issues #17–#25).</p>
+<p>Highlights:</p>
+<ul>
+<li>Driver interfaces <code>IGpioPin</code>, <code>II2c</code>, <code>ISpi</code>, <code>IUart</code>, <code>IFlash</code> are now
+  concepts (<code>interface/i_*.cppm</code>); <code>GpioPin</code>, <code>I2c</code>, <code>Spi</code>, <code>Uart</code>,
+  <code>InternalFlash</code> drop inheritance and <code>override</code>, each guarded by a
+  <code>static_assert(IXxx&lt;Impl&gt;)</code> self-check. <code>NullGpioPin</code> is now a plain <code>struct</code>.</li>
+<li>Sensor interfaces <code>IImu</code>, <code>IDisplay</code>, <code>IExternalFlash</code> are now concepts;
+  <code>Mpu6050</code>, <code>Ssd1306</code>, <code>W25q32</code> become class templates parameterised on their
+  bus (<code>template &lt;driver::II2c I2cDriver&gt; class Mpu6050</code>, …). Bus calls are direct.
+  CTAD keeps construction unchanged (<code>sensor::Mpu6050 g{i2c, {...}}</code>). Each
+  sensor module carries a compile-time <code>static_assert</code> self-check against a
+  trivial mock bus.</li>
+<li><code>W25q32</code> device constants moved to the non-template <code>sensor::W25q32Spec</code>
+  (<code>CAPACITY</code>, <code>SECTOR_SIZE</code>, <code>PAGE_SIZE</code>, <code>JEDEC_W25Q32JV</code>).</li>
+<li>Every value-returning driver/sensor method is now <code>[[nodiscard]]</code> (not only
+  the <code>Status</code> type): ignoring a <code>Uart::write</code> byte count or a flash geometry
+  value is a build error. Fire-and-forget UART writes use explicit <code>(void)</code>.</li>
+<li>Latent bugs surfaced by templating and fixed: <code>Mpu6050::setAccelRange</code> /
+  <code>setGyroRange</code> ignored a <code>[[nodiscard]] Status</code>; the init delay loop used a
+  deprecated <code>volatile</code> increment; <code>Ssd1306::sendCommands</code> used a range-for over
+  <code>std::span</code> that GCC 15 cannot resolve across a module boundary in a template
+  member (switched to an index loop).</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Source-breaking only for code that named an interface type directly
+  (<code>II2c&amp;</code>, <code>sensor::Mpu6050*</code>) or the moved <code>W25q32</code> constants. All in-tree
+  templates use the concrete types and needed only the <code>W25q32Spec</code> rename and
+  pointer-cast tweaks. See <a href="../migration/#upgrading-to-v017">migration</a>.</li>
+<li>No runtime polymorphism / heterogeneous bus containers (not needed on a
+  single target). CMake is unchanged — module file names and module names stay.</li>
+</ul>
+<h3 id="v016">v0.1.6<a class="headerlink" href="#v016" title="Permanent link">&para;</a></h3>
+<p>Focus: process and documentation only — no SDK or API changes.</p>
+<p>Highlights:</p>
+<ul>
+<li>The release process now mandates <strong>bilingual</strong> GitHub Release notes: an
+  <code>## English</code> section copied verbatim from <code>docs/release.md</code> and a <code>## Русский</code>
+  section from <code>docs/release.ru.md</code>, separated by <code>---</code>, with a footer linking
+  the docs release page and the <code>vPREV...vNEW</code> changelog. Recorded in <code>CLAUDE.md</code>
+  (Release process, step 4).</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Source-compatible with v0.1.5; downstream projects need no recompilation.</li>
+</ul>
+<h3 id="v015">v0.1.5<a class="headerlink" href="#v015" title="Permanent link">&para;</a></h3>
+<p>Focus: a unified, zero-overhead error-handling layer for <code>driver.types</code>
+(<a href="https://github.com/khosta77/stm32-sdk/issues/15">issue #15</a>,
+<a href="https://github.com/khosta77/stm32-sdk/issues/16">issue #16</a>).</p>
+<p>Highlights:</p>
+<ul>
+<li><code>driver::Result&lt;T&gt;</code> — carries either a value of <code>T</code> or an error <code>Status</code>
+  (1-byte tag, no allocation, no exceptions, fully <code>constexpr</code>). Marked
+  <code>[[nodiscard]]</code>; <code>T</code> must be trivially destructible. Helpers: <code>ok()</code>,
+  <code>status()</code>, <code>value()</code> (precondition <code>ok()</code>), <code>valueOr()</code>, <code>operator bool</code>.</li>
+<li><code>DRV_TRY(expr)</code> and <code>DRV_TRY_ASSIGN(var, expr)</code> — Rust-<code>?</code>-style early
+  return, in the textual header <code>driver/try.hpp</code> (macros cannot be exported
+  by a C++20 module; include it after <code>import driver.types;</code>).</li>
+<li><code>driver::Status</code> is now <code>[[nodiscard]]</code>. With the mandatory <code>-Werror</code> this
+  makes every ignored error a build failure. The in-tree templates were
+  updated accordingly: explicit <code>(void)</code> on the intentional byte-drop in the
+  UART RX ISR, and real error checks around <code>Mpu6050::init()</code> and
+  <code>W25q32::eraseSector()</code> in the FreeRTOS demos.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>The <code>host</code> unit-test requested in #15/#16 is deferred to v0.1.10, where the
+  full host-test harness lands (mock buses #34, host-test CI job #35). For now
+  a <code>consteval</code> self-check inside <code>driver.types</code> validates the <code>Result&lt;T&gt;</code>
+  invariants at compile time on every ARM build.</li>
+</ul>
+<h3 id="v014">v0.1.4<a class="headerlink" href="#v014" title="Permanent link">&para;</a></h3>
+<p>Focus: quality and infrastructure, no new SDK features beyond
+<a href="https://github.com/khosta77/stm32-sdk/issues/9">issue #9</a>.</p>
+<p>Highlights:</p>
+<ul>
+<li><code>driver::NullGpioPin</code> — empty <code>IGpioPin</code> implementation for boards
+  where the SPI CS line is hardwired (issue #9). Drop-in for
+  sensors that take <code>IGpioPin&amp;</code> such as <code>W25q32</code>.</li>
+<li><code>stmtool</code> migrated from <code>setuptools</code> to Poetry + <code>poethepoet</code>. New
+  <code>poetry run poe ci</code> runs ruff / flake8 / pylint / black / isort /
+  mypy (strict) / bandit / pytest in one shot; <code>poetry run poe fix</code>
+  applies all auto-fixers. The runtime <code>__version__</code> now comes from
+  <code>importlib.metadata</code>; the generated <code>_version.py</code> is gone.</li>
+<li><code>stmtool</code> gained a baseline pytest suite (~80% coverage, 50 tests)
+  and a new <code>.github/workflows/stmtool.yml</code> CI workflow that runs
+  <code>poe ci</code> on every PR touching <code>tools/stmtool/**</code>.</li>
+<li><code>.github/workflows/build.yml</code> rewritten: the chip matrix is now
+  <code>[STM32F407VG]</code> only, and each PR builds <strong>all 7 existing templates</strong>
+  against it in parallel (<code>fail-fast: false</code>). The CI ARM toolchain was
+  bumped to <code>15.2.Rel1</code>; GCC 13 cannot scan C++20 module imports
+  (<code>-fdeps-format=p1689r5</code> is GCC 14+), so any template that links
+  <code>stm32_drivers</code> needs GCC &gt;= 14. The documented minimum is now 14.</li>
+<li><code>-Wall -Wextra -Wpedantic -Wshadow -Werror</code> are now permanently
+  enabled on <code>stm32_core</code> and propagate to drivers, RTOS, sensors,
+  and user code. See <a href="../build-flags/">build-flags</a> for the policy.</li>
+<li>Project-level <code>.claude/commands/{ci,fix,build-all-templates,test-template,release-check}.md</code>
+  for contributors using Claude Code.</li>
+<li>New <code>CLAUDE.md</code> "Quality enforcement" section: linter rules and
+  <code>-W*</code> flags must NOT be disabled without explicit user approval.</li>
+</ul>
+<p>Known limitations / not validated in CI:</p>
+<ul>
+<li><strong>STM32F401CE and STM32F411CE</strong> remain supported by the SDK code
+  but are no longer covered by CI (the maintainer has no physical
+  hardware for these). Use at your own risk; if you build for them
+  and hit a warning that breaks <code>-Werror</code>, please open an issue.</li>
+<li><code>bare-metal/blink/main.cpp</code> was updated to use <code>g_ticks = g_ticks + 1</code>
+  instead of <code>++g_ticks</code> (the C++20 deprecation of <code>operator++</code> on
+  volatile). Downstream projects that copied the original may need
+  the same one-line fix.</li>
+</ul>
+<p>Deferred to v0.1.5+:</p>
+<ul>
+<li>All P1 <code>stmtool</code> commands from
+  <a href="https://github.com/khosta77/stm32-sdk/issues/2">issue #2</a>:
+  <code>monitor</code>, <code>size</code>, <code>config</code>, <code>project info</code>, <code>device list</code>, <code>chips</code>,
+  <code>boards</code>.</li>
+<li>New bare-metal templates: <code>uart-echo</code>, <code>spi-sensor</code>, <code>adc-dma</code>.</li>
+<li>Board definitions (<code>.toml</code> files) and Python chipdb.</li>
+<li><code>-Wconversion</code> warning flag (high noise on CMSIS-derived code,
+  needs a separate cleanup pass).</li>
+</ul>
+<h3 id="v013">v0.1.3<a class="headerlink" href="#v013" title="Permanent link">&para;</a></h3>
+<p>Highlights:</p>
+<ul>
+<li>New documentation site (MkDocs Material), English and Russian.</li>
+<li>New <code>stmtool sdk update</code>, <code>sdk list-versions</code>, <code>sdk path</code> subcommands.</li>
+<li>Optional <code>CLAUDE.md</code> generation per-template via <code>--with-claude</code>.</li>
+<li>All new sensors (MPU6050, SSD1306, W25Q32) and DMA stream wrapper documented.</li>
+<li>I2C multi-byte read fix per RM0090 §27.3.3, valid at 400 kHz.</li>
+<li><code>GpioConfig</code> rewritten as an aggregate with <code>consteval gpio({...})</code> validator.</li>
+</ul>
+<p>See <a href="../migration/">upgrade notes</a> for source-side changes required.</p>
+<h3 id="v012">v0.1.2<a class="headerlink" href="#v012" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>stmtool</code> install hardening (<code>install.sh</code> clears cache on reinstall).</li>
+</ul>
+<h3 id="v011">v0.1.1<a class="headerlink" href="#v011" title="Permanent link">&para;</a></h3>
+<ul>
+<li>FreeRTOS templates (<code>freertos/blink</code>, <code>freertos/mpu6050-uart</code>) registered for
+  <code>stmtool</code> discovery.</li>
+</ul>
+<h3 id="v010">v0.1.0<a class="headerlink" href="#v010" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Initial release. <code>setuptools-scm</code> versioning for <code>stmtool</code> and the SDK as a
+  whole. CI moved from <code>main</code> to <code>develop</code>.</li>
+</ul>
+<h2 id="github-pages">GitHub Pages<a class="headerlink" href="#github-pages" title="Permanent link">&para;</a></h2>
+<p>The documentation site is published from the <code>gh-pages</code> branch (created by the
+<code>docs.yml</code> workflow). The site is available at
+<a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a>. After the first deployment, enable
+Pages in repository Settings → Pages → Source = <code>gh-pages</code> / <code>(root)</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

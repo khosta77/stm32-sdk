@@ -1,0 +1,1959 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Bare-metal C++20 SDK for STM32 microcontrollers">
+      
+      
+      
+        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/modules/drivers/">
+      
+      
+        <link rel="prev" href="../../build-flags/">
+      
+      
+        <link rel="next" href="../sensors/">
+      
+      
+        
+          <link rel="alternate" href="../../../modules/drivers/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="ru">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Drivers - stm32-sdk</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../../" title="stm32-sdk" class="md-header__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            stm32-sdk
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Drivers
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Выберите язык">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../modules/drivers/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ru" class="md-select__link">
+              Русский
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/khosta77/stm32-sdk" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    khosta77/stm32-sdk
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../stmtool/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  stmtool
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../build-flags/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Build flags
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chips/" class="md-tabs__link">
+          
+  
+  
+  Chips
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../sensors/" class="md-tabs__link">
+          
+  
+  
+  Sensors
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Upgrade notes
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="stm32-sdk" class="md-nav__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    stm32-sdk
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/khosta77/stm32-sdk" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    khosta77/stm32-sdk
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stmtool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stmtool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build-flags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build flags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Modules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drivers
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drivers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Правила
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivertypes-v015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обработка ошибок — driver.types (v0.1.5)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Обработка ошибок — driver.types (v0.1.5)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resultt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Result&lt;T&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drv_try-drv_try_assign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DRV_TRY / DRV_TRY_ASSIGN — ранний возврат
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpio-driverstm32f4gpio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPIO — driver.stm32f4.gpio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GPIO — driver.stm32f4.gpio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nullgpiopin-drivernull_gpio-v014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NullGpioPin — driver.null_gpio (v0.1.4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i2c-driverstm32f4i2c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I2C — driver.stm32f4.i2c
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uart-driverstm32f4uart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UART — driver.stm32f4.uart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spi-driverstm32f4spi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPI — driver.stm32f4.spi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dma-driverstm32f4dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DMA — driver.stm32f4.dma
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flash-driverstm32f4internal_flash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Внутренний flash — driver.stm32f4.internal_flash
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exti-driverstm32f4exti-v0110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EXTI — driver.stm32f4.exti (v0.1.10)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sensors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../freertos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FreeRTOS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chips
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chips
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chips/datasheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datasheets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chips/stm32f4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32F4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensors
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sensors
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sensors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sensors/mpu6050/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MPU6050
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sensors/ssd1306/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSD1306
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sensors/w25q32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    W25Q32
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Правила
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drivertypes-v015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обработка ошибок — driver.types (v0.1.5)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Обработка ошибок — driver.types (v0.1.5)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resultt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Result&lt;T&gt;
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drv_try-drv_try_assign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DRV_TRY / DRV_TRY_ASSIGN — ранний возврат
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#gpio-driverstm32f4gpio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GPIO — driver.stm32f4.gpio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="GPIO — driver.stm32f4.gpio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#nullgpiopin-drivernull_gpio-v014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        NullGpioPin — driver.null_gpio (v0.1.4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i2c-driverstm32f4i2c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I2C — driver.stm32f4.i2c
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#uart-driverstm32f4uart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UART — driver.stm32f4.uart
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spi-driverstm32f4spi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPI — driver.stm32f4.spi
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dma-driverstm32f4dma" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DMA — driver.stm32f4.dma
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flash-driverstm32f4internal_flash" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Внутренний flash — driver.stm32f4.internal_flash
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exti-driverstm32f4exti-v0110" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        EXTI — driver.stm32f4.exti (v0.1.10)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/modules/drivers.ru.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="_1">Драйверы<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>Все драйверы лежат в <code>sdk/drivers/include/driver/</code>. Для каждой периферии
+есть C++20-<strong>концепт</strong> в <code>interface/i_*.cppm</code> (compile-time контракт) и
+конкретная реализация для STM32F4 в <code>stm32f4/*.cppm</code>, которая ему
+удовлетворяет.</p>
+<p>С v0.1.7 интерфейсы — это <strong>концепты, а не виртуальные базовые классы</strong>
+(<code>IGpioPin</code>, <code>II2c</code>, <code>ISpi</code>, <code>IUart</code>, <code>IFlash</code>). Драйвер просто предоставляет
+нужные методы — без наследования, без vtable на вызовах шины. Код, которому
+нужна обобщённая периферия, принимает её как ограниченный параметр шаблона
+(<code>template &lt;driver::II2c I2cDriver&gt;</code>), а тестовый дубль — это обычный <code>struct</code>,
+удовлетворяющий концепту. Каждая реализация заканчивается self-check'ом
+<code>static_assert(IXxx&lt;Impl&gt;)</code>, поэтому дрейф сигнатуры — ошибка компиляции.</p>
+<h2 id="_2">Правила<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Конфиги <strong>без дефолтов</strong> — каждое поле задаётся явно.</li>
+<li>Доступ к MMIO — только через <code>driver::reg::set/clear/write/read/get/modify</code>.
+  Сырые <code>|=</code>, <code>&amp;=</code>, присваивания к <code>volatile uint32_t</code> регистрам (<code>RCC-&gt;...</code>,
+  <code>CR1</code> периферии, DMA stream <code>NDTR</code> и т. п.) — запрещены.</li>
+<li>Глобалы предпочтительнее static-local и smart-pointers; периферия живёт
+  всё время работы программы.</li>
+<li>Никаких сырых указателей на периферию — только ссылки (<code>GPIO_TypeDef&amp;</code>).</li>
+</ul>
+<h2 id="drivertypes-v015">Обработка ошибок — <code>driver.types</code> (v0.1.5)<a class="headerlink" href="#drivertypes-v015" title="Permanent link">&para;</a></h2>
+<p>Драйверы сообщают об ошибках через <code>enum class Status : uint8_t</code> (<code>Ok</code>,
+<code>None</code>, <code>Timeout</code>, <code>Nack</code>, <code>BusError</code>, <code>Busy</code>, <code>InvalidArg</code>,
+<code>HardwareError</code>). С v0.1.5 <code>Status</code> помечен <code>[[nodiscard]]</code>: каждый
+возвращаемый <code>Status</code> нужно потребить либо явно сбросить через <code>(void)</code>. Под
+<code>-Werror</code> проигнорированный <code>Status</code> — ошибка сборки. С v0.1.7 <code>[[nodiscard]]</code>
+помечен <strong>каждый возвращающий значение метод драйвера и сенсора</strong> — включая
+счётчики байт (<code>Uart::write</code>/<code>read</code>) и геометрию (<code>Flash::sectorSize</code>,
+<code>Display::width</code>, …), поэтому fire-and-forget запись в UART требует явного
+<code>(void)</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">types</span><span class="p">;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">g_i2c</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* обработать */</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// намеренный сброс внутри ISR</span>
+</code></pre></div>
+<h3 id="resultt"><code>Result&lt;T&gt;</code><a class="headerlink" href="#resultt" title="Permanent link">&para;</a></h3>
+<p><code>Result&lt;T&gt;</code> несёт <strong>либо</strong> значение <code>T</code>, <strong>либо</strong> ошибку <code>Status</code>
+(1-байтовый тег, без аллокаций, без исключений). Помечен <code>[[nodiscard]]</code> и
+полностью <code>constexpr</code>. <code>T</code> должен быть тривиально разрушаемым (что верно для
+POD-payload, возвращаемых драйверами).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">types</span><span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Result</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">Result</span><span class="o">&lt;</span><span class="kt">uint16_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readAdc</span><span class="p">();</span><span class="w">        </span><span class="c1">// значение или ошибка</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">ok</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">value</span><span class="p">();</span><span class="w">            </span><span class="c1">// предусловие: ok() — иначе UB</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="p">}</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="kt">uint16_t</span><span class="w"> </span><span class="n">safe</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">valueOr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span><span class="w">          </span><span class="c1">// никогда не UB</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="n">Status</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">status</span><span class="p">();</span><span class="w">                </span><span class="c1">// Ok при успехе, иначе — ошибка</span>
+</code></pre></div>
+<p><code>value()</code> при ошибке — неопределённое поведение (как <code>*std::optional</code>);
+используйте <code>valueOr()</code> или проверяйте <code>ok()</code>. Переданный как ошибка
+<code>Status::Ok</code> нормализуется в <code>None</code>, поэтому ошибочный <code>Result</code> никогда не
+сообщает <code>ok()</code>.</p>
+<h3 id="drv_try-drv_try_assign"><code>DRV_TRY</code> / <code>DRV_TRY_ASSIGN</code> — ранний возврат<a class="headerlink" href="#drv_try-drv_try_assign" title="Permanent link">&para;</a></h3>
+<p>Макросы не экспортируются модулем C++20, поэтому хелперы в стиле Rust-<code>?</code>
+лежат в текстовом заголовке <code>driver/try.hpp</code>. Подключайте его <strong>после</strong>
+<code>import driver.types;</code>; окружающая функция должна возвращать <code>Status</code> (или
+<code>Result&lt;U&gt;</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">types</span><span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;driver/try.hpp&quot;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="w"> </span><span class="nf">configure</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="n">DRV_TRY</span><span class="p">(</span><span class="n">g_i2c</span><span class="p">.</span><span class="n">writeReg</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="n">REG_CTRL</span><span class="p">,</span><span class="w"> </span><span class="n">ctrl</span><span class="p">));</span><span class="w">   </span><span class="c1">// вернуть Status, если не Ok</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="n">DRV_TRY_ASSIGN</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span><span class="w"> </span><span class="n">readAdc</span><span class="p">());</span><span class="w">                  </span><span class="c1">// распаковать Result или вернуть ошибку</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="n">use</span><span class="p">(</span><span class="n">raw</span><span class="p">);</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">;</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="gpio-driverstm32f4gpio">GPIO — <code>driver.stm32f4.gpio</code><a class="headerlink" href="#gpio-driverstm32f4gpio" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">gpio</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">gpio</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">GpioPin</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">PinMode</span><span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">PullMode</span><span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">OutputSpeed</span><span class="p">;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">OutputType</span><span class="p">;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">GpioPin</span><span class="w"> </span><span class="n">g_led</span><span class="p">{</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="o">*</span><span class="n">GPIOD</span><span class="p">,</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="n">gpio</span><span class="p">({</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="p">.</span><span class="n">pin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PinMode</span><span class="o">::</span><span class="n">Output</span><span class="p">,</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">        </span><span class="p">.</span><span class="n">pull</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PullMode</span><span class="o">::</span><span class="n">None</span><span class="p">,</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="p">.</span><span class="n">speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OutputSpeed</span><span class="o">::</span><span class="n">Low</span><span class="p">,</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OutputType</span><span class="o">::</span><span class="n">PushPull</span><span class="p">,</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p">};</span>
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="n">g_led</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="n">g_led</span><span class="p">.</span><span class="n">toggle</span><span class="p">();</span>
+</code></pre></div>
+<p>Свободная функция <code>gpio({...})</code> — <code>consteval</code>-валидатор: бросает (на этапе
+компиляции) при <code>pin &gt; 15</code>, <code>mode == None</code>, отсутствующих <code>speed</code>/<code>type</code> для
+Output / AlternateFunction, <code>af &gt; 15</code> для AF.</p>
+<p>Тактирование GPIO-порта включается в конструкторе <code>GpioPin</code> (смотрит на адрес
+порта и устанавливает соответствующий бит <code>RCC_AHB1ENR_GPIOxEN</code>).</p>
+<h3 id="nullgpiopin-drivernull_gpio-v014"><code>NullGpioPin</code> — <code>driver.null_gpio</code> (v0.1.4)<a class="headerlink" href="#nullgpiopin-drivernull_gpio-v014" title="Permanent link">&para;</a></h3>
+<p>Пустой <code>struct</code>, удовлетворяющий концепту <code>IGpioPin</code>. Используйте, когда
+сенсор принимает CS-пин, <strong>впаянный</strong> в плату (например, SPI flash с CS,
+подтянутым к GND джампером).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">null_gpio</span><span class="p">;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">spi</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">driver</span><span class="o">::</span><span class="n">NullGpioPin</span><span class="w"> </span><span class="n">null_cs</span><span class="p">;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="c1">// W25q32 — шаблон по типам шины и CS; CTAD выводит их из аргументов:</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">sensor</span><span class="o">::</span><span class="n">W25q32</span><span class="w"> </span><span class="n">flash</span><span class="p">{</span><span class="n">spi</span><span class="p">,</span><span class="w"> </span><span class="n">null_cs</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">                     </span><span class="p">{.</span><span class="n">expectedJedecId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sensor</span><span class="o">::</span><span class="n">W25q32Spec</span><span class="o">::</span><span class="n">JEDEC_W25Q32JV</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">                      </span><span class="p">.</span><span class="n">busyPollLoops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000000U</span><span class="p">}};</span><span class="w">  </span><span class="c1">// CS hardwired — без переключений</span>
+</code></pre></div>
+<p>Четыре метода пина (<code>set</code>, <code>reset</code>, <code>toggle</code>, <code>read</code>) — inline-пустышки.
+С v0.1.7 <code>NullGpioPin</code> — обычный <code>struct</code> (а не наследник виртуальной базы),
+поэтому vtable нет вовсе — вызовы компилируются в ничто. Никакого доступа к
+регистрам, тактирования и состояния периферии. Модуль сознательно
+chip-agnostic и лежит на верхнем уровне в
+<code>sdk/drivers/include/driver/null_gpio.cppm</code>, а не под <code>stm32f4/</code>.</p>
+<h2 id="i2c-driverstm32f4i2c">I2C — <code>driver.stm32f4.i2c</code><a class="headerlink" href="#i2c-driverstm32f4i2c" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">i2c</span><span class="p">;</span><span class="w">             </span><span class="c1">// I2cConfig + валидатор i2c()</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">i2c</span><span class="p">;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">i2c</span><span class="p">;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">I2c</span><span class="p">;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">I2c</span><span class="w"> </span><span class="n">g_i2c1</span><span class="p">{</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="o">*</span><span class="n">I2C1</span><span class="p">,</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="n">i2c</span><span class="p">({</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">        </span><span class="p">.</span><span class="n">clockSpeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="p">.</span><span class="n">fastMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">};</span>
+</code></pre></div>
+<p><code>i2c({...})</code> — <code>consteval</code>-валидатор (как <code>gpio()</code> / <code>exti()</code>): бросает на этапе
+компиляции при <code>clockSpeed</code> вне <code>[1, 400000]</code> или <code>clockSpeed &gt; 100000</code> без
+<code>fastMode</code>. <code>I2cConfig</code> и <code>i2c()</code> живут в interface-модуле <code>driver.i2c</code> —
+импортируйте его рядом с <code>driver.stm32f4.i2c</code> (реализация его не реэкспортирует).</p>
+<p>Методы (требуемые концептом <code>II2c</code>):</p>
+<ul>
+<li><code>Status write(uint8_t addr, std::span&lt;const uint8_t&gt; data)</code></li>
+<li><code>Status read(uint8_t addr, std::span&lt;uint8_t&gt; data)</code></li>
+<li><code>Status writeReg(uint8_t addr, uint8_t reg, std::span&lt;const uint8_t&gt; data)</code></li>
+<li><code>Status readReg(uint8_t addr, uint8_t reg, std::span&lt;uint8_t&gt; data)</code></li>
+<li><code>Status probe(uint8_t addr)</code></li>
+</ul>
+<p>Multi-byte read реализован по closing-sequence из RM0090 §27.3.3 (ветки
+N=1 / N=2 / N≥3). Драйвер входит в критические секции (<code>taskENTER_CRITICAL</code> под
+FreeRTOS, <code>__disable_irq</code> иначе) вокруг окон BTF → STOP → DR-read, чтобы ISR
+не нарушила закрытие транзакции. <code>sendAddress()</code> гонит <code>ADDR</code> против <code>AF</code> —
+на NACK транзакция прерывается почти сразу; сканирование шины 0x03..0x77
+занимает ≈ 200 мс.</p>
+<p>Тактирование — ответственность вызывающего, обычно в <code>__initialize_hardware()</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">driver</span><span class="o">::</span><span class="n">reg</span><span class="o">::</span><span class="n">set</span><span class="p">(</span><span class="n">RCC</span><span class="o">-&gt;</span><span class="n">APB1ENR</span><span class="p">,</span><span class="w"> </span><span class="n">RCC_APB1ENR_I2C1EN</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="uart-driverstm32f4uart">UART — <code>driver.stm32f4.uart</code><a class="headerlink" href="#uart-driverstm32f4uart" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span><span class="w">           </span><span class="c1">// UartConfig, DataBits/StopBits/Parity, uart()</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">Uart</span><span class="p">;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">UartMode</span><span class="p">;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">DataBits</span><span class="p">;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">StopBits</span><span class="p">;</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Parity</span><span class="p">;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">uart</span><span class="p">;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="c1">// Interrupt mode (по умолчанию)</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">Uart</span><span class="o">&lt;</span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">{</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="o">*</span><span class="n">USART2</span><span class="p">,</span><span class="w"> </span><span class="n">USART2_IRQn</span><span class="p">,</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="n">uart</span><span class="p">({</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">        </span><span class="p">.</span><span class="n">baudrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">115200</span><span class="p">,</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">        </span><span class="p">.</span><span class="n">dataBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataBits</span><span class="o">::</span><span class="n">Eight</span><span class="p">,</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">        </span><span class="p">.</span><span class="n">stopBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StopBits</span><span class="o">::</span><span class="n">One</span><span class="p">,</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">        </span><span class="p">.</span><span class="n">parity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Parity</span><span class="o">::</span><span class="n">None</span><span class="p">,</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="p">};</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">USART2_IRQHandler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">.</span><span class="n">irqHandler</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><code>uart({...})</code> — <code>consteval</code>-валидатор: бросает на этапе компиляции при
+<code>baudrate == 0</code> или незаданных <code>dataBits</code>/<code>stopBits</code> (<code>DataBits::None</code> /
+<code>StopBits::None</code>). <code>UartConfig</code> и enum'ы живут в <code>driver.uart</code>.</p>
+<p>Template-параметры: <code>Uart&lt;RxBufSize, TxBufSize, Mode&gt;</code>, где:</p>
+<ul>
+<li><code>RxBufSize</code>, <code>TxBufSize</code> — степень двойки, минимум 16 (<code>static_assert</code>).</li>
+<li><code>Mode</code> — <code>UartMode::Interrupt</code> (по умолчанию) или <code>UartMode::Dma</code> (TX через DMA).</li>
+</ul>
+<p>DMA-режим требует дополнительных параметров конструктора и регистрации DMA ISR:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">Uart</span><span class="o">&lt;</span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="n">UartMode</span><span class="o">::</span><span class="n">Dma</span><span class="o">&gt;</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="o">*</span><span class="n">USART2</span><span class="p">,</span><span class="w"> </span><span class="n">USART2_IRQn</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">dmaMap</span><span class="o">::</span><span class="n">usart2_tx</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="n">uart</span><span class="p">({</span><span class="w"> </span><span class="p">.</span><span class="n">baudrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">115200</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">dataBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataBits</span><span class="o">::</span><span class="n">Eight</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">           </span><span class="p">.</span><span class="n">stopBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StopBits</span><span class="o">::</span><span class="n">One</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">parity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Parity</span><span class="o">::</span><span class="n">None</span><span class="w"> </span><span class="p">}),</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">};</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">DMA1_Stream6_IRQHandler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">.</span><span class="n">dmaTxIrqHandler</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>DMA TX выдаёт одно transfer-complete IRQ на <code>write()</code> (vs одно IRQ на байт
+в interrupt mode). Для 128-байтной строки на 115200 baud время CPU в ISR
+падает с ~11 мс до менее 50 мкс.</p>
+<h2 id="spi-driverstm32f4spi">SPI — <code>driver.stm32f4.spi</code><a class="headerlink" href="#spi-driverstm32f4spi" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">spi</span><span class="p">;</span><span class="w">            </span><span class="c1">// SpiConfig, SpiMode/SpiDataSize, spi()</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">spi</span><span class="p">;</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">Spi</span><span class="p">;</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">SpiMode</span><span class="p">;</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">SpiDataSize</span><span class="p">;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">spi</span><span class="p">;</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">Spi</span><span class="w"> </span><span class="n">g_spi2</span><span class="p">{</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="o">*</span><span class="n">SPI2</span><span class="p">,</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="n">spi</span><span class="p">({</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">        </span><span class="p">.</span><span class="n">clockHz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10&#39;000&#39;000</span><span class="p">,</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">        </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiMode</span><span class="o">::</span><span class="n">Mode0</span><span class="p">,</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">        </span><span class="p">.</span><span class="n">lsbFirst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">        </span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiDataSize</span><span class="o">::</span><span class="n">Bits8</span><span class="p">,</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">};</span>
+</code></pre></div>
+<p><code>spi({...})</code> — <code>consteval</code>-валидатор: бросает на этапе компиляции при
+<code>clockHz == 0</code> или незаданных <code>mode</code>/<code>dataSize</code> (<code>SpiMode::None</code> /
+<code>SpiDataSize::None</code>). <code>SpiConfig</code>, <code>SpiMode</code> (<code>Mode0..Mode3</code>, CPOL/CPHA) и
+<code>SpiDataSize</code> (<code>Bits8</code>/<code>Bits16</code>) живут в <code>driver.spi</code>.</p>
+<p><code>Spi</code> выбирает <code>PCLK1</code> для SPI2/SPI3 (APB1) и <code>PCLK2</code> для SPI1/SPI4/SPI5/SPI6
+(APB2) при расчёте BR-делителя.</p>
+<p>DMA для SPI пока не реализован; mapping stream/channel зарезервирован в
+<code>driver.stm32f4.dma::dmaMap</code> под будущий PR.</p>
+<h2 id="dma-driverstm32f4dma">DMA — <code>driver.stm32f4.dma</code><a class="headerlink" href="#dma-driverstm32f4dma" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">dma</span><span class="p">;</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">DmaStream</span><span class="p">;</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">DmaConfig</span><span class="p">;</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">DmaDir</span><span class="p">;</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">DmaPrio</span><span class="p">;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="n">DmaStream</span><span class="w"> </span><span class="n">txDma</span><span class="p">{</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">dmaMap</span><span class="o">::</span><span class="n">usart2_tx</span><span class="p">,</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">        </span><span class="p">.</span><span class="n">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DmaDir</span><span class="o">::</span><span class="n">MemToPeriph</span><span class="p">,</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">        </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DmaMode</span><span class="o">::</span><span class="n">Normal</span><span class="p">,</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">        </span><span class="p">.</span><span class="n">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DmaPrio</span><span class="o">::</span><span class="n">Medium</span><span class="p">,</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">        </span><span class="p">.</span><span class="n">memInc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">        </span><span class="p">.</span><span class="n">periphInc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">        </span><span class="p">.</span><span class="n">memDataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">        </span><span class="p">.</span><span class="n">periphDataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="p">};</span>
+</code></pre></div>
+<p><code>DmaStream</code> — RAII-обёртка. Mapping периферия ↔ stream/channel для F407VG
+живёт в namespace <code>dmaMap</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Периферия</th>
+<th>Stream</th>
+<th>Channel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USART1 TX</td>
+<td>DMA2/Stream 7</td>
+<td>4</td>
+</tr>
+<tr>
+<td>USART1 RX</td>
+<td>DMA2/Stream 5</td>
+<td>4</td>
+</tr>
+<tr>
+<td>USART2 TX</td>
+<td>DMA1/Stream 6</td>
+<td>4</td>
+</tr>
+<tr>
+<td>USART2 RX</td>
+<td>DMA1/Stream 5</td>
+<td>4</td>
+</tr>
+<tr>
+<td>SPI1 TX</td>
+<td>DMA2/Stream 3</td>
+<td>3</td>
+</tr>
+<tr>
+<td>SPI1 RX</td>
+<td>DMA2/Stream 0</td>
+<td>3</td>
+</tr>
+<tr>
+<td>SPI2 TX</td>
+<td>DMA1/Stream 4</td>
+<td>0</td>
+</tr>
+<tr>
+<td>SPI2 RX</td>
+<td>DMA1/Stream 3</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flash-driverstm32f4internal_flash">Внутренний flash — <code>driver.stm32f4.internal_flash</code><a class="headerlink" href="#flash-driverstm32f4internal_flash" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">internal_flash</span><span class="p">;</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">InternalFlash</span><span class="p">;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">InternalFlash</span><span class="w"> </span><span class="n">g_flash</span><span class="p">;</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="n">g_flash</span><span class="p">.</span><span class="n">eraseSector</span><span class="p">(</span><span class="mi">11</span><span class="p">);</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">g_flash</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mh">0x080E0000</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">span</span><span class="p">{</span><span class="n">data</span><span class="p">});</span>
+</code></pre></div>
+<p>Расположение секторов зависит от чипа: у F407VG 12 секторов (16K×4, 64K×1,
+128K×7). <code>InternalFlash</code> включает тактирование контроллера и обрабатывает
+последовательности unlock / program / lock.</p>
+<h2 id="exti-driverstm32f4exti-v0110">EXTI — <code>driver.stm32f4.exti</code> (v0.1.10)<a class="headerlink" href="#exti-driverstm32f4exti-v0110" title="Permanent link">&para;</a></h2>
+<p>Драйвер линий внешних прерываний: маршрутизирует вывод GPIO на линию EXTI,
+настраивает фронт и вызывает captureless-колбэк из ISR. Концепт <code>driver::IExti</code>,
+агрегат <code>ExtiConfig</code> и валидатор <code>exti({...})</code> живут в <code>driver.exti</code>; реализация
+для F4 <code>ExtiLine</code> — в <code>driver.stm32f4.exti</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">exti</span><span class="p">;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">exti</span><span class="p">;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">exti</span><span class="p">;</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">ExtiPort</span><span class="p">;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">ExtiTrigger</span><span class="p">;</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">ExtiLine</span><span class="p">;</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1">// Привязка линии к методу; колбэк выполняется в контексте прерывания.</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="n">ExtiLine</span><span class="w"> </span><span class="n">g_button</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExtiLine</span><span class="o">::</span><span class="n">bind</span><span class="o">&lt;&amp;</span><span class="n">App</span><span class="o">::</span><span class="n">onButton</span><span class="o">&gt;</span><span class="p">(</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="n">exti</span><span class="p">({</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">        </span><span class="p">.</span><span class="n">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">        </span><span class="p">.</span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExtiPort</span><span class="o">::</span><span class="n">A</span><span class="p">,</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">        </span><span class="p">.</span><span class="n">trigger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExtiTrigger</span><span class="o">::</span><span class="n">Rising</span><span class="p">,</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">        </span><span class="p">.</span><span class="n">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span><span class="n">app</span><span class="p">);</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">EXTI0_IRQHandler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">g_button</span><span class="p">.</span><span class="n">irqHandler</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><code>exti({...})</code> — <code>consteval</code>-валидатор: бросает (на этапе компиляции) при
+  <code>line &gt; 15</code> или <code>priority &gt; 15</code> (у F4 4 бита приоритета NVIC).</li>
+<li>Конструктор включает такт SYSCFG, выбирает порт в <code>SYSCFG_EXTICR</code>, ставит
+  <code>RTSR</code>/<code>FTSR</code> под фронт, гасит pending-бит, задаёт приоритет NVIC, включает IRQ
+  и снимает маску <code>IMR</code>. Значения <code>ExtiPort</code> ложатся прямо в 4-битное поле
+  <code>EXTICR</code> (A = 0 … H = 7).</li>
+<li><code>irqHandler()</code> проверяет бит <code>PR</code> своей линии, гасит его (write-1-to-clear) и
+  вызывает привязанный колбэк. У линий 0–4 отдельный IRQ; 5–9 делят
+  <code>EXTI9_5_IRQn</code>, 10–15 — <code>EXTI15_10_IRQn</code>. На общем векторе вызывайте
+  <code>irqHandler()</code> <strong>каждого</strong> объекта линии — каждый проверяет свой pending-бит.</li>
+<li><code>enable()</code> / <code>disable()</code> переключают маску; <code>pending()</code> читает <code>PR</code>;
+  <code>clearPending()</code> гасит его вручную.</li>
+</ul>
+<p>Сам вывод GPIO настраивается отдельно через <code>GpioPin</code> (режим входа). Чтобы
+вынести работу из ISR, колбэк вызывает <code>executor.postFromISR(workItem)</code> —
+приоритет ISR (здесь 6) должен быть численно ≥
+<code>configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY</code> (5 у F4), иначе вызов недопустим.
+См. шаблон <code>button-events-demo</code>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

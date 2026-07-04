@@ -1,0 +1,1804 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Bare-metal C++20 SDK for STM32 microcontrollers">
+      
+      
+      
+        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/modules/system/">
+      
+      
+        <link rel="prev" href="../freertos/">
+      
+      
+        <link rel="next" href="../testing/">
+      
+      
+        
+          <link rel="alternate" href="../../../modules/system/" hreflang="en">
+        
+          <link rel="alternate" href="./" hreflang="ru">
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>System - stm32-sdk</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#system" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../../" title="stm32-sdk" class="md-header__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            stm32-sdk
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              System
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+      <div class="md-header__option">
+  <div class="md-select">
+    
+    <button class="md-header__button md-icon" aria-label="Выберите язык">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
+    </button>
+    <div class="md-select__inner">
+      <ul class="md-select__list">
+        
+          <li class="md-select__item">
+            <a href="../../../modules/system/" hreflang="en" class="md-select__link">
+              English
+            </a>
+          </li>
+        
+          <li class="md-select__item">
+            <a href="./" hreflang="ru" class="md-select__link">
+              Русский
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</div>
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/khosta77/stm32-sdk" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    khosta77/stm32-sdk
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../quickstart/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Quick start
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../stmtool/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  stmtool
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../build-flags/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Build flags
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../drivers/" class="md-tabs__link">
+          
+  
+  
+  Modules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../chips/" class="md-tabs__link">
+          
+  
+  
+  Chips
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../sensors/" class="md-tabs__link">
+          
+  
+  
+  Sensors
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../release/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Release
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../migration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Upgrade notes
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../" title="stm32-sdk" class="md-nav__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    stm32-sdk
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/khosta77/stm32-sdk" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    khosta77/stm32-sdk
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../stmtool/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    stmtool
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../build-flags/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Build flags
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Modules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Modules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../drivers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drivers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sensors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../freertos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FreeRTOS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Контракт Component
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Фазы жизненного цикла
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Критичность — деградация вместо падения
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#di-config-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Соглашение DI — Config + Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#composition-root-struct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composition root — граф зависимостей как struct
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-freertos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main() и задачи FreeRTOS
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chips
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Chips
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chips/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chips/datasheets/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Datasheets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../chips/stm32f4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32F4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sensors
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Sensors
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sensors/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sensors/mpu6050/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MPU6050
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sensors/ssd1306/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSD1306
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../sensors/w25q32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    W25Q32
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../release/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Release
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Upgrade notes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Контракт Component
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Фазы жизненного цикла
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Критичность — деградация вместо падения
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#di-config-environment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Соглашение DI — Config + Environment
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#composition-root-struct" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composition root — граф зависимостей как struct
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-freertos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        main() и задачи FreeRTOS
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/modules/system.ru.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="system">System — каркас компонентов<a class="headerlink" href="#system" title="Permanent link">&para;</a></h1>
+<p>Начиная с v0.1.8 в SDK есть небольшой zero-cost каркас приложения в
+<code>sdk/system/include/system/</code>. Он даёт приложению <strong>единый жизненный цикл
+компонентов</strong>, <strong>соглашение о внедрении зависимостей</strong> и паттерн <strong>composition
+root</strong> — ту развязку, которую в голом <code>main.cpp</code> пришлось бы собирать вручную.</p>
+<p>Каркас <strong>аддитивен</strong>: существующие шаблоны продолжают работать без изменений.
+Только шаблон <code>imu-flash-oled-demo</code> написан на нём — как рабочий пример.</p>
+<p>Как и интерфейсы драйверов и сенсоров (v0.1.7), контракт — это <strong>C++20-концепт</strong>,
+а не виртуальный базовый класс: нет vtable, нет кучи, нет рантайм-реестра.
+«Реестр» — это список аргументов одного вызова <code>bootstrap(...)</code>.</p>
+<p>Включается флагом <code>STM32_USE_SYSTEM</code> (требует <code>STM32_USE_DRIVERS</code>), линкуется
+<code>stm32_system</code>. См. <a href="../../build-flags/">флаги сборки</a>.</p>
+<h2 id="component">Контракт <code>Component</code><a class="headerlink" href="#component" title="Permanent link">&para;</a></h2>
+<p><code>import system.component;</code> экспортирует контракт и его хелперы
+(<code>export namespace system</code>).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ComponentState</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="n">New</span><span class="p">,</span><span class="w"> </span><span class="n">Registered</span><span class="p">,</span><span class="w"> </span><span class="n">Initialized</span><span class="p">,</span><span class="w"> </span><span class="n">Bound</span><span class="p">,</span><span class="w"> </span><span class="n">Started</span><span class="p">,</span><span class="w"> </span><span class="n">Stopped</span><span class="p">,</span><span class="w"> </span><span class="n">Failed</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">};</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">Criticality</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Critical</span><span class="p">,</span><span class="w"> </span><span class="n">Common</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="k">struct</span><span class="w"> </span><span class="nc">ComponentConfig</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="p">;</span><span class="w"> </span><span class="n">Criticality</span><span class="w"> </span><span class="n">criticality</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="o">&gt;</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="k">concept</span><span class="w"> </span><span class="nc">Component</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">requires</span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">ComponentState</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">onRegister</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">onInit</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w">     </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">onBind</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w">     </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">onStart</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w">    </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">name</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w">        </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">criticality</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">Criticality</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">state</span><span class="p">()</span><span class="w"> </span><span class="p">}</span><span class="w">       </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="n">ComponentState</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">setState</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">}</span><span class="w">   </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">same_as</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="p">;</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">};</span>
+</code></pre></div>
+<p>Компонент <strong>моделирует</strong> концепт — само по себе наследование не требуется. На
+практике четыре аксессора вы получаете бесплатно из <code>ComponentBase</code> и пишете
+только четыре хука жизненного цикла:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">ComponentBase</span><span class="w"> </span><span class="p">{</span><span class="w">                 </span><span class="c1">// невиртуальная примесь, без vtable</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="n">ComponentConfig</span><span class="w"> </span><span class="n">_cfg</span><span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="n">ComponentState</span><span class="w"> </span><span class="n">_state</span><span class="p">{</span><span class="n">ComponentState</span><span class="o">::</span><span class="n">New</span><span class="p">};</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">ComponentBase</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">ComponentConfig</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cfg</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">_cfg</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">name</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">Criticality</span><span class="w"> </span><span class="n">criticality</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">ComponentState</span><span class="w"> </span><span class="n">state</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">setState</span><span class="p">(</span><span class="n">ComponentState</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="p">};</span>
+</code></pre></div>
+<p>Хуки называются <code>onRegister/onInit/onBind/onStart</code> (не <code>register</code> — это
+ключевое слово C++). Каждый возвращает <code>driver::Status</code>. Завершайте компонент
+self-check'ом <code>static_assert(system::Component&lt;MyComponent&gt;)</code>, чтобы дрейф
+сигнатуры был ошибкой компиляции — ровно как <code>static_assert(IXxx&lt;Impl&gt;)</code> на
+драйверах.</p>
+<h2 id="_1">Фазы жизненного цикла<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p><code>import system.bootstrap;</code> прогоняет четыре фазы по всем компонентам <strong>барьером</strong>:
+сначала все <code>onRegister</code>, затем все <code>onInit</code>, затем все <code>onBind</code>, затем все
+<code>onStart</code> — как в референсе <code>Register(); Init(); Bind(); Start();</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Фаза</th>
+<th>Хук</th>
+<th>Состояние при успехе</th>
+<th>Типичная работа</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Register</td>
+<td><code>onRegister()</code></td>
+<td><code>Registered</code></td>
+<td>заявить идентичность; ничего тяжёлого</td>
+</tr>
+<tr>
+<td>Init</td>
+<td><code>onInit()</code></td>
+<td><code>Initialized</code></td>
+<td>поднять периферию/сенсор</td>
+</tr>
+<tr>
+<td>Bind</td>
+<td><code>onBind()</code></td>
+<td><code>Bound</code></td>
+<td>связать ссылки между компонентами (шина v0.1.9)</td>
+</tr>
+<tr>
+<td>Start</td>
+<td><code>onStart()</code></td>
+<td><code>Started</code></td>
+<td>стать активным</td>
+</tr>
+</tbody>
+</table>
+<p><code>onBind</code> сейчас — задел под шину сигналов из v0.1.9; пока делайте
+<code>return driver::Status::Ok;</code>.</p>
+<h2 id="_2">Критичность — деградация вместо падения<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Каждый компонент объявляет <code>Criticality::Critical</code> или <code>Criticality::Common</code>:</p>
+<ul>
+<li><strong><code>Critical</code></strong> — без него система не работает корректно. Отказ хука
+  <strong>останавливает</strong> bootstrap; компонент остаётся <code>Failed</code>, а <code>bootstrap</code>
+  возвращает не-<code>Ok</code> статус.</li>
+<li><strong><code>Common</code></strong> — отказ записывается и считается, компонент остаётся <code>Failed</code> и
+  <strong>пропускается</strong> в последующих фазах, но bootstrap <strong>продолжает</strong>. Система
+  работает деградированно, а не отказывает целиком.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">struct</span><span class="w"> </span><span class="nc">BootReport</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="w"> </span><span class="n">status</span><span class="p">;</span><span class="w">        </span><span class="c1">// Ok, если ни один Critical не упал</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">failedComponent</span><span class="p">;</span><span class="w">  </span><span class="c1">// имя первого Critical-отказа, иначе nullptr</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="n">ComponentState</span><span class="w"> </span><span class="n">failedPhase</span><span class="p">;</span><span class="w">   </span><span class="c1">// на какой фазе он упал</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">degraded</span><span class="p">;</span><span class="w">             </span><span class="c1">// сколько Common-компонентов деградировало</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">};</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">system</span><span class="o">::</span><span class="n">Component</span><span class="p">...</span><span class="w"> </span><span class="n">Cs</span><span class="o">&gt;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">BootReport</span><span class="w"> </span><span class="n">bootstrap</span><span class="p">(</span><span class="n">Cs</span><span class="w"> </span><span class="o">&amp;</span><span class="p">...</span><span class="n">components</span><span class="p">);</span>
+</code></pre></div>
+<h2 id="di-config-environment">Соглашение DI — <code>Config</code> + <code>Environment</code><a class="headerlink" href="#di-config-environment" title="Permanent link">&para;</a></h2>
+<p>Компонент принимает две конструкторские структуры («бедный DI» — без контейнера,
+без рантайма):</p>
+<ul>
+<li><strong><code>Config</code></strong> — compile-time константы (имя и критичность через
+  <code>ComponentConfig base</code>, периоды, пороги).</li>
+<li><strong><code>Environment</code></strong> — ссылки на зависимости (шины, другие компоненты). Подстановка
+  мока в <code>Environment</code> — это и есть то, что делает компонент тестируемым вне
+  железа.</li>
+</ul>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">driver</span><span class="o">::</span><span class="n">II2c</span><span class="w"> </span><span class="n">I2cDriver</span><span class="o">&gt;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">ImuSampler</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">ComponentBase</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">public</span><span class="o">:</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">Config</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">ComponentConfig</span><span class="w"> </span><span class="n">base</span><span class="p">;</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">periodMs</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">Environment</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">I2cDriver</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i2c</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="n">ImuSampler</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Config</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cfg</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Environment</span><span class="w"> </span><span class="o">&amp;</span><span class="n">env</span><span class="p">)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">ComponentBase</span><span class="p">(</span><span class="n">cfg</span><span class="p">.</span><span class="n">base</span><span class="p">),</span><span class="w"> </span><span class="n">_periodMs</span><span class="p">(</span><span class="n">cfg</span><span class="p">.</span><span class="n">periodMs</span><span class="p">),</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">          </span><span class="n">_mpu</span><span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="n">i2c</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="cm">/* конфиг сенсора */</span><span class="p">})</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="w"> </span><span class="n">onRegister</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="w"> </span><span class="n">onInit</span><span class="p">()</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">_mpu</span><span class="p">.</span><span class="n">init</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="w"> </span><span class="n">onBind</span><span class="p">()</span><span class="w">     </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="w"> </span><span class="n">onStart</span><span class="p">()</span><span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">    </span><span class="c1">// ...</span>
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="p">};</span>
+</code></pre></div>
+<p>Компонент, которому нужна обобщённая шина, — это <strong>ограниченный шаблон</strong>: тот же
+краткий стиль <code>template &lt;driver::II2c I2cDriver&gt;</code>, что и у сенсоров, с полными
+описательными именами параметров (<code>I2cDriver</code> / <code>SpiDriver</code> / <code>GpioDriver</code>).</p>
+<h2 id="composition-root-struct">Composition root — граф зависимостей как <code>struct</code><a class="headerlink" href="#composition-root-struct" title="Permanent link">&para;</a></h2>
+<p>Объявите каждый драйвер и компонент членом одного <code>struct</code>. C++ гарантирует, что
+члены конструируются <strong>в порядке объявления</strong>, поэтому зависимости (объявленные
+раньше) уже живы, когда на них ссылается более поздний член. Это compile-time
+развязка — никакого рантайм-IoC.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">struct</span><span class="w"> </span><span class="nc">DemoApp</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="n">I2c</span><span class="w">  </span><span class="n">i2c1</span><span class="p">{</span><span class="o">*</span><span class="n">I2C1</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="cm">/* ... */</span><span class="p">}};</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">Spi</span><span class="w">  </span><span class="n">spi2</span><span class="p">{</span><span class="o">*</span><span class="n">SPI2</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="cm">/* ... */</span><span class="p">}};</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">    </span><span class="n">ImuSampler</span><span class="o">&lt;</span><span class="n">I2c</span><span class="o">&gt;</span><span class="w"> </span><span class="n">imu</span><span class="p">{</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="p">{.</span><span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;imu&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">criticality</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">Criticality</span><span class="o">::</span><span class="n">Critical</span><span class="p">},</span><span class="w"> </span><span class="p">.</span><span class="n">periodMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">},</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">        </span><span class="p">{.</span><span class="n">i2c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i2c1</span><span class="p">}};</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="n">DisplayView</span><span class="o">&lt;</span><span class="n">I2c</span><span class="o">&gt;</span><span class="w"> </span><span class="n">view</span><span class="p">{</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">        </span><span class="p">{.</span><span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;oled&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">criticality</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">Criticality</span><span class="o">::</span><span class="n">Common</span><span class="p">},</span><span class="w"> </span><span class="p">.</span><span class="n">periodMs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">200</span><span class="p">},</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span><span class="p">{.</span><span class="n">i2c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i2c1</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">imu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">imu</span><span class="p">}};</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">BootReport</span><span class="w"> </span><span class="n">boot</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">bootstrap</span><span class="p">(</span><span class="n">imu</span><span class="p">,</span><span class="w"> </span><span class="n">view</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">};</span>
+</code></pre></div>
+<p>Единственный список аргументов <code>bootstrap(imu, view)</code> — это <strong>единственный
+источник правды</strong> о наборе компонентов: нет отдельного ручного списка
+регистрации, который надо держать в синхронизации (ровно та ловушка, о которой
+предупреждает референсная архитектура).</p>
+<p>Типы членов пишите явно (<code>ImuSampler&lt;I2c&gt;</code>) — CTAD нужен только в свободных
+call-site'ах, не для членов <code>struct</code>.</p>
+<h2 id="main-freertos"><code>main()</code> и задачи FreeRTOS<a class="headerlink" href="#main-freertos" title="Permanent link">&para;</a></h2>
+<p>Задачи FreeRTOS, созданные <strong>до</strong> <code>vTaskStartScheduler()</code>, не исполняются до
+старта планировщика, поэтому и bootstrap (он прогоняет четыре хука в <code>main</code> до
+планировщика), и создание задач могут пройти до старта:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">BootReport</span><span class="w"> </span><span class="n">report</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app</span><span class="p">.</span><span class="n">boot</span><span class="p">();</span><span class="w">   </span><span class="c1">// Register→Init→Bind→Start</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="c1">// report.status / report.degraded → лог в UART</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">rtos</span><span class="o">::</span><span class="n">Task</span><span class="w"> </span><span class="n">tImu</span><span class="p">(</span><span class="s">&quot;imu&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">384</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">imuEntry</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">app</span><span class="p">.</span><span class="n">imu</span><span class="p">);</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">rtos</span><span class="o">::</span><span class="n">Task</span><span class="w"> </span><span class="n">tView</span><span class="p">(</span><span class="s">&quot;view&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">viewEntry</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">app</span><span class="p">.</span><span class="n">view</span><span class="p">);</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">    </span><span class="n">rtos</span><span class="o">::</span><span class="n">Task</span><span class="o">::</span><span class="n">startScheduler</span><span class="p">();</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="p">}</span>
+</code></pre></div>
+<p>Каждый <code>*Entry(void*)</code> — статический трамплин, зовущий <code>component-&gt;run()</code>;
+приводите <code>void*</code> обратно через <code>decltype(&amp;app.imu)</code> (имя шаблона требует
+аргументов). <code>onStart()</code> — место, где компонент становится активным; в демо
+физический запуск задач живёт в <code>main</code>, потому что <code>rtos::Task</code> стартует в
+конструкторе (отложенного старта пока нет).</p>
+<p>Полный рабочий пример — в шаблоне <code>imu-flash-oled-demo</code>
+(<code>ImuSampler</code> + <code>DisplayView</code> + <code>FlashLogger</code> на общих шинах).</p>
+<hr />
+<h1 id="v019">Слой конкурентности (v0.1.9)<a class="headerlink" href="#v019" title="Permanent link">&para;</a></h1>
+<p>Поверх каркаса компонентов библиотека <code>system</code> даёт три слоистых примитива,
+позволяющих компонентам общаться без прямых вызовов друг друга: <code>WorkQueue</code>,
+<code>SingleThreadExecutor</code> и типобезопасную шину сигналов. Все три держат стиль SDK
+— <strong>ноль vtable, ноль кучи, хранилище у клиента</strong> — и переиспользуют тот же
+механизм thunk'ов <code>void(*)(void*)</code>, что и трамплины задач FreeRTOS.</p>
+<table>
+<thead>
+<tr>
+<th>Модуль</th>
+<th>Зависит от</th>
+<th>Строится когда</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>system.work_queue</code></td>
+<td>только CMSIS (PRIMASK)</td>
+<td>всегда (часть <code>stm32_system</code>)</td>
+</tr>
+<tr>
+<td><code>system.executor</code></td>
+<td><code>rtos.hpp</code> (FreeRTOS)</td>
+<td>только с <code>STM32_USE_FREERTOS</code></td>
+</tr>
+<tr>
+<td><code>system.signal_bus</code></td>
+<td>executor + work queue</td>
+<td>только с <code>STM32_USE_FREERTOS</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ядро очереди намеренно RTOS-free: время инъектируется (<code>runDue(now)</code>), поэтому
+оно же приводит bare-metal super-loop через <code>runOnce()</code> и остаётся
+host-тестируемым.</p>
+<h2 id="workqueue-workitem"><code>WorkQueue</code> и <code>WorkItem</code> — отложенная работа без аллокаций<a class="headerlink" href="#workqueue-workitem" title="Permanent link">&para;</a></h2>
+<p><code>WorkItem</code> — <strong>интрузивный узел, которым владеет клиент</strong>: клиент держит его
+членом на всё время жизни, поэтому постановка в очередь ничего не аллоцирует.
+Узел несёт thunk <code>void(*)(void*)</code> плюс контекст; метод привязывается
+captureless-фабрикой:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">system</span><span class="o">::</span><span class="n">WorkItem</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">WorkItem</span><span class="o">::</span><span class="n">bind</span><span class="o">&lt;&amp;</span><span class="n">MyType</span><span class="o">::</span><span class="n">onWork</span><span class="o">&gt;</span><span class="p">(</span><span class="n">myObject</span><span class="p">);</span>
+</code></pre></div>
+<p><code>WorkQueue</code> — не-шаблонный интрузивный список, упорядоченный по due-тику:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kt">void</span><span class="w">   </span><span class="nf">schedule</span><span class="p">(</span><span class="n">WorkItem</span><span class="o">&amp;</span><span class="p">);</span><span class="w">                       </span><span class="c1">// FIFO, due на эпохе (super-loop)</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="kt">void</span><span class="w">   </span><span class="nf">schedulePriority</span><span class="p">(</span><span class="n">WorkItem</span><span class="o">&amp;</span><span class="p">);</span><span class="w">               </span><span class="c1">// вперёд равных по due</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kt">void</span><span class="w">   </span><span class="nf">scheduleAt</span><span class="p">(</span><span class="n">WorkItem</span><span class="o">&amp;</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">due</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">priority</span><span class="p">);</span><span class="w">  </span><span class="c1">// абсолютный тик</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="kt">void</span><span class="w">   </span><span class="nf">scheduleAfter</span><span class="p">(</span><span class="n">WorkItem</span><span class="o">&amp;</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">now</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">delay</span><span class="p">);</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="kt">void</span><span class="w">   </span><span class="nf">cancel</span><span class="p">(</span><span class="n">WorkItem</span><span class="o">&amp;</span><span class="p">);</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="kt">size_t</span><span class="w"> </span><span class="nf">runDue</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">now</span><span class="p">);</span><span class="w">                       </span><span class="c1">// исполнить всё с due ≤ now</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="kt">size_t</span><span class="w"> </span><span class="nf">runOnce</span><span class="p">();</span><span class="w">                                  </span><span class="c1">// слить всё, игнорируя due (super-loop)</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="kt">bool</span><span class="w">   </span><span class="nf">nextDue</span><span class="p">(</span><span class="kt">uint32_t</span><span class="o">&amp;</span><span class="w"> </span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="kt">bool</span><span class="w">   </span><span class="nf">pending</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</code></pre></div>
+<p>Два свойства несущие:</p>
+<ul>
+<li><strong>Идемпотентная постановка.</strong> Уже стоящий в очереди <code>WorkItem</code> повторно не
+  вставляется; второй <code>schedule()</code> до исполнения — no-op. Именно это позволяет
+  каналу <em>коалесцировать</em> повторные публикации, а не рвать список.</li>
+<li><strong>Обработчики исполняются вне критической секции.</strong> <code>runDue</code>/<code>runOnce</code>
+  отцепляют элемент под короткой CMSIS-PRIMASK-секцией, затем зовут thunk с
+  восстановленными прерываниями — поэтому обработчик может пере-планировать себя
+  (периодические авто-перевзводятся на <code>due + period</code>).</li>
+</ul>
+<p>Порядок (FIFO / priority / cancel) проверяется в compile-time <code>consteval</code>
+self-check'ом внутри модуля — тот же паттерн, что <code>resultSelfCheck</code> в
+<code>driver.types</code>.</p>
+<h3 id="thread-safety-v0111">Thread-safety аннотации (v0.1.11)<a class="headerlink" href="#thread-safety-v0111" title="Permanent link">&para;</a></h3>
+<p>PRIMASK-критсекция смоделирована как Clang thread-safety <strong>capability</strong>
+(<code>util/thread_safety.hpp</code>): <code>system::detail::g_criticalSection</code> — токен,
+<code>enterCritical()</code> / <code>leaveCritical()</code> размечены <code>ACQUIRE</code> / <code>RELEASE</code>, а головы
+интрузивных списков, которых касаются только внутри секции — <code>WorkQueue::_head</code>
+и <code>Channel::_ring</code> — помечены <code>GUARDED_BY</code>. <code>rtos::Mutex</code> / <code>rtos::LockGuard</code>
+несут <code>CAPABILITY</code> / <code>SCOPED_CAPABILITY</code>. Под Clang <code>-Wthread-safety</code> это даёт
+статические проверки «поле трогается только под своей блокировкой»; под GCC
+(компилятор SDK) каждый макрос разворачивается в пусто, поэтому кодоген не
+меняется. Прогон анализа в CI приедет с clang-tidy (issue #73).</p>
+<h2 id="singlethreadexecutor"><code>SingleThreadExecutor</code> — системный поток<a class="headerlink" href="#singlethreadexecutor" title="Permanent link">&para;</a></h2>
+<p>Executor связывает <code>WorkQueue</code> с одной выделенной <code>rtos::Task</code> и семафором
+пробуждения. Обработчики, поставленные ему, исполняются <strong>последовательно на
+этой одной задаче</strong>, поэтому гонок между ними нет by design — без мьютекса на
+обработчик.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">system</span><span class="o">::</span><span class="n">SingleThreadExecutor</span><span class="w"> </span><span class="n">exec</span><span class="p">{{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;sys&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">stackDepth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">}};</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">exec</span><span class="p">.</span><span class="k">post</span><span class="p">(</span><span class="n">item</span><span class="p">);</span><span class="w">                 </span><span class="c1">// исполнить как можно скорее на задаче executor</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="n">exec</span><span class="p">.</span><span class="n">postAfter</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="w"> </span><span class="mi">50</span><span class="p">);</span><span class="w">        </span><span class="c1">// исполнить через 50 мс</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="n">exec</span><span class="p">.</span><span class="n">addPeriodic</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">);</span><span class="w">    </span><span class="c1">// повторять каждые 1000 мс (перевзвод в ядре)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="n">exec</span><span class="p">.</span><span class="n">postFromISR</span><span class="p">(</span><span class="n">item</span><span class="p">);</span><span class="w">          </span><span class="c1">// отложить работу из ISR</span>
+</code></pre></div>
+<p>Его цикл зовёт <code>runDue(xTaskGetTickCount())</code>, затем спит на семафоре до
+ближайшего due-элемента (или пока <code>post</code> не разбудит). Как всякий объект SDK,
+executor — глобальный член composition-root: задача создаётся на static-init, но
+бежит только после <code>vTaskStartScheduler()</code>.</p>
+<h2 id="channelevent-maxsubs">Шина сигналов — типобезопасный <code>Channel&lt;Event, MaxSubs&gt;</code><a class="headerlink" href="#channelevent-maxsubs" title="Permanent link">&para;</a></h2>
+<p>Модули общаются через типизированные каналы, а не строки и <code>reinterpret_cast</code>.
+Событие — любая тривиально копируемая тег-структура; канал держит фикс-массив из
+<code>MaxSubs</code> слотов подписчиков (без кучи) и собственный <code>WorkItem</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">struct</span><span class="w"> </span><span class="nc">HeartbeatEvent</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">seq</span><span class="p">;</span><span class="w"> </span><span class="kt">int16_t</span><span class="w"> </span><span class="n">value</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="n">system</span><span class="o">::</span><span class="n">Channel</span><span class="o">&lt;</span><span class="n">HeartbeatEvent</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="w"> </span><span class="n">bus</span><span class="p">{</span><span class="n">exec</span><span class="p">};</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="c1">// подписать метод-обработчик (возвращает не-Ok, если таблица полна)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bus</span><span class="p">.</span><span class="n">subscribe</span><span class="o">&lt;&amp;</span><span class="n">Consumer</span><span class="o">::</span><span class="n">onBeat</span><span class="o">&gt;</span><span class="p">(</span><span class="n">consumer</span><span class="p">);</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">// опубликовать — веерная рассылка идёт позже, последовательно, на executor</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">bus</span><span class="p">.</span><span class="n">publish</span><span class="p">({.</span><span class="n">seq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">});</span>
+</code></pre></div>
+<p><code>publish</code> сохраняет событие под критической секцией и ставит <code>WorkItem</code> канала в
+executor; <code>dispatch()</code> затем копирует событие и зовёт каждого подписчика.
+Поскольку доставка сериализована на executor, подписчики не гоняются.
+Одиночный слот события по умолчанию <strong>коалесцирует</strong> — если две публикации
+попадут до dispatch, подписчики увидят последнюю (идеально для семантики
+«последняя выборка»). Передайте третий шаблонный аргумент <code>RingDepth</code>, если
+нужно каждое событие — см. ниже.</p>
+<p>Обработчики должны быть короткими — они бегут на общей задаче executor. Тяжёлую
+работу откладывайте, поставив из обработчика отдельный <code>WorkItem</code> обратно в
+executor.</p>
+<p>Пример на два компонента — в шаблоне <code>signal-bus-demo</code>: <code>Producer</code> со своей
+задачей публикует, а реактивный <code>Consumer</code> <strong>без собственной задачи</strong>
+обрабатывает события на executor, подписавшись в <code>onBind()</code>.</p>
+<h1 id="v0110">Достройка слоя конкурентности (v0.1.10)<a class="headerlink" href="#v0110" title="Permanent link">&para;</a></h1>
+<p>Три уточнения поверх v0.1.9, в том же стиле zero-vtable / zero-heap. Шаблон
+<code>button-events-demo</code> показывает их все вместе.</p>
+<h2 id="timer"><code>Timer</code> — отложенные и периодические колбэки<a class="headerlink" href="#timer" title="Permanent link">&para;</a></h2>
+<p><code>system::Timer</code> (модуль <code>system.timer</code>, только под FreeRTOS) — тонкая
+типобезопасная обёртка над <code>postAfter</code> / <code>addPeriodic</code> / <code>cancel</code> executor'а.
+Держит один <code>WorkItem</code>; колбэк — captureless-thunk, никогда <code>std::function</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">system</span><span class="o">::</span><span class="n">Timer</span><span class="w"> </span><span class="n">debounce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">Timer</span><span class="o">::</span><span class="n">bind</span><span class="o">&lt;&amp;</span><span class="n">Button</span><span class="o">::</span><span class="n">onDebounced</span><span class="o">&gt;</span><span class="p">(</span><span class="n">exec</span><span class="p">,</span><span class="w"> </span><span class="n">button</span><span class="p">);</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">debounce</span><span class="p">.</span><span class="n">start</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span><span class="w">           </span><span class="c1">// однократно через 20 мс</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">debounce</span><span class="p">.</span><span class="n">startPeriodic</span><span class="p">(</span><span class="mi">1000</span><span class="p">);</span><span class="w"> </span><span class="c1">// повтор каждую секунду</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="n">debounce</span><span class="p">.</span><span class="n">stop</span><span class="p">();</span><span class="w">              </span><span class="c1">// отмена; active() отдаёт признак ожидания</span>
+</code></pre></div>
+<p><code>start</code> сначала снимает прежнюю постановку и обнуляет период, поэтому
+перевзвод таймера всегда определён. Обработчики бегут на задаче executor,
+сериализованы с остальными — без блокировок внутри колбэка.</p>
+<h2 id="ring-channelevent-maxsubs-ringdepth">Ring-режим <code>Channel&lt;Event, MaxSubs, RingDepth&gt;</code><a class="headerlink" href="#ring-channelevent-maxsubs-ringdepth" title="Permanent link">&para;</a></h2>
+<p>У <code>Channel</code> появился хвостовой шаблонный параметр <code>RingDepth</code> (по умолчанию <code>1</code>).
+При дефолте поведение ровно как в v0.1.9 — один коалесцирующий слот, последний
+выигрывает. При <code>RingDepth &gt; 1</code> держится кольцо фиксированной ёмкости и
+доставляется <strong>каждое</strong> событие в порядке FIFO, при переполнении вытесняется
+самое старое (без кучи).</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">using</span><span class="w"> </span><span class="n">Bus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">system</span><span class="o">::</span><span class="n">Channel</span><span class="o">&lt;</span><span class="n">ButtonEvent</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span><span class="p">;</span><span class="w">  </span><span class="c1">// 4 подписчика, кольцо на 8</span>
+</code></pre></div>
+<p>Кольцо вынесено в самостоятельный <code>detail::EventRing&lt;Event, Depth&gt;</code>, поэтому его
+порядок (коалесцирование при глубине 1, FIFO + drop-oldest выше) проверяется
+<code>consteval</code>-самотестом в духе <code>workQueueOrderSelfCheck</code>. <code>dispatch()</code> дренирует
+всё кольцо за одно пробуждение, так что серия публикаций, коалесцирующая в один
+<code>WorkItem</code>, всё равно доставляет все накопленные события.</p>
+<h2 id="deferred-start">Компоненты со своей задачей (deferred-start)<a class="headerlink" href="#deferred-start" title="Permanent link">&para;</a></h2>
+<p><code>rtos::Task</code> теперь default-конструируем и получил
+<code>create(name, stack, prio, fn, param)</code> (идемпотентный — повторный вызов no-op).
+Это позволяет компоненту владеть своей задачей и стартовать её в <code>onStart()</code>, а
+не в <code>main</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="w"> </span><span class="nf">onStart</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_task</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">_name</span><span class="p">,</span><span class="w"> </span><span class="n">_stack</span><span class="p">,</span><span class="w"> </span><span class="n">_prio</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">trampoline</span><span class="p">,</span><span class="w"> </span><span class="k">this</span><span class="p">)</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">               </span><span class="o">?</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">               </span><span class="o">:</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">HardwareError</span><span class="p">;</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">}</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="c1">// ...</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="n">rtos</span><span class="o">::</span><span class="n">Task</span><span class="w"> </span><span class="n">_task</span><span class="p">;</span><span class="w">  </span><span class="c1">// default-конструируемый член, стартует в onStart()</span>
+</code></pre></div>
+<p>Задачи, созданные до <code>vTaskStartScheduler()</code>, спят до запуска планировщика,
+поэтому <code>onStart()</code> (выполняется до планировщика в <code>bootstrap</code>) — естественное
+место для их создания. Точка входа остаётся статическим трамплином, приводящим
+<code>void*</code> обратно к компоненту.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
