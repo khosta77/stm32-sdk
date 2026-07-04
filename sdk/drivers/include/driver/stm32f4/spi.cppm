@@ -21,17 +21,9 @@ namespace stm32f4 {
 // Async transfer via DMA will land in a follow-up PR.
 
 class Spi {
-public:
-    struct Config {
-        uint32_t clockHz;
-        uint8_t mode;
-        bool lsbFirst;
-        uint8_t dataSize;
-    };
-
 private:
     SPI_TypeDef &_periph;
-    Config _cfg;
+    SpiConfig _cfg;
 
 #ifdef STM32_USE_FREERTOS
     SemaphoreHandle_t _mutex = nullptr;
@@ -77,7 +69,7 @@ private:
     }
 
 public:
-    Spi(SPI_TypeDef &periph, const Config &cfg) : _periph(periph), _cfg(cfg) {
+    Spi(SPI_TypeDef &periph, const SpiConfig &cfg) : _periph(periph), _cfg(cfg) {
         reg::write(_periph.CR1, 0);
 
         uint32_t cr1 = SPI_CR1_MSTR | SPI_CR1_SSI | SPI_CR1_SSM;
@@ -96,16 +88,17 @@ public:
         }
         cr1 |= (br << SPI_CR1_BR_Pos);
 
-        if (_cfg.mode & 0x01) {
+        const uint8_t mode = static_cast<uint8_t>(_cfg.mode);
+        if (mode & 0x01) {
             cr1 |= SPI_CR1_CPHA;
         }
-        if (_cfg.mode & 0x02) {
+        if (mode & 0x02) {
             cr1 |= SPI_CR1_CPOL;
         }
         if (_cfg.lsbFirst) {
             cr1 |= SPI_CR1_LSBFIRST;
         }
-        if (_cfg.dataSize == 16) {
+        if (_cfg.dataSize == SpiDataSize::Bits16) {
             cr1 |= SPI_CR1_DFF;
         }
 

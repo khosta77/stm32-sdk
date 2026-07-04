@@ -18,15 +18,9 @@ export namespace driver {
 namespace stm32f4 {
 
 class I2c {
-public:
-    struct Config {
-        uint32_t clockSpeed;
-        bool fastMode;
-    };
-
 private:
     I2C_TypeDef &_periph;
-    Config _cfg;
+    I2cConfig _cfg;
 
 #ifdef STM32_USE_FREERTOS
     SemaphoreHandle_t _mutex = nullptr;
@@ -221,7 +215,7 @@ private:
     }
 
 public:
-    I2c(I2C_TypeDef &periph, const Config &cfg) : _periph(periph), _cfg(cfg) {
+    I2c(I2C_TypeDef &periph, const I2cConfig &cfg) : _periph(periph), _cfg(cfg) {
         reg::write(_periph.CR1, I2C_CR1_SWRST);
         reg::write(_periph.CR1, 0);
         reinit();

@@ -17,12 +17,15 @@ extern "C" {
 int snprintf(char *str, size_t size, const char *format, ...);
 }
 
+using driver::DataBits;
 using driver::gpio;
 using driver::OutputSpeed;
 using driver::OutputType;
 using driver::Parity;
 using driver::PinMode;
 using driver::PullMode;
+using driver::StopBits;
+using driver::uart;
 using driver::stm32f4::GpioPin;
 using driver::stm32f4::Uart;
 
@@ -150,12 +153,12 @@ struct SignalDemo {
     Uart<> uart2{
         *USART2,
         USART2_IRQn,
-        {
+        uart({
             .baudrate = 115200,
-            .dataBits = 8,
-            .stopBits = 1,
+            .dataBits = DataBits::Eight,
+            .stopBits = StopBits::One,
             .parity = Parity::None,
-        },
+        }),
     };
 
     system::SingleThreadExecutor exec{

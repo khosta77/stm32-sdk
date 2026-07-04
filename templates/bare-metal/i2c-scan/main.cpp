@@ -4,6 +4,7 @@
 
 import driver.types;
 import driver.gpio;
+import driver.i2c;
 import driver.reg;
 import driver.stm32f4.clock;
 import driver.stm32f4.gpio;
@@ -15,6 +16,7 @@ int snprintf(char *str, size_t size, const char *format, ...);
 
 using driver::gpio;
 using driver::GpioConfig;
+using driver::i2c;
 using driver::OutputSpeed;
 using driver::OutputType;
 using driver::PinMode;
@@ -78,10 +80,10 @@ GpioPin g_i2cSda{
 
 I2c g_i2c1{
     *I2C1,
-    {
+    i2c({
         .clockSpeed = 100000,
         .fastMode = false,
-    },
+    }),
 };
 
 void uartInit() {

@@ -9,6 +9,21 @@ import driver.types;
 
 export namespace driver {
 
+struct I2cConfig {
+    uint32_t clockSpeed;
+    bool fastMode;
+};
+
+consteval I2cConfig i2c(I2cConfig c) {
+    if (c.clockSpeed == 0 || c.clockSpeed > 400000) {
+        throw "I2cConfig: clockSpeed must be in [1, 400000]";
+    }
+    if (!c.fastMode && c.clockSpeed > 100000) {
+        throw "I2cConfig: clockSpeed > 100000 requires fastMode";
+    }
+    return c;
+}
+
 // Compile-time contract for an I2C master bus (replaces the former virtual
 // II2c base class). A sensor templated on `II2c Bus` calls these directly.
 template <typename T>
