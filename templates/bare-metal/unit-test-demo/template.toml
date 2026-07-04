@@ -1,0 +1,5 @@
+[template]
+name = "unit-test-demo"
+description = "On-device unit tests: ASSERT_/EXPECT_ helpers with a UART-reporting runner (no exceptions, no heap)"
+category = "bare-metal"
+families = ["stm32f4"]

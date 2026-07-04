@@ -73,6 +73,7 @@ nav:
       - Sensors: modules/sensors.md
       - FreeRTOS: modules/freertos.md
       - System: modules/system.md
+      - Testing: modules/testing.md
   - Chips:
       - Overview: chips/index.md
       - Datasheets: chips/datasheets.md
