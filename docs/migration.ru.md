@@ -14,6 +14,29 @@
 5. Прошейте на железо и убедитесь, что ваш smoke-test проходит.
 6. Сливайте, когда всё зелёное.
 
+## Новое в v0.1.12
+
+v0.1.12 — релиз **про форматирование и инструменты**, без изменений поведения
+исходников и API. В C++-коде вашего проекта менять нечего. На локальный workflow
+влияют две вещи:
+
+- **Стиль SDK теперь Google 2 пробела / 80 колонок** (`Cpp11BracedListStyle:
+  true`). Если ваш проект переиспользует `.clang-format` из SDK — перепрогоните
+  `clang-format -i`, ожидайте реверстку только по пробелам. Вендорные / сторонние
+  файлы в проекте можно исключить своим `.clang-format-ignore` (нужен
+  clang-format 18+).
+- **Опциональные pre-commit хуки.** SDK теперь поставляет
+  `.pre-commit-config.yaml` (clang-format запинен на 19.1.3 + Conventional
+  Commits + `poe ci`). Чтобы включить те же проверки в своём проекте:
+
+  ```bash
+  pip install pre-commit
+  pre-commit install --hook-type pre-commit --hook-type commit-msg
+  ```
+
+  Используйте clang-format 19 под запиненную версию; более старые мажоры могут
+  верстать иначе.
+
 ## Новое в v0.1.11
 
 v0.1.11 вводит compile-time валидацию конфигов I2C / SPI / UART. Это **ломающее
@@ -320,15 +343,17 @@ Uart<512, 256, UartMode::Dma> g_uart2{ ... };
 
 ## Изменения в clang-format
 
-В `.clang-format` добавлены:
+Начиная с v0.1.12 стиль — Google со следующими отклонениями:
 
+- `IndentWidth` / `TabWidth`: 2, `ColumnLimit`: 80, `AccessModifierOffset`: -2
 - `BinPackArguments: false`, `BinPackParameters: false`
 - `AllowAllArgumentsOnNextLine: false`, `AllowAllParametersOfDeclarationOnNextLine: false`
 - `AlignAfterOpenBracket: BlockIndent`
-- `Cpp11BracedListStyle: false`
+- `Cpp11BracedListStyle: true` (braced-init списки как `{nullptr}`)
 
-При `clang-format -i` после апгрейда — ожидайте шумные diff'ы на call-сайтах
-с aggregate-конфигами. Используйте trailing comma после последнего
+Вендорные CMSIS / newlib исходники исключены через `.clang-format-ignore`
+(clang-format 18+). При `clang-format -i` после апгрейда — ожидайте шумные diff'ы
+на call-сайтах с aggregate-конфигами. Используйте trailing comma после последнего
 designated-инициализатора, чтобы детерминированно сохранить multi-line.
 
 ## Поведение I2C

@@ -59,6 +59,22 @@ to update docs means future contributors see stale information.
   `set_source_files_properties(... PROPERTIES COMPILE_OPTIONS "-Wno-XXX")`,
   not globally.
 
+- C/C++ style is Google, **2-space indent, 80-column limit**,
+  `Cpp11BracedListStyle: true` (braced-init lists format as `{nullptr}`),
+  fixed in the root `.clang-format` (since v0.1.12). clang-format is
+  **pinned to 19.1.3** in `.pre-commit-config.yaml` and the `Format` CI
+  job; use clang-format 19 locally so output matches. Do NOT change the
+  style or the pin without explicit user approval. Vendor CMSIS / newlib
+  sources are excluded via `.clang-format-ignore` and must stay pristine —
+  never reformat them.
+
+- pre-commit hooks are mandatory (`.pre-commit-config.yaml`): clang-format
+  on C/C++/`.cppm`, Conventional Commits on the message, `poe ci` on push
+  for `tools/stmtool`. Install once with `pre-commit install --hook-type
+  pre-commit --hook-type commit-msg`. The `Format` workflow enforces the
+  same clang-format on every push / PR to `develop`. Contributor workflow
+  lives in `CONTRIBUTING.md`.
+
 - `stmtool` code must pass `poetry run poe ci` before any commit: ruff,
   flake8, black, isort, mypy (strict), bandit, pylint, pytest with at
   least 70% coverage. Do NOT add `# noqa`, `# type: ignore`,

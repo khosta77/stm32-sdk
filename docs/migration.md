@@ -14,6 +14,29 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.1.12
+
+v0.1.12 is a **formatting and tooling** release — no source-behaviour or API
+changes. There is nothing to change in your project's C++ source. Two things
+affect your local workflow:
+
+- **The SDK style is now Google 2-space / 80-column** (`Cpp11BracedListStyle:
+  true`). If your project reuses the SDK `.clang-format`, re-run `clang-format -i`
+  and expect a whitespace-only reflow. Vendor / third-party files you keep in
+  your project can be excluded with your own `.clang-format-ignore` (needs
+  clang-format 18+).
+- **Optional pre-commit hooks.** The SDK now ships `.pre-commit-config.yaml`
+  (clang-format pinned to 19.1.3 + Conventional Commits + `poe ci`). To adopt the
+  same gates in your project:
+
+  ```bash
+  pip install pre-commit
+  pre-commit install --hook-type pre-commit --hook-type commit-msg
+  ```
+
+  Use clang-format 19 to match the pinned version; older majors may reflow
+  differently.
+
 ## New in v0.1.11
 
 v0.1.11 introduces compile-time validation for the I2C / SPI / UART configs.
@@ -320,16 +343,18 @@ configuration changes:
 
 ## clang-format changes
 
-`.clang-format` adds:
+As of v0.1.12 the style is Google with these deviations:
 
+- `IndentWidth` / `TabWidth`: 2, `ColumnLimit`: 80, `AccessModifierOffset`: -2
 - `BinPackArguments: false`, `BinPackParameters: false`
 - `AllowAllArgumentsOnNextLine: false`, `AllowAllParametersOfDeclarationOnNextLine: false`
 - `AlignAfterOpenBracket: BlockIndent`
-- `Cpp11BracedListStyle: false`
+- `Cpp11BracedListStyle: true` (braced-init lists format as `{nullptr}`)
 
-If you run `clang-format -i` after upgrading, expect noisy diffs on call sites
-that pass aggregate configs. Use trailing commas after the last designated
-initializer to preserve multi-line formatting deterministically.
+Vendor CMSIS / newlib sources are excluded via `.clang-format-ignore`
+(clang-format 18+). If you run `clang-format -i` after upgrading, expect noisy
+diffs on call sites that pass aggregate configs. Use trailing commas after the
+last designated initializer to preserve multi-line formatting deterministically.
 
 ## I2C behaviour
 
