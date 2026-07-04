@@ -14,6 +14,74 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.1.11
+
+v0.1.11 introduces compile-time validation for the I2C / SPI / UART configs.
+This is a **breaking change** for any code that constructs an `I2c`, `Spi`, or
+`Uart<>`. The thread-safety (#57) and unit-test (#58) additions are purely
+additive — new headers, nothing to change in existing code.
+
+### Breaking: I2C / SPI / UART configs (#56)
+
+Three things changed for these drivers:
+
+1. **Wrap the config in its validator.** The config must now go through the free
+   `consteval` validator `i2c()` / `spi()` / `uart()`, exactly like `gpio()` /
+   `exti()`. An invalid config is now a compile error instead of silently wrong.
+2. **SPI / UART fields are now strong enums**, not bare integers: `.mode`,
+   `.dataSize`, `.dataBits`, `.stopBits`.
+3. **The config type moved out of the implementation.** `I2c::Config` is now the
+   free `driver::I2cConfig` (and likewise `driver::SpiConfig` /
+   `driver::UartConfig`), living in the interface module. The implementation no
+   longer re-exports the interface, so add `import driver.i2c;` (resp.
+   `driver.spi` / `driver.uart`) next to `import driver.stm32f4.i2c;`.
+
+Before:
+
+```cpp
+import driver.stm32f4.i2c;
+import driver.stm32f4.spi;
+import driver.stm32f4.uart;
+
+I2c g_i2c1{*I2C1, {.clockSpeed = 400000, .fastMode = true}};
+Spi g_spi1{*SPI1, {.mode = 0, .dataSize = 8, ...}};
+Uart<> g_uart2{*USART2, USART2_IRQn,
+               {.baudrate = 115200, .dataBits = 8, .stopBits = 1,
+                .parity = Parity::None}};
+```
+
+After:
+
+```cpp
+import driver.i2c;
+import driver.spi;
+import driver.uart;
+import driver.stm32f4.i2c;
+import driver.stm32f4.spi;
+import driver.stm32f4.uart;
+
+I2c g_i2c1{*I2C1, i2c({.clockSpeed = 400000, .fastMode = true})};
+Spi g_spi1{*SPI1, spi({.mode = SpiMode::Mode0, .dataSize = SpiDataSize::Bits8, ...})};
+Uart<> g_uart2{*USART2, USART2_IRQn,
+               uart({.baudrate = 115200, .dataBits = DataBits::Eight,
+                     .stopBits = StopBits::One, .parity = Parity::None})};
+```
+
+Field mapping for the enum conversion:
+
+- `.mode = 0` → `.mode = SpiMode::Mode0` (likewise `Mode1`..`Mode3`).
+- `.dataSize = 8` → `.dataSize = SpiDataSize::Bits8` (`16` → `Bits16`).
+- `.dataBits = 8` → `.dataBits = DataBits::Eight` (`9` → `Nine`).
+- `.stopBits = 1` → `.stopBits = StopBits::One` (`2` → `Two`).
+
+### Additive: thread-safety and unit tests (#57, #58)
+
+Nothing to change. `util/thread_safety.hpp` (in `sdk/core/include/util/`) is a
+pure-preprocessor header — its macros are no-ops under GCC and don't affect
+codegen. `testing/unit_test.hpp` is a header-only helper behind
+`STM32_USE_TESTING` (INTERFACE target `stm32_testing`); opt in only if you want
+on-device unit tests. See the new `bare-metal/unit-test-demo` template.
+
 ## New in v0.1.10
 
 v0.1.10 completes the concurrency layer. It is **additive** — no edits are

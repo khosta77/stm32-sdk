@@ -14,6 +14,75 @@
 5. Прошейте на железо и убедитесь, что ваш smoke-test проходит.
 6. Сливайте, когда всё зелёное.
 
+## Новое в v0.1.11
+
+v0.1.11 вводит compile-time валидацию конфигов I2C / SPI / UART. Это **ломающее
+изменение** для любого кода, который создаёт `I2c`, `Spi` или `Uart<>`.
+Добавления thread-safety (#57) и юнит-тестов (#58) чисто аддитивны — новые
+заголовки, в существующем коде менять нечего.
+
+### Ломающее: конфиги I2C / SPI / UART (#56)
+
+Для этих драйверов изменилось три вещи:
+
+1. **Оборачивайте конфиг в валидатор.** Конфиг теперь должен проходить через
+   свободный `consteval`-валидатор `i2c()` / `spi()` / `uart()`, ровно как
+   `gpio()` / `exti()`. Невалидный конфиг теперь ошибка компиляции, а не молча
+   неверное поведение.
+2. **Поля SPI / UART теперь строгие enum'ы**, а не голые целые: `.mode`,
+   `.dataSize`, `.dataBits`, `.stopBits`.
+3. **Тип конфига вынесен из реализации.** `I2c::Config` теперь свободный
+   `driver::I2cConfig` (и аналогично `driver::SpiConfig` / `driver::UartConfig`),
+   живущий в interface-модуле. Реализация больше не реэкспортирует interface,
+   поэтому добавьте `import driver.i2c;` (соотв. `driver.spi` / `driver.uart`)
+   рядом с `import driver.stm32f4.i2c;`.
+
+Было:
+
+```cpp
+import driver.stm32f4.i2c;
+import driver.stm32f4.spi;
+import driver.stm32f4.uart;
+
+I2c g_i2c1{*I2C1, {.clockSpeed = 400000, .fastMode = true}};
+Spi g_spi1{*SPI1, {.mode = 0, .dataSize = 8, ...}};
+Uart<> g_uart2{*USART2, USART2_IRQn,
+               {.baudrate = 115200, .dataBits = 8, .stopBits = 1,
+                .parity = Parity::None}};
+```
+
+Стало:
+
+```cpp
+import driver.i2c;
+import driver.spi;
+import driver.uart;
+import driver.stm32f4.i2c;
+import driver.stm32f4.spi;
+import driver.stm32f4.uart;
+
+I2c g_i2c1{*I2C1, i2c({.clockSpeed = 400000, .fastMode = true})};
+Spi g_spi1{*SPI1, spi({.mode = SpiMode::Mode0, .dataSize = SpiDataSize::Bits8, ...})};
+Uart<> g_uart2{*USART2, USART2_IRQn,
+               uart({.baudrate = 115200, .dataBits = DataBits::Eight,
+                     .stopBits = StopBits::One, .parity = Parity::None})};
+```
+
+Соответствие полей для перехода на enum:
+
+- `.mode = 0` → `.mode = SpiMode::Mode0` (аналогично `Mode1`..`Mode3`).
+- `.dataSize = 8` → `.dataSize = SpiDataSize::Bits8` (`16` → `Bits16`).
+- `.dataBits = 8` → `.dataBits = DataBits::Eight` (`9` → `Nine`).
+- `.stopBits = 1` → `.stopBits = StopBits::One` (`2` → `Two`).
+
+### Аддитивно: thread-safety и юнит-тесты (#57, #58)
+
+Менять нечего. `util/thread_safety.hpp` (в `sdk/core/include/util/`) — чисто
+препроцессорный заголовок: его макросы под GCC no-op и на кодоген не влияют.
+`testing/unit_test.hpp` — header-only хелпер за флагом `STM32_USE_TESTING`
+(INTERFACE-таргет `stm32_testing`); включайте, только если хотите юнит-тесты на
+устройстве. См. новый шаблон `bare-metal/unit-test-demo`.
+
 ## Новое в v0.1.10
 
 v0.1.10 достраивает слой конкурентности. Он **аддитивен** — правки для апгрейда

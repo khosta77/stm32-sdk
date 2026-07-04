@@ -52,6 +52,59 @@ style = "pep440"
 
 ## История релизов
 
+### v0.1.11
+
+Фокус: качество и типобезопасность — `consteval`-валидаторы конфигов I2C / SPI /
+UART, аннотации thread-safety и хелперы юнит-тестов на устройстве
+(issues #56–#58).
+
+Основное:
+
+- **`consteval`-валидаторы конфигов `i2c()` / `spi()` / `uart()`.** Раньше
+  compile-time валидацию имели только `GpioConfig` / `ExtiConfig`. Теперь конфиги
+  I2C / SPI / UART — свободные структуры в interface-модулях (`driver::I2cConfig`,
+  `driver::SpiConfig`, `driver::UartConfig`), вынесенные из типов реализации (было
+  `I2c::Config`), рядом со свободными `consteval`-валидаторами (`driver::i2c()` /
+  `driver::spi()` / `driver::uart()`) в том же стиле, что `gpio()` / `exti()`.
+  Поля SPI / UART стали строгими enum'ами с сентинелом `None`: `SpiMode`
+  (`Mode0`..`Mode3`), `SpiDataSize` (`Bits8` / `Bits16`), `DataBits` (`Eight` /
+  `Nine`), `StopBits` (`One` / `Two`). Невалидный конфиг больше не компилируется.
+  UART `Config`, ранее продублированный в основном шаблоне и DMA-специализации,
+  теперь единый.
+- **Аннотации thread-safety.** Новый чисто-препроцессорный заголовок
+  `util/thread_safety.hpp` (в `sdk/core/include/util/`) оборачивает атрибуты
+  thread-safety из Clang: `CAPABILITY`, `SCOPED_CAPABILITY`, `GUARDED_BY`,
+  `REQUIRES`, `ACQUIRE`, `RELEASE`, `EXCLUDES`, `NO_THREAD_SAFETY_ANALYSIS` и др.
+  Под Clang (`-Wthread-safety`) они дают статанализ; под GCC (на котором собирается
+  SDK) — no-op. Размечены: `rtos::Mutex` (`CAPABILITY`) и `rtos::LockGuard`
+  (`SCOPED_CAPABILITY`) в `rtos.hpp`; PRIMASK-критсекция смоделирована как
+  именованная capability (`system::detail::g_criticalSection`), `enterCritical` /
+  `leaveCritical` как `ACQUIRE` / `RELEASE`, а `WorkQueue::_head` / `Channel::_ring`
+  как `GUARDED_BY`. Это groundwork — реальный прогон анализа Clang приедет с
+  clang-tidy в CI (#73); сейчас важно, что всё компилируется чисто под GCC
+  `-Werror` и кодоген не меняется (макросы разворачиваются в пусто).
+- **Хелперы юнит-тестов на устройстве.** Новый header-only заголовок
+  `testing/unit_test.hpp` (в `sdk/testing/include/testing/`, INTERFACE-таргет
+  `stm32_testing`, флаг `STM32_USE_TESTING`). GTest-подобные `ASSERT_*` /
+  `EXPECT_*` без исключений, без кучи, без динамической линковки: `ASSERT_` делает
+  `return` из тест-функции, `EXPECT_` продолжает. `TEST(name){...}` определяет тест
+  как функцию; `TestRunner runner{writer}` принимает инжектируемый `Writer`
+  (`void(*)(const char*)`); `RUN_TEST(runner, name)` гоняет тест; `runner.summary()`
+  печатает «N passed, M failed» и возвращает bool. Форматирование целых — вручную
+  (без `snprintf`), поэтому один и тот же код тестов компилируется и гоняется и на
+  хосте (writer → stdout), и на устройстве (writer → UART). Новый шаблон
+  `bare-metal/unit-test-demo` демонстрирует это (тесты на `driver::Result<T>`).
+  Дополняет будущие host-тесты (#34 / #35).
+
+Примечания:
+
+- **Ломающее для вызовов драйверов.** Конфиги I2C / SPI / UART теперь надо
+  оборачивать в валидатор (`I2c g{*I2C1, i2c({...})}`), поля SPI / UART стали
+  enum'ами, а тип конфига переехал (`I2c::Config` → `driver::I2cConfig`, требует
+  `import driver.i2c;`). См. [миграцию](migration.ru.md#new-in-v0111).
+- Добавления thread-safety и тестов чисто аддитивны — новые заголовки, для
+  существующего кода правки не нужны.
+
 ### v0.1.10
 
 Фокус: достройка слоя конкурентности — драйвер EXTI, software `Timer`,
