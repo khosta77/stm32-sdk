@@ -1,10 +1,10 @@
 BasedOnStyle: Google
 
-IndentWidth: 4
-TabWidth: 4
+IndentWidth: 2
+TabWidth: 2
 UseTab: Never
-ColumnLimit: 110
-AccessModifierOffset: -4
+ColumnLimit: 80
+AccessModifierOffset: -2
 
 PointerAlignment: Right
 DerivePointerAlignment: false
@@ -20,7 +20,7 @@ BinPackParameters: false
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AlignAfterOpenBracket: BlockIndent
-Cpp11BracedListStyle: false
+Cpp11BracedListStyle: true
 
 BreakBeforeBinaryOperators: None
 BreakBeforeBraces: Attach
