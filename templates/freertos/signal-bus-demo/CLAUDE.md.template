@@ -1,0 +1,100 @@
+# @PROJECT_NAME@
+
+STM32 @STM32_CHIP@ project on stm32-sdk @SDK_VERSION@ — decoupling two
+components through the SDK signal bus: a **Producer** publishes typed events on
+a `system::Channel`, and a reactive **Consumer** handles them on a shared
+`system::SingleThreadExecutor` without ever referencing the Producer.
+
+## SDK rules (must follow)
+
+- CMSIS only, HAL/LL forbidden.
+- C++20 (gnu++20), C11 (gnu11).
+- MMIO access through `driver::reg::set/clear/write/read/get/modify` only.
+- No raw pointers to peripherals — references (`GPIO_TypeDef&`).
+- Configs without defaults — every field must be explicit.
+- `GpioConfig` is an aggregate; wrap in `gpio({...})` for compile-time validation.
+- Trailing comma after the last designated initializer to keep clang-format multi-line.
+
+## Build / flash
+
+```bash
+stmtool build --native
+stmtool flash
+stmtool sdk update          # if [sdk] version = "develop"
+```
+
+## SDK reference
+
+- Documentation: <https://khosta77.github.io/stm32-sdk/>
+- System / component framework: <https://khosta77.github.io/stm32-sdk/modules/system/>
+
+## This template
+
+The whole demo runs off **USART2** (PA2/PA3 @ 115200) plus one LED on **PD12**.
+No sensors — the point is the concurrency layer, not the peripherals.
+
+### Pinout
+
+| Function | Pin | Notes |
+|----------|-----|-------|
+| USART2 TX | PA2 | AF7, 115200 8N1 |
+| USART2 RX | PA3 | AF7 |
+| LED | PD12 | toggled by the Consumer on each event |
+
+### What `main.cpp` does
+
+This template is built on the SDK **concurrency layer** (`STM32_USE_SYSTEM` +
+FreeRTOS: `import system.work_queue; import system.executor; import
+system.signal_bus;`). Two components communicate only through a typed channel:
+
+- `Producer` — a component with its **own FreeRTOS task**. Its `run()` loop
+  publishes a `HeartbeatEvent{seq, value}` on the channel every 500 ms. It has
+  no reference to the Consumer.
+- `Consumer<Uart, GpioPin>` — a **reactive** component with **no task of its
+  own**. In `onBind()` it subscribes its `onBeat()` handler to the channel;
+  every handler call runs on the executor task. It has no reference to the
+  Producer.
+
+Flow:
+
+1. `__initialize_hardware()` enables GPIOA, GPIOD and USART2 clocks.
+2. `struct SignalDemo` is the composition root: the UART, LED, the
+   `SingleThreadExecutor`, the `Channel<HeartbeatEvent, 4>` (injected with the
+   executor), then the two components — each wired by reference to earlier
+   members.
+3. `app.boot()` runs `system::bootstrap(producer, consumer)`: the four phases
+   `Register → Init → Bind → Start`. `Consumer::onBind()` is where the
+   subscription happens; a full subscriber table (more than `MaxSubs`) would
+   surface as a non-`Ok` `BootReport`.
+4. `main` prints the `BootReport`, runs a one-shot `workQueueDispatchSelfCheck()`
+   (RTOS-free, proves FIFO/priority ordering before the scheduler starts),
+   creates the Producer task and starts the scheduler.
+
+The `SingleThreadExecutor` owns its own task (created at static init, runs after
+`startScheduler()`); publishing a value posts an internal `WorkItem` to it, so
+all `onBeat()` fan-out is serialized on that one task — no mutex in the handler.
+
+### Expected behaviour
+
+- On boot USART2 prints `=== signal-bus-demo bootstrap ===`, then
+  `all components started` and `workqueue self-check: PASS`.
+- Every 500 ms a new line appears: `beat #<n> value=<±v>` with an increasing
+  `n` and a value sweeping a sawtooth between -100 and +99.
+- The PD12 LED toggles once per event (≈1 Hz visible blink).
+
+### How to verify
+
+1. Power the board, open the serial port at 115200 8N1.
+2. Confirm the bootstrap banner and `self-check: PASS`.
+3. Watch the `beat #...` lines arrive once per 500 ms with monotonically
+   increasing `seq`, and the LED toggling in lockstep.
+
+### When to extend
+
+- Add a second subscriber (`MaxSubs` is 4): e.g. a component that accumulates a
+  running average of `value` and publishes its own derived event on another
+  channel — subscribers never see each other.
+- Move heavy work out of `onBeat()` by posting a separate `WorkItem` to
+  `exec` — keep signal handlers short (they run on the shared executor task).
+- Replace the periodic Producer loop with an ISR that calls
+  `exec.postFromISR(...)` to defer processing out of interrupt context.

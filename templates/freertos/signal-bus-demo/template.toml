@@ -1,0 +1,5 @@
+[template]
+name = "signal-bus-demo"
+description = "Type-safe pub/sub over one SingleThreadExecutor: a Producer publishes events, a reactive Consumer handles them off-task"
+category = "freertos"
+families = ["stm32f4"]

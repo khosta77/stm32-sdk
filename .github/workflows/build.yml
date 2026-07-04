@@ -21,6 +21,7 @@ jobs:
           - oled-display-test
           - w25q32-flash-test
           - imu-flash-oled-demo
+          - signal-bus-demo
 
     steps:
       - uses: actions/checkout@v4
