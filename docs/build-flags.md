@@ -18,6 +18,20 @@ on, while `system.executor` and `system.signal_bus` (which need the FreeRTOS
 wrappers) are compiled only when `STM32_USE_FREERTOS` is also on — the queue core
 stays usable in bare-metal builds.
 
+## Build environment (Docker, offline)
+
+Since v0.1.13 all builds run inside the SDK Docker image
+(`ghcr.io/khosta77/stm32-sdk-build:latest`) — `stmtool build` has no
+host-toolchain path. The image pins `arm-none-eabi-gcc` 15.2 (GCC >= 14 is
+required for C++20 module dependency scanning; `stm32_sdk.cmake` fails
+configuration otherwise) and a host `g++` for the [host tests](modules/testing.md).
+
+The image also **bakes FreeRTOS-Kernel** (`V11.1.0`) at `/opt/freertos-kernel`
+and exports `FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL`, so FreeRTOS builds no
+longer re-clone the kernel per project and work offline. Outside Docker,
+`stm32_rtos.cmake` still honours that variable (or environment variable) for a
+pre-provisioned checkout, falling back to a shallow `FetchContent` clone.
+
 ## Active flags (v0.1.4)
 
 ```cmake

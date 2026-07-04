@@ -53,6 +53,47 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.13
+
+Focus: a quality / infrastructure release that makes the toolchain reproducible,
+adds a real host-test path, and removes the divergent local build (issues #33,
+#34, #35, #47, #79).
+
+Highlights:
+
+- **Docker-only builds; artifacts in `out/`.** `stmtool build --native` is gone;
+  every build runs inside the SDK image, so the environment is identical
+  locally and in CI. Build output moved from `build/` to `out/` (gitignored).
+  The image is overridable via `STMTOOL_DOCKER_IMAGE`. **Breaking** — drop
+  `--native` and repoint any `build/*.elf` scripts at `out/`.
+- **Pinned toolchain, single source of truth (#33).** The image bumps
+  `arm-none-eabi-gcc` to 15.2 (the 13.2 pin silently could not scan C++20 module
+  imports) and `stm32_sdk.cmake` now fails configuration below GCC 14.
+  `stmtool doctor` parses the compiler version and flags a stale toolchain, and
+  reports whether the SDK image is present.
+- **Reusable mock buses (#34).** A new module `testing.mock` ships
+  `testing::MockI2c` / `MockSpi` / `MockUart` / `MockGpioPin` / `MockFlash` —
+  plain structs that satisfy the driver concepts, programmable with scripted
+  responses and write capture, so driver / sensor logic is unit-testable with no
+  hardware.
+- **Host unit tests + `stmtool test` (#35).** `tests/host/` builds the CMSIS-free
+  portable layer with the image's host `g++` and runs `ctest` — `Result<T>` /
+  `DRV_TRY` invariants, the mocks, and an MPU6050-on-mock example. `stmtool test`
+  runs the suite in Docker; a `host-tests` CI job runs the same command.
+- **FreeRTOS baked into the image (#47).** The kernel (`V11.1.0`) is cloned once
+  at image-build time and picked up via `FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL`,
+  so FreeRTOS templates no longer re-clone it per project and build offline.
+- **CI on the image.** `build.yml` drops the ARM toolchain action, warms a shared
+  buildx cache and loads the image from it (hermetic — no dependency on the
+  published tag), and a new `docker-image.yml` publishes the image to GHCR.
+
+Notes:
+
+- No SDK C++ API changes; the break is in the build workflow (`--native`, `out/`,
+  Docker requirement). See the [upgrade notes](migration.md#new-in-v0113).
+- Host tests need GCC 15 (g++-14 miscompiles modules that include `<cstddef>` in
+  the global module fragment); the image provides it via the toolchain PPA.
+
 ### v0.1.12
 
 Focus: a single, enforced code style. One clang-format configuration applied

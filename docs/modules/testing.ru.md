@@ -105,3 +105,69 @@ int main() {
 Шаблон `bare-metal/unit-test-demo` — рабочий пример для устройства; его тесты
 проверяют `driver::Result<T>` — чистую логику, поэтому они осмысленны на любой
 из платформ.
+
+## Мок-шины (v0.1.13)
+
+Поскольку интерфейсы шин — это **концепты** C++20, мок — это обычный struct,
+удовлетворяющий концепту. SDK поставляет переиспользуемые программируемые моки в
+модуле `testing.mock` (`sdk/testing/mock/mock_bus.cppm`):
+
+| Мок | Моделирует | Программируется через |
+|-----|------------|------------------------|
+| `testing::MockI2c` | `driver::II2c` | `loadResponse(...)`, `written()`, `nextStatus` |
+| `testing::MockSpi` | `driver::ISpi` | `loadResponse(...)`, `written()`, `nextStatus` |
+| `testing::MockUart` | `driver::IUart` | `loadRx(...)`, `transmitted()` |
+| `testing::MockGpioPin` | `driver::IGpioPin` | счётчики `set/reset/toggle`, уровень |
+| `testing::MockFlash` | `driver::IFlash` | массив в памяти, `eraseSector` |
+
+`loadResponse` / `loadRx` задают байты, которые вернёт чтение; `written()` /
+`transmitted()` показывают, что отправил тестируемый код, — так проверяется
+поведение, а не только код возврата. `nextStatus` инжектирует ошибку шины. Моки
+без кучи и исключений, поэтому компилируются и на устройстве.
+
+```cpp
+import sensor.mpu6050;
+import testing.mock;
+
+TEST(mpu6050_scales_accel) {
+  testing::MockI2c bus;
+  const uint8_t frame[14] = {0x40, 0x00};  // ACCEL_XOUT hi/lo -> 1 g
+  bus.loadResponse({frame, 14});
+
+  sensor::Mpu6050 mpu{bus, kCfg};
+  sensor::ImuData data;
+  ASSERT_EQ(mpu.read(data), Status::Ok);
+  EXPECT_EQ(bus.lastReg, 0x3B);  // обратился к ACCEL_XOUT_H
+  EXPECT_TRUE(data.accel.x > 9.8f && data.accel.x < 9.82f);
+}
+```
+
+Модуль не линкуется в INTERFACE-таргет `stm32_testing` (он импортирует
+driver-концепты); потребитель подключает его, добавив `mock_bus.cppm` в свой
+набор `CXX_MODULES` рядом со `stm32_drivers`.
+
+## Host-тесты и `stmtool test` (v0.1.13)
+
+`tests/host/` — отдельное CMake-дерево, собираемое хостовым `g++` из образа: оно
+компилирует CMSIS-free переносимые модули плюс `testing.mock` в исполняемые файлы
+и запускает их под `ctest`. Прогнать весь набор:
+
+```bash
+stmtool test
+```
+
+Команда собирает и запускает тесты внутри Docker-образа SDK (в `out/host`) и
+возвращает ненулевой код при любом провале; CI выполняет ту же команду в job
+`host-tests`. Чтобы добавить случай, положите `test_*.cpp` в `tests/host/` и
+зарегистрируйте его в `tests/host/CMakeLists.txt` через `add_host_test(...)`.
+
+Два правила, чтобы модули C++20 не ломались в TU, который одновременно импортирует
+модули и включает текстовые заголовки:
+
+- **Включайте STL / текстовые заголовки до строк `import`.** Модуль включает,
+  например, `<cstddef>` в global module fragment; текстовое включение *после*
+  импорта такого модуля вызывает `redefinition of std::__byte_operand`.
+- **Не пишите `#include <span>`; инициализируйте span через фигурные скобки**
+  (`bus.loadResponse({p, n})`) и используйте `auto` для возвращаемых span —
+  смешение `#include <span>` с `import` модуля, включающего `<span>`, отвергается
+  GCC 15.

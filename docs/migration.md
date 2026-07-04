@@ -10,9 +10,33 @@ upgrade deliberately.
 1. On a feature branch of your project, bump `[sdk] version` to the new tag.
 2. Run `stmtool sdk update --version <tag>`.
 3. Re-run formatter: `clang-format -i src/**/*.cpp src/**/*.cppm`.
-4. Try `stmtool build --native --clean`. Address compiler errors one by one.
+4. Try `stmtool build --clean`. Address compiler errors one by one.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
+
+## New in v0.1.13
+
+v0.1.13 is a **quality / infrastructure** release. There are no SDK API changes,
+but the build workflow changes in a breaking way:
+
+- **`stmtool build --native` is removed.** All builds now run inside the SDK
+  Docker image; there is no host-toolchain path. Drop `--native` from any
+  scripts. Docker is now required. If you relied on a local `arm-none-eabi-gcc`,
+  install Docker instead — the image ships the pinned toolchain (15.2).
+- **Artifacts move from `build/` to `out/`.** `stmtool build` configures into
+  `out/`, `stmtool flash` reads the `.bin` from `out/`, and `--clean` wipes
+  `out/`. Add `out/` to your project `.gitignore` (SDK templates already do). Any
+  CI or scripts that referenced `build/*.elf` should use `out/*.elf`.
+- **`stmtool test`** is new: it builds and runs the SDK host unit tests in the
+  image. Reusable mock buses (`testing::MockI2c` / `MockSpi` / `MockUart` /
+  `MockGpioPin` / `MockFlash`, module `testing.mock`) let you unit-test
+  driver/sensor logic on the host — see the testing module docs.
+- **GCC >= 14 is enforced.** `stm32_sdk.cmake` fails configuration if the ARM
+  compiler is older than GCC 14 (C++20 module scanning needs it). Inside the
+  image this is always satisfied; `stmtool doctor` flags a stale local toolchain.
+- **FreeRTOS-Kernel is baked into the image** and no longer re-cloned per build,
+  so builds are offline. Outside Docker, `stm32_rtos.cmake` still honours
+  `FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL` for an offline checkout.
 
 ## New in v0.1.12
 
