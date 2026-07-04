@@ -300,3 +300,50 @@ g_flash.write(0x080E0000, std::span{data});
 Расположение секторов зависит от чипа: у F407VG 12 секторов (16K×4, 64K×1,
 128K×7). `InternalFlash` включает тактирование контроллера и обрабатывает
 последовательности unlock / program / lock.
+
+## EXTI — `driver.stm32f4.exti` (v0.1.10)
+
+Драйвер линий внешних прерываний: маршрутизирует вывод GPIO на линию EXTI,
+настраивает фронт и вызывает captureless-колбэк из ISR. Концепт `driver::IExti`,
+агрегат `ExtiConfig` и валидатор `exti({...})` живут в `driver.exti`; реализация
+для F4 `ExtiLine` — в `driver.stm32f4.exti`.
+
+```cpp
+import driver.exti;
+import driver.stm32f4.exti;
+using driver::exti;
+using driver::ExtiPort;
+using driver::ExtiTrigger;
+using driver::stm32f4::ExtiLine;
+
+// Привязка линии к методу; колбэк выполняется в контексте прерывания.
+ExtiLine g_button = ExtiLine::bind<&App::onButton>(
+    exti({
+        .line = 0,
+        .port = ExtiPort::A,
+        .trigger = ExtiTrigger::Rising,
+        .priority = 6,
+    }),
+    app);
+
+extern "C" void EXTI0_IRQHandler() { g_button.irqHandler(); }
+```
+
+- `exti({...})` — `consteval`-валидатор: бросает (на этапе компиляции) при
+  `line > 15` или `priority > 15` (у F4 4 бита приоритета NVIC).
+- Конструктор включает такт SYSCFG, выбирает порт в `SYSCFG_EXTICR`, ставит
+  `RTSR`/`FTSR` под фронт, гасит pending-бит, задаёт приоритет NVIC, включает IRQ
+  и снимает маску `IMR`. Значения `ExtiPort` ложатся прямо в 4-битное поле
+  `EXTICR` (A = 0 … H = 7).
+- `irqHandler()` проверяет бит `PR` своей линии, гасит его (write-1-to-clear) и
+  вызывает привязанный колбэк. У линий 0–4 отдельный IRQ; 5–9 делят
+  `EXTI9_5_IRQn`, 10–15 — `EXTI15_10_IRQn`. На общем векторе вызывайте
+  `irqHandler()` **каждого** объекта линии — каждый проверяет свой pending-бит.
+- `enable()` / `disable()` переключают маску; `pending()` читает `PR`;
+  `clearPending()` гасит его вручную.
+
+Сам вывод GPIO настраивается отдельно через `GpioPin` (режим входа). Чтобы
+вынести работу из ISR, колбэк вызывает `executor.postFromISR(workItem)` —
+приоритет ISR (здесь 6) должен быть численно ≥
+`configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 у F4), иначе вызов недопустим.
+См. шаблон `button-events-demo`.

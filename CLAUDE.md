@@ -181,10 +181,10 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 - `sdk/drivers/include/driver/` — modules:
     - `types.cppm`, `reg.cppm`, `circular_buffer.cppm` — utilities.
     - `interface/i_*.cppm` — interface **concepts** (`IGpioPin`, `IUart`,
-      `II2c`, `ISpi`, `IFlash`), not virtual classes (since v0.1.7).
+      `II2c`, `ISpi`, `IFlash`, `IExti`), not virtual classes (since v0.1.7).
     - `stm32f4/*.cppm` — implementations (`GpioPin`, `Uart<>`, `I2c`, `Spi`,
-      `DmaStream`, `InternalFlash`, `clock`); model the concepts without
-      inheritance, each ends with `static_assert(IXxx<Impl>)`.
+      `DmaStream`, `InternalFlash`, `ExtiLine`, `clock`); model the concepts
+      without inheritance, each ends with `static_assert(IXxx<Impl>)`.
 - `sdk/sensors/` — sensor concepts (`IImu`/`IDisplay`/`IExternalFlash`) +
   implementations. Sensors are templates on their bus type
   (`template <driver::II2c I2cDriver> class Mpu6050`); MPU6050, SSD1306, W25Q32.
@@ -194,12 +194,14 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
   `bootstrap(...)` + `BootReport`). Zero vtable, depends only on `driver.types`.
   Concurrency layer (v0.1.9): `work_queue.cppm` (intrusive `WorkItem` +
   `WorkQueue`, RTOS-free, CMSIS PRIMASK), `executor.cppm`
-  (`SingleThreadExecutor` on an `rtos::Task`) and `signal_bus.cppm`
-  (type-safe `Channel<Event, MaxSubs>`) — the last two only under FreeRTOS.
-- `templates/` — 8 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
+  (`SingleThreadExecutor` on an `rtos::Task`), `timer.cppm` (`Timer` over the
+  executor, v0.1.10) and `signal_bus.cppm` (type-safe
+  `Channel<Event, MaxSubs, RingDepth>`) — all but `work_queue` only under
+  FreeRTOS.
+- `templates/` — 9 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
   `freertos/blink`, `freertos/mpu6050-uart`, `freertos/oled-display-test`,
   `freertos/w25q32-flash-test`, `freertos/imu-flash-oled-demo`,
-  `freertos/signal-bus-demo`).
+  `freertos/signal-bus-demo`, `freertos/button-events-demo`).
 - `tools/stmtool/` — Python CLI tool (Typer + Rich).
 - `tools/docs/` — MkDocs build dependencies.
 - `docs/` — MkDocs source (EN + RU via suffix mode).
@@ -383,6 +385,34 @@ style. Callables are `void(*)(void*)` thunks (never `std::function`). Full guide
   reference on purpose: no string publisher names, no `reinterpret_cast`.
 - Demo: `freertos/signal-bus-demo` (a `Producer` with a task publishes; a
   reactive `Consumer` with no task subscribes in `onBind()`).
+
+### Concurrency layer completion (v0.1.10)
+
+Finishes the layer (issues #52–#55). Same zero-vtable/zero-heap style.
+
+- **EXTI driver (`driver.stm32f4.exti` + concept `driver.exti`)** — routes a GPIO
+  pin to an EXTI line. `ExtiLine` is **non-template**, so it calls CMSIS
+  (`NVIC_*`, `__DSB`) directly (no `detail::` wrappers, unlike `Uart<>`). All MMIO
+  through `reg::*`; `EXTI->PR` is write-1-to-clear via `reg::write`. Callback is a
+  captureless thunk (`ExtiLine::bind<&T::method>(cfg, obj)`). ISR pattern mirrors
+  UART: `EXTI0_IRQHandler() { obj.irqHandler(); }`; shared vectors (5–9, 10–15)
+  call `irqHandler()` on every line object. `exti({...})` is a `consteval`
+  validator like `gpio()`.
+- **`Timer` (`system.timer`, FreeRTOS only)** — thin wrapper over the executor
+  (`postAfter`/`addPeriodic`/`cancel`); owns one `WorkItem`, thunk callback.
+  `start`/`startPeriodic`/`stop`. `start` cancels + zeroes the period first, so
+  re-arm is always defined.
+- **`Channel<Event, MaxSubs, RingDepth = 1>`** — added trailing `RingDepth`.
+  Default 1 = the v0.1.9 coalescing slot; >1 = FIFO ring, drop-oldest. Unified
+  via `detail::EventRing<Event, Depth>` (drop-oldest at depth 1 *is* coalescing) —
+  its ordering has a `consteval` self-check (`eventRingSelfCheck`).
+- **Deferred-start `rtos::Task`** — default ctor + idempotent `create(...)`. A
+  component owns `rtos::Task _task;` and starts it in `onStart()` (still
+  pre-scheduler). Task ownership moves out of `main`.
+- ISR that calls `postFromISR` must have priority numerically ≥
+  `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 on F4) — the EXTI demo uses 6.
+- Demo: `freertos/button-events-demo` (EXTI button → `postFromISR` → debounce
+  `Timer` → ring `Channel` → LED, plus a `Heartbeat` component owning its task).
 
 ## CMake
 

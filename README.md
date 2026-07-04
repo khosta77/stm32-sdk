@@ -111,6 +111,7 @@ mkdocs serve
 | `freertos/w25q32-flash-test` | W25Q32 round-trip: erase, page-program, read, verify |
 | `freertos/imu-flash-oled-demo` | MPU + OLED + W25Q32 on one board, built on the `system` component framework |
 | `freertos/signal-bus-demo` | Two components decoupled through a type-safe signal bus on one `SingleThreadExecutor` |
+| `freertos/button-events-demo` | EXTI button → deferred debounce `Timer` → ring signal `Channel` → LED, with a component owning its task |
 
 ## Supported chips
 

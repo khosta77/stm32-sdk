@@ -1,0 +1,111 @@
+# @PROJECT_NAME@
+
+STM32 @STM32_CHIP@ project on stm32-sdk @SDK_VERSION@ — the SDK **concurrency
+layer end to end**: an EXTI button interrupt defers work into a
+`system::SingleThreadExecutor`, a software `system::Timer` debounces it, a
+`system::Channel` (ring mode) delivers every press to a reactive component, and
+a third component owns its own **deferred-start** FreeRTOS task.
+
+## SDK rules (must follow)
+
+- CMSIS only, HAL/LL forbidden.
+- C++20 (gnu++20), C11 (gnu11).
+- MMIO access through `driver::reg::set/clear/write/read/get/modify` only.
+- No raw pointers to peripherals — references (`GPIO_TypeDef&`).
+- Configs without defaults — every field must be explicit.
+- `GpioConfig` / `ExtiConfig` are aggregates; wrap in `gpio({...})` / `exti({...})`
+  for compile-time validation.
+- EXTI ISR priority must be numerically ≥ `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY`
+  (5 on F4) so the handler may call `postFromISR`. This template uses 6.
+- Trailing comma after the last designated initializer to keep clang-format multi-line.
+
+## Build / flash
+
+```bash
+stmtool build --native
+stmtool flash
+stmtool sdk update          # if [sdk] version = "develop"
+```
+
+## SDK reference
+
+- Documentation: <https://khosta77.github.io/stm32-sdk/>
+- System / component framework: <https://khosta77.github.io/stm32-sdk/modules/system/>
+- Drivers (EXTI): <https://khosta77.github.io/stm32-sdk/modules/drivers/>
+
+## This template
+
+Runs off **USART2** (PA2/PA3 @ 115200), the **user button on PA0** (EXTI line 0),
+and two LEDs. No sensors — the point is the concurrency layer.
+
+### Pinout
+
+| Function | Pin | Notes |
+|----------|-----|-------|
+| USART2 TX | PA2 | AF7, 115200 8N1 |
+| USART2 RX | PA3 | AF7 |
+| User button | PA0 | EXTI0, rising edge; board has an external pull-down (Discovery B1) |
+| Press LED | PD12 | toggled by `Reporter` on each debounced press |
+| Heartbeat LED | PD13 | toggled by `Heartbeat`'s own task at 1 Hz |
+
+### What `main.cpp` does
+
+Built on the SDK concurrency layer (`STM32_USE_SYSTEM` + FreeRTOS): `import
+driver.stm32f4.exti; import system.executor; import system.timer; import
+system.signal_bus;`. Three components share one `SingleThreadExecutor`:
+
+- `Button<GpioPin>` — owns an `ExtiLine` and a debounce `Timer`. The
+  `EXTI0_IRQHandler` calls `btn.irqHandler()`, which clears the pending bit and
+  invokes `onIsr()` **in interrupt context**. `onIsr()` does nothing but
+  `exec.postFromISR(edgeItem)` — the classic defer-out-of-ISR pattern. `onEdge()`
+  (executor task) arms the one-shot debounce `Timer`; `onDebounced()` re-reads
+  PA0 and, if still high, publishes a `ButtonEvent{seq, tick}`.
+- `Reporter<Uart, GpioPin>` — a **reactive** component with **no task**. In
+  `onBind()` it subscribes `onPress()` to the channel; each press toggles PD12
+  and prints `press #<n> @tick=<t>`.
+- `Heartbeat<Uart, GpioPin>` — owns a `rtos::Task` **created in `onStart()`**
+  (deferred-start), not in `main`. Its `run()` toggles PD13 and prints
+  `alive #<n>` every second.
+
+The channel is `Channel<ButtonEvent, 4, 8>`: **ring depth 8**, so a burst of
+presses that arrives before the executor drains is delivered in full instead of
+coalescing to the latest (the default depth 1 keeps only the newest).
+
+Flow:
+
+1. `__initialize_hardware()` enables GPIOA, GPIOD and USART2 clocks (SYSCFG is
+   enabled by the `ExtiLine` constructor).
+2. `struct ButtonDemo` is the composition root: pins, UART, the executor, the
+   channel, then the three components wired by reference. `ExtiLine` is the
+   **last** member of `Button` so the deferred `WorkItem`/`Timer` exist before
+   the NVIC line is unmasked.
+3. `app.boot()` runs `system::bootstrap(btn, reporter, heartbeat)` —
+   `Register → Init → Bind → Start`. `Reporter::onBind()` subscribes;
+   `Heartbeat::onStart()` creates its task.
+4. `main` prints the `BootReport` and starts the scheduler.
+
+### Expected behaviour
+
+- On boot USART2 prints `=== button-events-demo bootstrap ===` then
+  `all components started; press the user button (PA0)`.
+- `alive #<n>` appears once per second (PD13 blinks at ~0.5 Hz).
+- Pressing the user button prints `press #<n> @tick=<t>` and toggles PD12; the
+  debounce filter (20 ms) suppresses contact bounce, so one physical press ⇒ one
+  line.
+
+### How to verify
+
+1. Power the board, open the serial port at 115200 8N1.
+2. Confirm the bootstrap banner and the steady `alive #...` heartbeat.
+3. Press the user button; confirm exactly one `press #...` line per press with a
+   monotonically increasing `seq`, and PD12 toggling.
+
+### When to extend
+
+- Raise the debounce window or switch the EXTI trigger to `ExtiTrigger::Both` to
+  report release as well as press.
+- Add EXTI lines on other pins (lines 5–9 share `EXTI9_5_IRQn`, 10–15 share
+  `EXTI15_10_IRQn`): call each line object's `irqHandler()` from the shared
+  vector — every object checks its own pending bit.
+- Give `Reporter` a sibling subscriber (`MaxSubs` is 4) that counts presses and
+  publishes a derived event on another channel.

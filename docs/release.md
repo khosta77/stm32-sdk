@@ -53,6 +53,42 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.10
+
+Focus: finishing the concurrency layer — an EXTI driver, a software `Timer`,
+component-owned tasks and a ring-mode signal channel (issues #52–#55).
+
+Highlights:
+
+- New **EXTI driver** `driver.stm32f4.exti` (+ concept `driver::IExti`,
+  `ExtiConfig` aggregate and `consteval exti({...})` validator). Routes a GPIO
+  pin to an EXTI line, configures the edge, and dispatches to a captureless
+  callback from `irqHandler()`. CMSIS-only, `reg::*` for all MMIO. Pairs with
+  `executor.postFromISR` for the classic defer-out-of-ISR pattern.
+- New **`system::Timer`** (`system.timer`, FreeRTOS only): a thin, type-safe
+  wrapper over the executor's `postAfter` / `addPeriodic` / `cancel`. Thunk
+  callback, no `std::function`. `start` / `startPeriodic` / `stop` / `active`.
+- **`Channel<Event, MaxSubs, RingDepth = 1>`** gained a ring mode. The default is
+  the v0.1.9 coalescing slot; `RingDepth > 1` delivers every event in FIFO order
+  (drop-oldest on overflow, no heap). Ordering is checked by a `consteval`
+  self-test on a standalone `detail::EventRing`.
+- **Deferred-start `rtos::Task`**: default-constructible plus an idempotent
+  `create(...)`, so a component can own its worker task and start it in
+  `onStart()` instead of in `main`.
+- New `button-events-demo` template: EXTI button → `postFromISR` → debounce
+  `Timer` → ring `Channel` → LED, plus a `Heartbeat` component that owns its own
+  deferred-start task.
+
+Notes:
+
+- **Additive** — the EXTI driver builds with `STM32_USE_DRIVERS`; `Timer` follows
+  the executor under `STM32_USE_FREERTOS`. The `Channel` change is
+  source-compatible (new trailing template parameter defaults to the old
+  behaviour) and the new `rtos::Task` members don't touch existing call sites.
+  See [migration](migration.md#new-in-v0110).
+- EXTI ISR priority must be numerically ≥
+  `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 on F4) to call `postFromISR`.
+
 ### v0.1.9
 
 Focus: a zero-cost concurrency layer on top of the component framework —
