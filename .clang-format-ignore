@@ -1,0 +1,20 @@
+# Vendor / third-party sources kept pristine so they stay diffable against
+# upstream. clang-format (18+) skips every path matching a pattern below.
+# Patterns are relative to this file (repo root); '*' matches within one path
+# segment and does not cross '/', so depth is spelled out explicitly.
+
+# ARM CMSIS core + Cortex-M / diag headers (authored code lives in core/include/util)
+sdk/core/include/cmsis/*
+sdk/core/include/cortexm/*
+sdk/core/include/arm/*
+sdk/core/include/diag/*
+
+# newlib / Cortex-M runtime glue (C sources; slated for C++ migration later)
+sdk/core/src/*/*
+
+# STM32 device headers, system_*, vector tables (per family)
+sdk/hal/*/include/cmsis/*
+sdk/hal/*/src/cmsis/*
+
+# Generated font table
+sdk/sensors/displays/ssd1306/font5x7.cppm
