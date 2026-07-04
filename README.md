@@ -191,6 +191,14 @@ still be refined. The single source of versioning is git tags (resolved via
 `poetry-dynamic-versioning` for `stmtool`, starting v0.1.4). Release notes live
 in `docs/release.md`.
 
+## Contributing
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md): install the pre-commit hooks
+(`pip install pre-commit && pre-commit install --hook-type pre-commit
+--hook-type commit-msg`), keep to Google 2-space / 80-column C++ style
+(clang-format pinned to 19.1.3), write English Conventional Commits, and open
+pull requests against `develop` with a Russian description.
+
 ## Adding a new chip family
 
 1. Create `sdk/cmake/families/stm32XX.cmake` with a `stm32XX_get_chip_info` function

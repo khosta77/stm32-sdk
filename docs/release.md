@@ -53,6 +53,47 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.12
+
+Focus: a single, enforced code style. One clang-format configuration applied
+across the whole tree, plus mandatory pre-commit hooks so the style and the
+commit history cannot drift again (issues #59, #60).
+
+Highlights:
+
+- **Unified clang-format style, Google 2-space / 80-column.** `.clang-format`
+  moved to the Google defaults it was closest to: `IndentWidth` / `TabWidth` 2,
+  `ColumnLimit` 80, `AccessModifierOffset` -2, and — the actual bug behind #59 —
+  `Cpp11BracedListStyle: true`. The previous explicit `Cpp11BracedListStyle:
+  false` contradicted the code, which was written `{nullptr}` (no inner spaces),
+  and drifted against clang-format 19; braced-init lists now format the Google
+  way. The whole SDK and all ten templates were reformatted in one mechanical
+  sweep — no behavioural changes.
+- **Vendor sources kept out of the formatter.** A new `.clang-format-ignore`
+  excludes the third-party CMSIS core / device headers, the newlib / Cortex-M
+  runtime glue and the generated font table, so they stay pristine and diffable
+  against upstream. clang-format's `*` matches within a single path segment, so
+  the patterns spell the depth out explicitly.
+- **Mandatory pre-commit hooks.** A new `.pre-commit-config.yaml` wires three
+  gates: `clang-format` pinned to 19.1.3 (so the hook, CI and the tree agree
+  byte-for-byte) over C / C++ / `.cppm` sources, `conventional-pre-commit` on the
+  commit message, and a pre-push `poe ci` run scoped to `tools/stmtool`. Install
+  once with `pip install pre-commit && pre-commit install --hook-type pre-commit
+  --hook-type commit-msg`.
+- **CI format gate.** A new `Format` workflow runs the same pinned clang-format
+  hook on every push and PR to `develop`, so a drifting style fails CI instead
+  of landing.
+- **Contributor guide.** A new `CONTRIBUTING.md` documents the workflow: install
+  the hooks, English Conventional Commits, Russian PR descriptions, `poe ci` for
+  `stmtool`.
+
+Notes:
+
+- No source-behaviour or API changes — this release is formatting and tooling
+  only. Existing downstream projects need no code edits; re-running
+  `clang-format -i` with the new config reflows to 2-space / 80-column.
+- `.clang-format-ignore` needs clang-format 18+; the pinned hook uses 19.1.3.
+
 ### v0.1.11
 
 Focus: quality and type safety — `consteval` validators for the I2C / SPI / UART
