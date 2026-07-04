@@ -13,6 +13,7 @@ target_sources(stm32_drivers PUBLIC
         ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_i2c.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_spi.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_flash.cppm
+        ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_exti.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/clock.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/dma.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/gpio.cppm
@@ -20,6 +21,7 @@ target_sources(stm32_drivers PUBLIC
         ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/spi.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/flash.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/uart.cppm
+        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/exti.cppm
 )
 
 target_include_directories(stm32_drivers PUBLIC

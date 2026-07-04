@@ -14,6 +14,36 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.1.10
+
+v0.1.10 completes the concurrency layer. It is **additive** — no edits are
+required to upgrade, and every existing template is unchanged apart from the new
+`button-events-demo`.
+
+New surface, all opt-in:
+
+1. **EXTI driver** (`STM32_USE_DRIVERS`): `import driver.exti; import
+   driver.stm32f4.exti;`. Configure a line with `exti({.line, .port, .trigger,
+   .priority})`, bind a callback with `ExtiLine::bind<&T::method>(cfg, obj)`, and
+   forward the vector: `extern "C" void EXTI0_IRQHandler() { obj.irqHandler(); }`.
+   For lines 5–9 / 10–15 (shared vectors) call `irqHandler()` on each line
+   object. If the callback uses `postFromISR`, the ISR priority must be
+   numerically ≥ `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 on F4).
+2. **`system::Timer`** (`STM32_USE_SYSTEM` + FreeRTOS): `import system.timer;`.
+   `Timer::bind<&T::method>(exec, obj)`, then `start(ms)` / `startPeriodic(ms)` /
+   `stop()`.
+3. **Ring channels**: `system::Channel` now takes an optional third template
+   argument `RingDepth` (default `1`). Existing `Channel<Event, MaxSubs>` code is
+   unchanged; use `Channel<Event, MaxSubs, N>` when you must not coalesce events.
+4. **Component-owned tasks**: `rtos::Task` is now default-constructible with an
+   idempotent `create(...)`. Move task creation from `main` into a component's
+   `onStart()` if you want the component to own its worker.
+
+No existing symbol changed signature in a breaking way; the `Channel` and
+`rtos::Task` additions are backward compatible. See
+[System](modules/system.md#concurrency-layer-additions-v0110) and
+[Drivers](modules/drivers.md#exti--driverstm32f4exti-v0110).
+
 ## New in v0.1.9
 
 v0.1.9 adds the optional concurrency layer to `sdk/system/` — `WorkQueue`,

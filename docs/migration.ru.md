@@ -14,6 +14,37 @@
 5. Прошейте на железо и убедитесь, что ваш smoke-test проходит.
 6. Сливайте, когда всё зелёное.
 
+## Новое в v0.1.10
+
+v0.1.10 достраивает слой конкурентности. Он **аддитивен** — правки для апгрейда
+не нужны, все существующие шаблоны не изменились, кроме нового
+`button-events-demo`.
+
+Новая поверхность, всё опционально:
+
+1. **Драйвер EXTI** (`STM32_USE_DRIVERS`): `import driver.exti; import
+   driver.stm32f4.exti;`. Настройте линию через `exti({.line, .port, .trigger,
+   .priority})`, привяжите колбэк `ExtiLine::bind<&T::method>(cfg, obj)` и
+   проведите вектор: `extern "C" void EXTI0_IRQHandler() { obj.irqHandler(); }`.
+   Для линий 5–9 / 10–15 (общие векторы) вызывайте `irqHandler()` каждого объекта
+   линии. Если колбэк использует `postFromISR`, приоритет ISR должен быть
+   численно ≥ `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 у F4).
+2. **`system::Timer`** (`STM32_USE_SYSTEM` + FreeRTOS): `import system.timer;`.
+   `Timer::bind<&T::method>(exec, obj)`, затем `start(ms)` / `startPeriodic(ms)` /
+   `stop()`.
+3. **Ring-каналы**: `system::Channel` теперь принимает опциональный третий
+   шаблонный аргумент `RingDepth` (по умолчанию `1`). Существующий код
+   `Channel<Event, MaxSubs>` не меняется; используйте `Channel<Event, MaxSubs, N>`,
+   когда события нельзя коалесцировать.
+4. **Задачи внутри компонента**: `rtos::Task` теперь default-конструируем с
+   идемпотентным `create(...)`. Перенесите создание задачи из `main` в `onStart()`
+   компонента, если хотите, чтобы он владел своим воркером.
+
+Ни один существующий символ не сменил сигнатуру ломающим образом; добавления в
+`Channel` и `rtos::Task` обратно совместимы. См.
+[System](modules/system.ru.md#достройка-слоя-конкурентности-v0110) и
+[Drivers](modules/drivers.ru.md#exti--driverstm32f4exti-v0110).
+
 ## Новое в v0.1.9
 
 v0.1.9 добавляет опциональный слой конкурентности в `sdk/system/` — `WorkQueue`,

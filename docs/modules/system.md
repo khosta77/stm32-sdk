@@ -291,8 +291,8 @@ driver::Status st = bus.subscribe<&Consumer::onBeat>(consumer);
 `WorkItem` to the executor; `dispatch()` then copies the event and calls each
 subscriber. Because delivery is serialized on the executor, subscribers never
 race. The default single event slot **coalesces** — if two publishes land before
-dispatch, subscribers see the latest (ideal for "latest sample" semantics); swap
-in a ring buffer if you need every event.
+dispatch, subscribers see the latest (ideal for "latest sample" semantics). Pass
+a third `RingDepth` template argument if you need every event — see below.
 
 Handlers must be short — they run on the shared executor task. For heavy work,
 post a separate `WorkItem` back to the executor from inside the handler.
@@ -300,3 +300,65 @@ post a separate `WorkItem` back to the executor from inside the handler.
 See the `signal-bus-demo` template for a two-component example: a `Producer`
 with its own task publishes, and a reactive `Consumer` with **no task of its
 own** handles events on the executor, subscribing in `onBind()`.
+
+# Concurrency layer additions (v0.1.10)
+
+Three refinements on top of v0.1.9, same zero-vtable / zero-heap style. The
+`button-events-demo` template exercises all of them together.
+
+## `Timer` — deferred and periodic callbacks
+
+`system::Timer` (module `system.timer`, FreeRTOS only) is a thin, type-safe
+wrapper over the executor's `postAfter` / `addPeriodic` / `cancel`. It owns one
+`WorkItem`; the callback is a captureless thunk, never `std::function`.
+
+```cpp
+system::Timer debounce = system::Timer::bind<&Button::onDebounced>(exec, button);
+
+debounce.start(20);           // one-shot after 20 ms
+debounce.startPeriodic(1000); // re-fire every second
+debounce.stop();              // cancel; active() reports pending state
+```
+
+`start` first cancels any prior arming and clears the period, so re-arming a
+timer is always well-defined. Handlers run on the executor task, serialized with
+every other posted item — no locking inside the callback.
+
+## Ring-mode `Channel<Event, MaxSubs, RingDepth>`
+
+`Channel` gained a trailing `RingDepth` template parameter (default `1`). At the
+default it behaves exactly as in v0.1.9 — a single coalescing slot, latest wins.
+At `RingDepth > 1` it keeps a fixed-capacity ring and delivers **every** event in
+FIFO order, dropping the oldest on overflow (no heap).
+
+```cpp
+using Bus = system::Channel<ButtonEvent, 4, 8>;  // 4 subscribers, 8-deep ring
+```
+
+The ring lives in a standalone `detail::EventRing<Event, Depth>` so its ordering
+(coalesce at depth 1, FIFO + drop-oldest above) is checked by a `consteval`
+self-test, mirroring `workQueueOrderSelfCheck`. `dispatch()` drains the whole
+ring on each wake, so a burst of publishes that coalesce into one `WorkItem`
+still delivers all buffered events.
+
+## Components that own their task (deferred-start)
+
+`rtos::Task` is now default-constructible and gains
+`create(name, stack, prio, fn, param)` (idempotent — a second call is a no-op).
+This lets a component own its worker task and start it in `onStart()` instead of
+in `main`:
+
+```cpp
+driver::Status onStart() {
+    return _task.create(_name, _stack, _prio, &trampoline, this)
+               ? driver::Status::Ok
+               : driver::Status::HardwareError;
+}
+// ...
+rtos::Task _task;  // default-constructed member, started in onStart()
+```
+
+Tasks created before `vTaskStartScheduler()` stay dormant until the scheduler
+runs, so `onStart()` (which runs pre-scheduler in `bootstrap`) is the natural
+home for task creation. The task entry stays a static trampoline that casts
+`void*` back to the component.

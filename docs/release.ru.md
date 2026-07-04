@@ -52,6 +52,44 @@ style = "pep440"
 
 ## История релизов
 
+### v0.1.10
+
+Фокус: достройка слоя конкурентности — драйвер EXTI, software `Timer`,
+компоненты со своей задачей и ring-режим канала сигналов (issues #52–#55).
+
+Основное:
+
+- Новый **драйвер EXTI** `driver.stm32f4.exti` (+ концепт `driver::IExti`,
+  агрегат `ExtiConfig` и `consteval`-валидатор `exti({...})`). Маршрутизирует
+  вывод GPIO на линию EXTI, настраивает фронт и вызывает captureless-колбэк из
+  `irqHandler()`. Только CMSIS, весь MMIO через `reg::*`. В паре с
+  `executor.postFromISR` даёт классический вынос работы из ISR.
+- Новый **`system::Timer`** (`system.timer`, только под FreeRTOS): тонкая
+  типобезопасная обёртка над `postAfter` / `addPeriodic` / `cancel` executor'а.
+  Колбэк-thunk, без `std::function`. `start` / `startPeriodic` / `stop` /
+  `active`.
+- У **`Channel<Event, MaxSubs, RingDepth = 1>`** появился ring-режим. Дефолт —
+  коалесцирующий слот из v0.1.9; `RingDepth > 1` доставляет каждое событие в
+  порядке FIFO (drop-oldest при переполнении, без кучи). Порядок проверяется
+  `consteval`-самотестом на отдельном `detail::EventRing`.
+- **Deferred-start `rtos::Task`**: default-конструируем плюс идемпотентный
+  `create(...)`, так что компонент может владеть своей задачей и стартовать её в
+  `onStart()`, а не в `main`.
+- Новый шаблон `button-events-demo`: EXTI-кнопка → `postFromISR` → дебаунс
+  `Timer` → ring-`Channel` → LED, плюс компонент `Heartbeat` со своей
+  deferred-start задачей.
+
+Примечания:
+
+- **Аддитивно** — драйвер EXTI собирается с `STM32_USE_DRIVERS`; `Timer` следует
+  за executor под `STM32_USE_FREERTOS`. Правка `Channel` совместима по исходникам
+  (новый хвостовой шаблонный параметр с дефолтом = старое поведение), а новые
+  члены `rtos::Task` не трогают существующие вызовы. См.
+  [миграцию](migration.ru.md#new-in-v0110).
+- Приоритет ISR EXTI должен быть численно ≥
+  `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 у F4), чтобы вызывать
+  `postFromISR`.
+
 ### v0.1.9
 
 Фокус: zero-cost слой конкурентности поверх каркаса компонентов — очередь работ,

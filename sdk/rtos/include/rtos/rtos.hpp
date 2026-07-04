@@ -115,11 +115,25 @@ class Task {
     TaskHandle_t _handle = nullptr;
 
 public:
+    Task() = default;
+
     Task(const char *name, uint16_t stackDepth, UBaseType_t priority, void (*fn)(void *),
          void *param = nullptr) {
         xTaskCreate(fn, name, stackDepth, param, priority, &_handle);
         configASSERT(_handle);
     }
+
+    bool create(const char *name, uint16_t stackDepth, UBaseType_t priority, void (*fn)(void *),
+                void *param = nullptr) {
+        if (_handle) {
+            return false;
+        }
+        xTaskCreate(fn, name, stackDepth, param, priority, &_handle);
+        configASSERT(_handle);
+        return _handle != nullptr;
+    }
+
+    bool created() const { return _handle != nullptr; }
 
     ~Task() {
         if (_handle) {

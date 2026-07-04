@@ -44,6 +44,7 @@ if(STM32_USE_FREERTOS)
         BASE_DIRS ${_STM32_SDK_DIR}
         FILES
             ${_STM32_SDK_DIR}/system/include/system/executor.cppm
+            ${_STM32_SDK_DIR}/system/include/system/timer.cppm
             ${_STM32_SDK_DIR}/system/include/system/signal_bus.cppm
     )
     target_link_libraries(stm32_system PUBLIC stm32_rtos)

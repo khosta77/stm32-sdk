@@ -298,3 +298,51 @@ g_flash.write(0x080E0000, std::span{data});
 Sector layout follows the chip: F407VG has 12 sectors (16K×4, 64K×1, 128K×7).
 `InternalFlash` enables the flash controller clock and handles unlock /
 program / lock sequences.
+
+## EXTI — `driver.stm32f4.exti` (v0.1.10)
+
+External-interrupt line driver: routes a GPIO pin to an EXTI line, configures
+the edge, and dispatches to a captureless callback from the ISR. The concept
+`driver::IExti` and the `ExtiConfig` aggregate + `exti({...})` validator live in
+`driver.exti`; the F4 implementation `ExtiLine` in `driver.stm32f4.exti`.
+
+```cpp
+import driver.exti;
+import driver.stm32f4.exti;
+using driver::exti;
+using driver::ExtiPort;
+using driver::ExtiTrigger;
+using driver::stm32f4::ExtiLine;
+
+// Bind the line to a member; the callback runs in interrupt context.
+ExtiLine g_button = ExtiLine::bind<&App::onButton>(
+    exti({
+        .line = 0,
+        .port = ExtiPort::A,
+        .trigger = ExtiTrigger::Rising,
+        .priority = 6,
+    }),
+    app);
+
+extern "C" void EXTI0_IRQHandler() { g_button.irqHandler(); }
+```
+
+- `exti({...})` is a `consteval` validator: it throws (at compile time) on
+  `line > 15` or `priority > 15` (F4 has 4 NVIC priority bits).
+- The constructor enables the SYSCFG clock, selects the port in
+  `SYSCFG_EXTICR`, sets `RTSR`/`FTSR` for the edge, clears any pending bit, sets
+  the NVIC priority, enables the IRQ and unmasks `IMR`. `ExtiPort` values map
+  directly onto the 4-bit `EXTICR` nibble (A = 0 … H = 7).
+- `irqHandler()` checks this line's `PR` bit, clears it (write-1-to-clear) and
+  calls the bound callback. Lines 0–4 have a dedicated IRQ; 5–9 share
+  `EXTI9_5_IRQn` and 10–15 share `EXTI15_10_IRQn`. On a shared vector call
+  `irqHandler()` on **every** line object that uses it — each checks its own
+  pending bit.
+- `enable()` / `disable()` toggle the mask; `pending()` reads `PR`;
+  `clearPending()` clears it manually.
+
+The GPIO pin itself is configured separately with `GpioPin` (input mode). To
+defer work out of the ISR, have the callback call
+`executor.postFromISR(workItem)` — the ISR priority (6 here) must be numerically
+≥ `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 on F4) for that to be legal.
+See the `button-events-demo` template.

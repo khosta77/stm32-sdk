@@ -1,0 +1,5 @@
+[template]
+name = "button-events-demo"
+description = "EXTI button -> postFromISR -> debounce Timer -> ring Channel -> LED, plus a component that owns its own deferred-start task"
+category = "freertos"
+families = ["stm32f4"]
