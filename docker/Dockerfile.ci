@@ -4,14 +4,24 @@ FROM ubuntu:24.04
 # ARM toolchain). GCC >= 14 is required for C++20 module scanning.
 ARG ARM_GCC_VERSION=15.2.Rel1
 
+# g++-15 (not 14): g++-14 miscompiles C++20 modules that include <cstddef> in
+# the global module fragment. noble ships only g++-14, so use the PPA.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cmake make ninja-build wget xz-utils ca-certificates git \
-    gcc-14 g++-14 \
-    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 \
-    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100 \
+        software-properties-common \
+    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    && apt-get update && apt-get install -y --no-install-recommends \
+        cmake make ninja-build wget xz-utils ca-certificates git \
+        gcc-15 g++-15 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-15 100 \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-15 100 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget -q "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_GCC_VERSION}/binrel/arm-gnu-toolchain-${ARM_GCC_VERSION}-x86_64-arm-none-eabi.tar.xz" \
+# Download from the Arm CDN blob directly (the developer.arm.com redirect host
+# does not resolve inside some Docker DNS setups). The blob path lowercases the
+# version (15.2.Rel1 -> 15.2.rel1).
+RUN ARM_GCC_LC="$(echo "${ARM_GCC_VERSION}" | tr '[:upper:]' '[:lower:]')" \
+    && wget -q --retry-connrefused --tries=5 --timeout=120 --waitretry=5 \
+    "https://armkeil.blob.core.windows.net/developer/files/downloads/gnu/${ARM_GCC_LC}/binrel/arm-gnu-toolchain-${ARM_GCC_LC}-x86_64-arm-none-eabi.tar.xz" \
     -O /tmp/gcc-arm.tar.xz \
     && mkdir -p /opt/gcc-arm \
     && tar xf /tmp/gcc-arm.tar.xz -C /opt/gcc-arm --strip-components=1 \

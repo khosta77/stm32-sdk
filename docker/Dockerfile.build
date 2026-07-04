@@ -5,17 +5,27 @@ FROM ubuntu:24.04
 # fails to scan `import`, so 13.2 was a latent break for module builds.
 ARG ARM_GCC_VERSION=15.2.Rel1
 
-# gcc-14/g++-14 (x86) are for the host unit-test build (tests/host); the ARM
-# cross-toolchain below is for firmware. ubuntu:24.04 (noble) ships g++-14 in
-# the archive, so no PPA is needed.
+# gcc-15/g++-15 (x86) are for the host unit-test build (tests/host); the ARM
+# cross-toolchain below is for firmware. GCC 15 (not 14) is required: g++-14
+# miscompiles C++20 modules that include <cstddef> in the global module fragment
+# (redefinition of std::__byte_operand), which the SDK modules do. noble ships
+# only g++-14, so g++-15 comes from the ubuntu-toolchain-r/test PPA.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    cmake make ninja-build wget xz-utils ca-certificates python3 python3-pip git \
-    gcc-14 g++-14 \
-    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-14 100 \
-    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-14 100 \
+        software-properties-common \
+    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    && apt-get update && apt-get install -y --no-install-recommends \
+        cmake make ninja-build wget xz-utils ca-certificates python3 python3-pip git \
+        gcc-15 g++-15 \
+    && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-15 100 \
+    && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-15 100 \
     && rm -rf /var/lib/apt/lists/*
 
-RUN wget -q "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_GCC_VERSION}/binrel/arm-gnu-toolchain-${ARM_GCC_VERSION}-x86_64-arm-none-eabi.tar.xz" \
+# Download from the Arm CDN blob directly (the developer.arm.com redirect host
+# does not resolve inside some Docker DNS setups). The blob path lowercases the
+# version (15.2.Rel1 -> 15.2.rel1).
+RUN ARM_GCC_LC="$(echo "${ARM_GCC_VERSION}" | tr '[:upper:]' '[:lower:]')" \
+    && wget -q --retry-connrefused --tries=5 --timeout=120 --waitretry=5 \
+    "https://armkeil.blob.core.windows.net/developer/files/downloads/gnu/${ARM_GCC_LC}/binrel/arm-gnu-toolchain-${ARM_GCC_LC}-x86_64-arm-none-eabi.tar.xz" \
     -O /tmp/gcc-arm.tar.xz \
     && mkdir -p /opt/gcc-arm \
     && tar xf /tmp/gcc-arm.tar.xz -C /opt/gcc-arm --strip-components=1 \
