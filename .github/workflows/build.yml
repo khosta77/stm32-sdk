@@ -7,7 +7,26 @@ on:
     branches: [develop]
 
 jobs:
+  # Warm the shared buildx cache once so the matrix and host-test jobs load the
+  # image from cache instead of each rebuilding the toolchain layers. This keeps
+  # CI hermetic: it never depends on the published ghcr image being current.
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Warm image cache
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.build
+          tags: stm32-sdk-build:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          outputs: type=cacheonly
+
   build:
+    needs: image
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -28,10 +47,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install ARM toolchain
-        uses: carlosperate/arm-none-eabi-gcc-action@v1
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Load SDK image from cache
+        uses: docker/build-push-action@v6
         with:
-          release: '15.2.Rel1'
+          context: .
+          file: docker/Dockerfile.build
+          tags: stm32-sdk-build:ci
+          load: true
+          cache-from: type=gha
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -52,11 +77,44 @@ jobs:
       - name: Build
         run: |
           cd "ci-${{ matrix.template }}"
-          stmtool build --native
+          stmtool build
         env:
           STMSDK_PATH: ${{ github.workspace }}
+          STMTOOL_DOCKER_IMAGE: stm32-sdk-build:ci
 
       - name: Binary size
         run: |
           cd "ci-${{ matrix.template }}"
-          arm-none-eabi-size build/*.elf
+          docker run --rm -v "$PWD:/w" -w /w stm32-sdk-build:ci \
+            sh -c 'arm-none-eabi-size out/*.elf'
+
+  host-tests:
+    needs: image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Load SDK image from cache
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.build
+          tags: stm32-sdk-build:ci
+          load: true
+          cache-from: type=gha
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install stmtool
+        run: pip install ./tools/stmtool
+
+      - name: Host unit tests
+        run: stmtool test
+        env:
+          STMSDK_PATH: ${{ github.workspace }}
+          STMTOOL_DOCKER_IMAGE: stm32-sdk-build:ci
