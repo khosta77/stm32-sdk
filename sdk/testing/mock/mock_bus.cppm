@@ -31,7 +31,8 @@ inline constexpr size_t kMockCapacity = 256;
 
 namespace detail {
 
-inline size_t appendBytes(uint8_t *dst, size_t len, std::span<const uint8_t> src) {
+inline size_t
+appendBytes(uint8_t *dst, size_t len, std::span<const uint8_t> src) {
   size_t n = 0;
   while (n < src.size() && len + n < kMockCapacity) {
     dst[len + n] = src[n];
@@ -40,7 +41,12 @@ inline size_t appendBytes(uint8_t *dst, size_t len, std::span<const uint8_t> src
   return n;
 }
 
-inline void drainInto(const uint8_t *src, size_t total, size_t &pos, std::span<uint8_t> out) {
+inline void drainInto(
+    const uint8_t *src,
+    size_t total,
+    size_t &pos,
+    std::span<uint8_t> out
+) {
   for (size_t i = 0; i < out.size(); ++i) {
     out[i] = (pos < total) ? src[pos++] : uint8_t{0};
   }
@@ -197,7 +203,10 @@ struct MockGpioPin {
   }
   [[nodiscard]] Status read() const { return high ? Status::Ok : Status::None; }
 };
-static_assert(driver::IGpioPin<MockGpioPin>, "MockGpioPin must model driver::IGpioPin");
+static_assert(
+    driver::IGpioPin<MockGpioPin>,
+    "MockGpioPin must model driver::IGpioPin"
+);
 
 // Models driver::IFlash over a small in-memory array. eraseSector() sets the
 // sector to 0xFF (NOR-erase semantics); read()/write() copy at byte offsets.
