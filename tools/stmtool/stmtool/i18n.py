@@ -92,8 +92,8 @@ _STRINGS: dict[str, dict[str, str]] = {
         "ru": "Прошивка {name} через st-link...",
     },
     "no_bin": {
-        "en": "Error: no .bin file found in build/. Run 'stmtool build' first.",
-        "ru": "Ошибка: файл .bin не найден в build/. Сначала запустите 'stmtool build'.",
+        "en": "Error: no .bin file found in out/. Run 'stmtool build' first.",
+        "ru": "Ошибка: файл .bin не найден в out/. Сначала запустите 'stmtool build'.",
     },
     "project_created": {
         "en": "Project '{name}' created at {path}",

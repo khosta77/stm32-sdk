@@ -100,8 +100,8 @@ def _build_docker(
 ) -> subprocess.CompletedProcess[bytes]:
     """Run ``cmake`` configure + build inside the SDK Docker image."""
     cmake_cmd = (
-        f"cmake -B build -DSTM32_CHIP={target_chip} -DSTM32_SDK=/sdk-repo/sdk "
-        f"-DCMAKE_BUILD_TYPE={build_type} && cmake --build build {verbose_flag}"
+        f"cmake -B out -DSTM32_CHIP={target_chip} -DSTM32_SDK=/sdk-repo/sdk "
+        f"-DCMAKE_BUILD_TYPE={build_type} && cmake --build out {verbose_flag}"
     )
     docker_cmd: list[str] = [
         "docker",
@@ -138,7 +138,7 @@ def build(
 
     if clean:
         console.print(f"[yellow]{t('cleaning')}[/yellow]")
-        shutil.rmtree("build", ignore_errors=True)
+        shutil.rmtree("out", ignore_errors=True)
 
     sdk_section = config.get("sdk")
     sdk_version = (
@@ -179,7 +179,7 @@ def flash(
         flash_section.get("tool", "stlink") if isinstance(flash_section, dict) else "stlink"
     )
 
-    bin_files = list(Path("build").glob("*.bin"))
+    bin_files = list(Path("out").glob("*.bin"))
     if not bin_files:
         console.print(f"[red]{t('no_bin')}[/red]")
         raise typer.Exit(code=1)
