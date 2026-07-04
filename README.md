@@ -32,9 +32,11 @@ Create and flash your first project:
 ```bash
 stmtool project create my-blink --chip STM32F407VG
 cd my-blink
-stmtool build --native
+stmtool build
 stmtool flash
 ```
+
+Builds run inside the SDK Docker image; artifacts land in `out/`.
 
 ## Documentation
 
@@ -51,11 +53,15 @@ mkdocs serve
 
 ## Requirements
 
-- `arm-none-eabi-gcc` >= 14 (14+ required for C++20 module dependency scanning)
-- `cmake` >= 3.28 (needed for C++20 modules support)
-- `python` >= 3.10
+- **Docker** — all builds run inside the SDK image, which ships the pinned ARM
+  toolchain (`arm-none-eabi-gcc` 15.2, GCC >= 14 is required for C++20 module
+  dependency scanning) plus the host `g++` used for the unit tests
+- `python` >= 3.10 (for `stmtool`)
 - `st-flash` (optional, for flashing via ST-Link)
 - `pipx` (recommended, for isolated `stmtool` installation)
+
+A local `arm-none-eabi-gcc` is no longer required; if present, it must be
+GCC >= 14 (`stmtool doctor` verifies this).
 
 ## stmtool CLI
 
@@ -65,9 +71,9 @@ mkdocs serve
 | `stmtool project create <name> --chip <chip> --template <tpl>` | Pick a specific template |
 | `stmtool project create <name> ... --with-claude` | Also generate a `CLAUDE.md` tailored to the template |
 | `stmtool project templates` | List available templates |
-| `stmtool build` | Build project (Docker by default) |
-| `stmtool build --native` | Build locally without Docker |
-| `stmtool build --clean` | Clean build directory before building |
+| `stmtool build` | Build project in Docker (artifacts in `out/`) |
+| `stmtool build --clean` | Clean the `out/` directory before building |
+| `stmtool test` | Build and run the SDK host unit tests in Docker |
 | `stmtool flash` | Flash firmware via st-link |
 | `stmtool sdk update [--version <tag>]` | Update cached SDK to a release tag or `develop` |
 | `stmtool sdk list-versions` | List available SDK versions (git tags) |

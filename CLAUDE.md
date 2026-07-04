@@ -8,9 +8,14 @@ Bare-metal C++20 ecosystem for STM32 (CMSIS only).
 pip install ./tools/stmtool
 stmtool project create my-project --chip STM32F407VG
 cd my-project
-stmtool build --native
+stmtool build   # always runs in the SDK Docker image; artifacts in out/
 stmtool flash
 ```
+
+Since v0.1.13 all builds run inside the SDK Docker image (no `--native`);
+artifacts land in `out/`. `stmtool test` builds and runs the host unit tests
+(`tests/host` on the mock buses) in the image. The image pins the ARM toolchain
+(GCC 15.2; `stm32_sdk.cmake` requires GCC >= 14) and bakes FreeRTOS-Kernel.
 
 ## Code rules
 
@@ -219,10 +224,16 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
   executor, v0.1.10) and `signal_bus.cppm` (type-safe
   `Channel<Event, MaxSubs, RingDepth>`) — all but `work_queue` only under
   FreeRTOS.
-- `sdk/testing/` — header-only on-device unit-test helpers (since v0.1.11,
+- `sdk/testing/` — on-device unit-test helpers (since v0.1.11,
   `STM32_USE_TESTING`): `testing/unit_test.hpp` (`ASSERT_*`/`EXPECT_*` +
-  `TestRunner`, no exceptions/heap, injected `Writer`; same code host + device).
-  Linked as INTERFACE `stm32_testing`.
+  `TestRunner`, no exceptions/heap, injected `Writer`; same code host + device),
+  linked as INTERFACE `stm32_testing`. Plus `testing/mock/mock_bus.cppm` (module
+  `testing.mock`, v0.1.13): reusable programmable mocks `MockI2c`/`MockSpi`/
+  `MockUart`/`MockGpioPin`/`MockFlash` satisfying the driver concepts.
+- `tests/host/` — standalone CMake tree (v0.1.13) built with the image's host
+  `g++`: compiles the CMSIS-free portable modules + `testing.mock` into `ctest`
+  executables (`test_result`/`test_mock`/`test_sensor_mock`). Run via
+  `stmtool test`; a `host-tests` CI job runs the same.
 - `templates/` — 10 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
   `bare-metal/unit-test-demo`, `freertos/blink`, `freertos/mpu6050-uart`,
   `freertos/oled-display-test`, `freertos/w25q32-flash-test`,

@@ -53,20 +53,34 @@ List all available templates with their categories and descriptions.
 ### `stmtool build`
 
 ```bash
-stmtool build [--native] [--release] [--clean] [--chip <chip>] [--verbose]
+stmtool build [--release] [--clean] [--chip <chip>] [--verbose]
 ```
 
-Build the project in the current directory.
+Build the project in the current directory. Every build runs inside the SDK
+Docker image — there is no host-toolchain path. Artifacts are written to `out/`.
 
 | Flag | Default | Description |
 |------|---------|-------------|
-| `--native` | off | Use host's `arm-none-eabi-gcc` and `cmake` instead of Docker |
 | `--release` | off | Build with `-O2 -DNDEBUG` |
-| `--clean` | off | Wipe the build directory first |
+| `--clean` | off | Wipe the `out/` directory first |
 | `--chip` | from `stmproject.toml` | Override target chip |
 | `--verbose` / `-v` | off | Show full CMake/Ninja output |
 
-The Docker image is `ghcr.io/khosta77/stm32-sdk-build:latest`.
+The Docker image is `ghcr.io/khosta77/stm32-sdk-build:latest`, overridable via
+the `STMTOOL_DOCKER_IMAGE` environment variable (CI points it at a locally built
+image). The image bundles the pinned ARM toolchain and a pre-provisioned
+FreeRTOS-Kernel, so builds need no network.
+
+### `stmtool test`
+
+```bash
+stmtool test [--verbose]
+```
+
+Build and run the SDK host unit tests (`tests/host`) inside the Docker image,
+using its host `g++`. These exercise the portable layer — `driver::Result<T>`,
+`DRV_TRY`, and driver/sensor logic driven by the reusable mock buses — without
+hardware. Exit code is non-zero if any test fails.
 
 ### `stmtool flash`
 
@@ -118,8 +132,10 @@ Print the resolved SDK root path — useful for debugging or scripting.
 stmtool doctor
 ```
 
-Check that all required tools are installed and on `PATH`: Docker (optional),
-`arm-none-eabi-gcc`, `cmake`, `st-flash`.
+Check that all required tools are installed and on `PATH`: Docker,
+`arm-none-eabi-gcc`, `cmake`, `st-flash`, plus whether the SDK image is present
+locally. A local `arm-none-eabi-gcc` below GCC 14 is flagged as an error (C++20
+module scanning needs GCC >= 14).
 
 ### `stmtool completion`
 

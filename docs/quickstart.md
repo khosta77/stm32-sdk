@@ -4,11 +4,15 @@
 
 | Tool | Minimum version | Purpose |
 |------|-----------------|---------|
-| `arm-none-eabi-gcc` | 14 | Cross-compiler for Cortex-M (14+ required for C++20 module scanning) |
-| `cmake` | 3.28 | C++20 modules support |
+| `docker` | any recent | Runs every build; ships the pinned toolchain + FreeRTOS |
 | `python` | 3.10 | Runs `stmtool` |
 | `pipx` | any | Isolated install of `stmtool` (recommended) |
 | `st-flash` | any | Optional, for flashing via ST-Link |
+
+Builds happen inside the SDK Docker image, so a host `arm-none-eabi-gcc` is not
+required. The image pins `arm-none-eabi-gcc` 15.2 (GCC >= 14 is mandatory for
+C++20 module scanning). If you do keep a local toolchain, `stmtool doctor` warns
+when it is older than GCC 14.
 
 Verify your toolchain after installing:
 
@@ -72,16 +76,18 @@ stmtool project create imu --chip STM32F407VG \
 
 ## Build
 
-Locally (uses the host's `arm-none-eabi-gcc` and `cmake`):
-
-```bash
-stmtool build --native
-```
-
-Or via Docker (no host toolchain required):
+Builds run inside the SDK Docker image; artifacts land in `out/`:
 
 ```bash
 stmtool build
+```
+
+## Test
+
+Run the SDK host unit tests (portable logic on the mock buses, no hardware):
+
+```bash
+stmtool test
 ```
 
 ## Flash

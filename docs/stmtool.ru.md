@@ -53,20 +53,34 @@ stmtool project templates
 ### `stmtool build`
 
 ```bash
-stmtool build [--native] [--release] [--clean] [--chip <чип>] [--verbose]
+stmtool build [--release] [--clean] [--chip <чип>] [--verbose]
 ```
 
-Собрать проект в текущей директории.
+Собрать проект в текущей директории. Любая сборка выполняется внутри Docker-образа
+SDK — пути через хостовый тулчейн больше нет. Артефакты кладутся в `out/`.
 
 | Флаг | По умолчанию | Описание |
 |------|--------------|----------|
-| `--native` | выкл. | Использовать хостовые `arm-none-eabi-gcc` и `cmake` вместо Docker |
 | `--release` | выкл. | Сборка с `-O2 -DNDEBUG` |
-| `--clean` | выкл. | Очистить директорию сборки перед сборкой |
+| `--clean` | выкл. | Очистить директорию `out/` перед сборкой |
 | `--chip` | из `stmproject.toml` | Переопределить целевой чип |
 | `--verbose` / `-v` | выкл. | Показывать полный вывод CMake/Ninja |
 
-Docker-образ — `ghcr.io/khosta77/stm32-sdk-build:latest`.
+Docker-образ — `ghcr.io/khosta77/stm32-sdk-build:latest`, переопределяется
+переменной окружения `STMTOOL_DOCKER_IMAGE` (в CI она указывает на локально
+собранный образ). Образ содержит запиненный ARM-тулчейн и заранее подготовленный
+FreeRTOS-Kernel, поэтому сборка не требует сети.
+
+### `stmtool test`
+
+```bash
+stmtool test [--verbose]
+```
+
+Собрать и запустить host-юнит-тесты SDK (`tests/host`) внутри Docker-образа,
+используя его хостовый `g++`. Они проверяют переносимый слой — `driver::Result<T>`,
+`DRV_TRY` и логику драйверов / сенсоров на переиспользуемых мок-шинах — без железа.
+Код возврата ненулевой при любом провале.
 
 ### `stmtool flash`
 
@@ -118,8 +132,9 @@ stmtool sdk path
 stmtool doctor
 ```
 
-Проверяет наличие в `PATH`: Docker (опционально), `arm-none-eabi-gcc`,
-`cmake`, `st-flash`.
+Проверяет наличие в `PATH`: Docker, `arm-none-eabi-gcc`, `cmake`, `st-flash`,
+а также присутствует ли SDK-образ локально. Локальный `arm-none-eabi-gcc` ниже
+GCC 14 отмечается как ошибка (сканирование модулей C++20 требует GCC >= 14).
 
 ### `stmtool completion`
 
