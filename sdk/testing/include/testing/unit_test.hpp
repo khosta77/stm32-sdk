@@ -25,14 +25,14 @@ using Writer = void (*)(const char *);
 namespace detail {
 
 inline void writeUint(Writer write, uint32_t value) {
-    char buf[11];
-    char *p = buf + sizeof(buf);
-    *--p = '\0';
-    do {
-        *--p = static_cast<char>('0' + (value % 10));
-        value /= 10;
-    } while (value != 0);
-    write(p);
+  char buf[11];
+  char *p = buf + sizeof(buf);
+  *--p = '\0';
+  do {
+    *--p = static_cast<char>('0' + (value % 10));
+    value /= 10;
+  } while (value != 0);
+  write(p);
 }
 
 }  // namespace detail
@@ -40,18 +40,18 @@ inline void writeUint(Writer write, uint32_t value) {
 // Per-test state. `failed` latches on the first failed check; `checks` counts
 // every EXPECT_/ASSERT_ evaluated. A test reads/writes it only through macros.
 struct TestContext {
-    Writer write;
-    const char *name;
-    bool failed;
-    uint32_t checks;
+  Writer write;
+  const char *name;
+  bool failed;
+  uint32_t checks;
 };
 
 inline void reportFailure(const TestContext &ctx, const char *expr) {
-    if (ctx.write != nullptr) {
-        ctx.write("  fail: ");
-        ctx.write(expr);
-        ctx.write("\r\n");
-    }
+  if (ctx.write != nullptr) {
+    ctx.write("  fail: ");
+    ctx.write(expr);
+    ctx.write("\r\n");
+  }
 }
 
 // Runs tests one by one and tallies pass/fail. No registration list -- the
@@ -59,45 +59,45 @@ inline void reportFailure(const TestContext &ctx, const char *expr) {
 // deterministic and avoids static constructors before main() on bare metal.
 class TestRunner {
 public:
-    explicit TestRunner(Writer write) : _write(write) {}
+  explicit TestRunner(Writer write) : _write(write) {}
 
-    void run(const char *name, void (*fn)(TestContext &)) {
-        TestContext ctx{_write, name, false, 0};
-        fn(ctx);
-        emit(ctx.failed ? "[FAIL] " : "[PASS] ", name);
-        if (ctx.failed) {
-            ++_failed;
-        } else {
-            ++_passed;
-        }
+  void run(const char *name, void (*fn)(TestContext &)) {
+    TestContext ctx{_write, name, false, 0};
+    fn(ctx);
+    emit(ctx.failed ? "[FAIL] " : "[PASS] ", name);
+    if (ctx.failed) {
+      ++_failed;
+    } else {
+      ++_passed;
     }
+  }
 
-    // Prints "N passed, M failed" and returns true when every test passed.
-    [[nodiscard]] bool summary() const {
-        if (_write != nullptr) {
-            detail::writeUint(_write, _passed);
-            _write(" passed, ");
-            detail::writeUint(_write, _failed);
-            _write(" failed\r\n");
-        }
-        return _failed == 0;
+  // Prints "N passed, M failed" and returns true when every test passed.
+  [[nodiscard]] bool summary() const {
+    if (_write != nullptr) {
+      detail::writeUint(_write, _passed);
+      _write(" passed, ");
+      detail::writeUint(_write, _failed);
+      _write(" failed\r\n");
     }
+    return _failed == 0;
+  }
 
-    [[nodiscard]] uint32_t passed() const { return _passed; }
-    [[nodiscard]] uint32_t failed() const { return _failed; }
+  [[nodiscard]] uint32_t passed() const { return _passed; }
+  [[nodiscard]] uint32_t failed() const { return _failed; }
 
 private:
-    void emit(const char *prefix, const char *name) const {
-        if (_write != nullptr) {
-            _write(prefix);
-            _write(name);
-            _write("\r\n");
-        }
+  void emit(const char *prefix, const char *name) const {
+    if (_write != nullptr) {
+      _write(prefix);
+      _write(name);
+      _write("\r\n");
     }
+  }
 
-    Writer _write;
-    uint32_t _passed{0};
-    uint32_t _failed{0};
+  Writer _write;
+  uint32_t _passed{0};
+  uint32_t _failed{0};
 };
 
 }  // namespace testing
@@ -106,79 +106,79 @@ private:
 // ASSERT_/EXPECT_ macros act on that implicit `_t`.
 #define TEST(name) void name(::testing::TestContext &_t)
 
-#define STM32_TEST_FAIL_(expr)                     \
-    do {                                           \
-        _t.failed = true;                          \
-        ::testing::reportFailure(_t, (expr));      \
-    } while (0)
+#define STM32_TEST_FAIL_(expr)            \
+  do {                                    \
+    _t.failed = true;                     \
+    ::testing::reportFailure(_t, (expr)); \
+  } while (0)
 
-#define EXPECT_TRUE(cond)                          \
-    do {                                           \
-        ++_t.checks;                               \
-        if (!(cond)) {                             \
-            STM32_TEST_FAIL_(#cond);               \
-        }                                          \
-    } while (0)
+#define EXPECT_TRUE(cond)      \
+  do {                         \
+    ++_t.checks;               \
+    if (!(cond)) {             \
+      STM32_TEST_FAIL_(#cond); \
+    }                          \
+  } while (0)
 
-#define EXPECT_FALSE(cond)                         \
-    do {                                           \
-        ++_t.checks;                               \
-        if (cond) {                                \
-            STM32_TEST_FAIL_("!(" #cond ")");      \
-        }                                          \
-    } while (0)
+#define EXPECT_FALSE(cond)              \
+  do {                                  \
+    ++_t.checks;                        \
+    if (cond) {                         \
+      STM32_TEST_FAIL_("!(" #cond ")"); \
+    }                                   \
+  } while (0)
 
-#define EXPECT_EQ(lhs, rhs)                        \
-    do {                                           \
-        ++_t.checks;                               \
-        if (!((lhs) == (rhs))) {                   \
-            STM32_TEST_FAIL_(#lhs " == " #rhs);    \
-        }                                          \
-    } while (0)
+#define EXPECT_EQ(lhs, rhs)               \
+  do {                                    \
+    ++_t.checks;                          \
+    if (!((lhs) == (rhs))) {              \
+      STM32_TEST_FAIL_(#lhs " == " #rhs); \
+    }                                     \
+  } while (0)
 
-#define EXPECT_NE(lhs, rhs)                        \
-    do {                                           \
-        ++_t.checks;                               \
-        if (!((lhs) != (rhs))) {                   \
-            STM32_TEST_FAIL_(#lhs " != " #rhs);    \
-        }                                          \
-    } while (0)
+#define EXPECT_NE(lhs, rhs)               \
+  do {                                    \
+    ++_t.checks;                          \
+    if (!((lhs) != (rhs))) {              \
+      STM32_TEST_FAIL_(#lhs " != " #rhs); \
+    }                                     \
+  } while (0)
 
-#define ASSERT_TRUE(cond)                          \
-    do {                                           \
-        ++_t.checks;                               \
-        if (!(cond)) {                             \
-            STM32_TEST_FAIL_(#cond);               \
-            return;                                \
-        }                                          \
-    } while (0)
+#define ASSERT_TRUE(cond)      \
+  do {                         \
+    ++_t.checks;               \
+    if (!(cond)) {             \
+      STM32_TEST_FAIL_(#cond); \
+      return;                  \
+    }                          \
+  } while (0)
 
-#define ASSERT_FALSE(cond)                         \
-    do {                                           \
-        ++_t.checks;                               \
-        if (cond) {                                \
-            STM32_TEST_FAIL_("!(" #cond ")");      \
-            return;                                \
-        }                                          \
-    } while (0)
+#define ASSERT_FALSE(cond)              \
+  do {                                  \
+    ++_t.checks;                        \
+    if (cond) {                         \
+      STM32_TEST_FAIL_("!(" #cond ")"); \
+      return;                           \
+    }                                   \
+  } while (0)
 
-#define ASSERT_EQ(lhs, rhs)                        \
-    do {                                           \
-        ++_t.checks;                               \
-        if (!((lhs) == (rhs))) {                   \
-            STM32_TEST_FAIL_(#lhs " == " #rhs);    \
-            return;                                \
-        }                                          \
-    } while (0)
+#define ASSERT_EQ(lhs, rhs)               \
+  do {                                    \
+    ++_t.checks;                          \
+    if (!((lhs) == (rhs))) {              \
+      STM32_TEST_FAIL_(#lhs " == " #rhs); \
+      return;                             \
+    }                                     \
+  } while (0)
 
-#define ASSERT_NE(lhs, rhs)                        \
-    do {                                           \
-        ++_t.checks;                               \
-        if (!((lhs) != (rhs))) {                   \
-            STM32_TEST_FAIL_(#lhs " != " #rhs);    \
-            return;                                \
-        }                                          \
-    } while (0)
+#define ASSERT_NE(lhs, rhs)               \
+  do {                                    \
+    ++_t.checks;                          \
+    if (!((lhs) != (rhs))) {              \
+      STM32_TEST_FAIL_(#lhs " != " #rhs); \
+      return;                             \
+    }                                     \
+  } while (0)
 
 #define RUN_TEST(runner, name) (runner).run(#name, &name)
 

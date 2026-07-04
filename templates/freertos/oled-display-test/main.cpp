@@ -25,10 +25,10 @@ using driver::stm32f4::GpioPin;
 using driver::stm32f4::I2c;
 
 extern "C" void __initialize_hardware() {
-    SystemCoreClockUpdate();
-    driver::reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOBEN);
-    driver::reg::set(RCC->APB1ENR, RCC_APB1ENR_I2C1EN);
-    __DSB();
+  SystemCoreClockUpdate();
+  driver::reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOBEN);
+  driver::reg::set(RCC->APB1ENR, RCC_APB1ENR_I2C1EN);
+  __DSB();
 }
 
 namespace {
@@ -74,37 +74,42 @@ sensor::Ssd1306 g_oled{
 };
 
 void taskDisplay(void *) {
-    rtos::Task::delay(pdMS_TO_TICKS(200));
-    if (g_oled.init() != driver::Status::Ok) {
-        while (true) {
-            rtos::Task::delay(pdMS_TO_TICKS(1000));
-        }
-    }
-
-    uint32_t counter = 0;
-    char buf[32];
+  rtos::Task::delay(pdMS_TO_TICKS(200));
+  if (g_oled.init() != driver::Status::Ok) {
     while (true) {
-        g_oled.clear();
-        g_oled.drawText(0, 0, "STM32 SDK");
-        g_oled.drawText(0, 12, "SSD1306 128x64");
-        g_oled.drawText(0, 24, "I2C @ 400 kHz");
-
-        snprintf(buf, sizeof(buf), "uptime: %lus", static_cast<unsigned long>(counter));
-        g_oled.drawText(0, 48, buf);
-        (void) g_oled.flush();
-
-        ++counter;
-        rtos::Task::delay(pdMS_TO_TICKS(1000));
+      rtos::Task::delay(pdMS_TO_TICKS(1000));
     }
+  }
+
+  uint32_t counter = 0;
+  char buf[32];
+  while (true) {
+    g_oled.clear();
+    g_oled.drawText(0, 0, "STM32 SDK");
+    g_oled.drawText(0, 12, "SSD1306 128x64");
+    g_oled.drawText(0, 24, "I2C @ 400 kHz");
+
+    snprintf(
+        buf,
+        sizeof(buf),
+        "uptime: %lus",
+        static_cast<unsigned long>(counter)
+    );
+    g_oled.drawText(0, 48, buf);
+    (void) g_oled.flush();
+
+    ++counter;
+    rtos::Task::delay(pdMS_TO_TICKS(1000));
+  }
 }
 
 }  // namespace
 
 int main() {
-    static rtos::Task t("display", 512, 1, taskDisplay);
+  static rtos::Task t("display", 512, 1, taskDisplay);
 
-    rtos::Task::startScheduler();
+  rtos::Task::startScheduler();
 
-    while (true) {
-    }
+  while (true) {
+  }
 }

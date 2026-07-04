@@ -17,9 +17,10 @@ extern uint32_t SystemCoreClock;
 
 #define configLIBRARY_LOWEST_INTERRUPT_PRIORITY ((1U << configPRIO_BITS) - 1)
 #define configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY 5
-#define configKERNEL_INTERRUPT_PRIORITY (configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS))
+#define configKERNEL_INTERRUPT_PRIORITY \
+  (configLIBRARY_LOWEST_INTERRUPT_PRIORITY << (8 - configPRIO_BITS))
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY \
-    (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS))
+  (configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY << (8 - configPRIO_BITS))
 
 #define configUSE_PREEMPTION 1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
@@ -59,14 +60,14 @@ extern uint32_t SystemCoreClock;
 #define configTIMER_QUEUE_LENGTH 10
 #define configTIMER_TASK_STACK_DEPTH (configMINIMAL_STACK_SIZE * 2)
 
-#define configASSERT(x)                             \
-    do {                                            \
-        if ((x) == 0) {                             \
-            __asm volatile("cpsid i" ::: "memory"); \
-            for (;;) {                              \
-            }                                       \
-        }                                           \
-    } while (0)
+#define configASSERT(x)                       \
+  do {                                        \
+    if ((x) == 0) {                           \
+      __asm volatile("cpsid i" ::: "memory"); \
+      for (;;) {                              \
+      }                                       \
+    }                                         \
+  } while (0)
 
 #define INCLUDE_vTaskPrioritySet 1
 #define INCLUDE_uxTaskPriorityGet 1
