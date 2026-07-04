@@ -53,6 +53,60 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.11
+
+Focus: quality and type safety — `consteval` validators for the I2C / SPI / UART
+configs, thread-safety annotations, and on-device unit-test helpers
+(issues #56–#58).
+
+Highlights:
+
+- **`consteval` config validators `i2c()` / `spi()` / `uart()`.** Previously only
+  `GpioConfig` / `ExtiConfig` had compile-time validation. The I2C / SPI / UART
+  configs are now free structs in the interface modules — `driver::I2cConfig`,
+  `driver::SpiConfig`, `driver::UartConfig` — moved out of the implementation
+  types (was `I2c::Config`), each next to a free `consteval` validator
+  (`driver::i2c()` / `driver::spi()` / `driver::uart()`) in the same style as
+  `gpio()` / `exti()`. SPI / UART fields became strong enums with a `None`
+  sentinel: `SpiMode` (`Mode0`..`Mode3`), `SpiDataSize` (`Bits8` / `Bits16`),
+  `DataBits` (`Eight` / `Nine`), `StopBits` (`One` / `Two`). An invalid config no
+  longer compiles. The UART `Config`, previously duplicated between the primary
+  template and the DMA specialisation, is now single-sourced.
+- **Thread-safety annotations.** A new pure-preprocessor header
+  `util/thread_safety.hpp` (in `sdk/core/include/util/`) wraps the Clang
+  thread-safety attributes: `CAPABILITY`, `SCOPED_CAPABILITY`, `GUARDED_BY`,
+  `REQUIRES`, `ACQUIRE`, `RELEASE`, `EXCLUDES`, `NO_THREAD_SAFETY_ANALYSIS` and
+  more. Under Clang (`-Wthread-safety`) they drive static analysis; under GCC
+  (which builds the SDK) they are no-ops. Annotated: `rtos::Mutex` (`CAPABILITY`)
+  and `rtos::LockGuard` (`SCOPED_CAPABILITY`) in `rtos.hpp`; the PRIMASK critical
+  section modelled as a named capability (`system::detail::g_criticalSection`),
+  `enterCritical` / `leaveCritical` as `ACQUIRE` / `RELEASE`, and `WorkQueue::_head`
+  / `Channel::_ring` as `GUARDED_BY`. This is groundwork — the actual Clang
+  analysis pass arrives with clang-tidy in CI (#73); for now everything compiles
+  cleanly under GCC `-Werror` and codegen is unchanged (the macros expand to
+  nothing).
+- **On-device unit-test helpers.** A new header-only `testing/unit_test.hpp` (in
+  `sdk/testing/include/testing/`, INTERFACE target `stm32_testing`, flag
+  `STM32_USE_TESTING`). GTest-like `ASSERT_*` / `EXPECT_*` with no exceptions, no
+  heap, no dynamic linking: `ASSERT_` returns from the test function, `EXPECT_`
+  continues. `TEST(name){...}` defines a test as a function; `TestRunner
+  runner{writer}` takes an injectable `Writer` (`void(*)(const char*)`);
+  `RUN_TEST(runner, name)` runs a test; `runner.summary()` prints "N passed, M
+  failed" and returns a bool. Integer formatting is done by hand (no `snprintf`),
+  so the same test code compiles and runs both on the host (writer → stdout) and
+  on the device (writer → UART). A new `bare-metal/unit-test-demo` template shows
+  it off (tests over `driver::Result<T>`). Complements the future host tests
+  (#34 / #35).
+
+Notes:
+
+- **Breaking for driver call sites.** The I2C / SPI / UART configs must now be
+  wrapped in their validator (`I2c g{*I2C1, i2c({...})}`), SPI / UART fields are
+  enums, and the config type moved (`I2c::Config` → `driver::I2cConfig`, needing
+  `import driver.i2c;`). See [migration](migration.md#new-in-v0111).
+- The thread-safety and testing additions are purely additive — new headers, no
+  edits required for existing code.
+
 ### v0.1.10
 
 Focus: finishing the concurrency layer — an EXTI driver, a software `Timer`,

@@ -145,10 +145,15 @@ import driver.reg;
 
 ### Macros live in textual headers, not modules
 
-Macros are not exported across `import`. Any user-facing macro (e.g. the
-`DRV_TRY` / `DRV_TRY_ASSIGN` helpers in `driver/try.hpp`) must ship as a
+Macros are not exported across `import`. Any user-facing macro must ship as a
 textual `#include` header, included after the relevant `import`, not defined
-inside a `.cppm`.
+inside a `.cppm`. Current helper headers:
+
+- `driver/try.hpp` — `DRV_TRY` / `DRV_TRY_ASSIGN` early-return helpers.
+- `util/thread_safety.hpp` — Clang thread-safety annotation wrappers
+  (`GUARDED_BY`, `REQUIRES`, `ACQUIRE`, ...), no-op on GCC (v0.1.11).
+- `testing/unit_test.hpp` — `ASSERT_*` / `EXPECT_*` on-device unit-test
+  helpers + `TestRunner` (v0.1.11).
 
 ### TU-local limitations for templates
 
@@ -198,10 +203,15 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
   executor, v0.1.10) and `signal_bus.cppm` (type-safe
   `Channel<Event, MaxSubs, RingDepth>`) — all but `work_queue` only under
   FreeRTOS.
-- `templates/` — 9 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
-  `freertos/blink`, `freertos/mpu6050-uart`, `freertos/oled-display-test`,
-  `freertos/w25q32-flash-test`, `freertos/imu-flash-oled-demo`,
-  `freertos/signal-bus-demo`, `freertos/button-events-demo`).
+- `sdk/testing/` — header-only on-device unit-test helpers (since v0.1.11,
+  `STM32_USE_TESTING`): `testing/unit_test.hpp` (`ASSERT_*`/`EXPECT_*` +
+  `TestRunner`, no exceptions/heap, injected `Writer`; same code host + device).
+  Linked as INTERFACE `stm32_testing`.
+- `templates/` — 10 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
+  `bare-metal/unit-test-demo`, `freertos/blink`, `freertos/mpu6050-uart`,
+  `freertos/oled-display-test`, `freertos/w25q32-flash-test`,
+  `freertos/imu-flash-oled-demo`, `freertos/signal-bus-demo`,
+  `freertos/button-events-demo`).
 - `tools/stmtool/` — Python CLI tool (Typer + Rich).
 - `tools/docs/` — MkDocs build dependencies.
 - `docs/` — MkDocs source (EN + RU via suffix mode).
@@ -242,14 +252,29 @@ C++20 **concepts** (`IGpioPin`, `II2c`, `ISpi`, `IUart`, `IFlash`, `IImu`,
 - I2C / UART / SPI / DMA: clocks enabled via `__initialize_hardware()` override
   in `main.cpp` before C++ constructors run.
 
-### Config
+### Config — free structs + `consteval` validators (since v0.1.11)
 
-All configs have no defaults. The caller fills every field:
+All configs have no defaults; the caller fills every field. Since v0.1.11 the
+I2C/SPI/UART configs live in their interface module as **free** structs
+(`driver::I2cConfig`/`SpiConfig`/`UartConfig`, no longer nested `I2c::Config`)
+with a free `consteval` validator each — same shape as `gpio()`/`exti()`. An
+out-of-range or unset field fails to compile. SPI/UART fields are strong enums
+(`SpiMode`, `SpiDataSize`, `DataBits`, `StopBits`) with a `None` sentinel the
+validator rejects:
 
 ```cpp
-I2c::Config{ .clockSpeed = 400000, .fastMode = true }
-Uart<>::Config{ .baudrate = 115200, .dataBits = 8, .stopBits = 1, .parity = Parity::None }
+I2c  g_i2c{*I2C1, i2c({.clockSpeed = 400000, .fastMode = true})};
+Spi  g_spi{*SPI2, spi({.clockHz = 10000000, .mode = SpiMode::Mode0,
+                       .lsbFirst = false, .dataSize = SpiDataSize::Bits8})};
+Uart<> g_uart{*USART2, USART2_IRQn,
+              uart({.baudrate = 115200, .dataBits = DataBits::Eight,
+                    .stopBits = StopBits::One, .parity = Parity::None})};
 ```
+
+The validator and enums come from the interface module (`driver.i2c` /
+`driver.spi` / `driver.uart`) — `import` it alongside the `driver.stm32f4.*`
+implementation (the impl does not re-export it), same as `import driver.gpio`
+next to `import driver.stm32f4.gpio`.
 
 ### `GpioConfig` — aggregate + consteval validation via `gpio()`
 
