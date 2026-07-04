@@ -110,7 +110,7 @@ def _build_docker(
 ) -> subprocess.CompletedProcess[bytes]:
     """Run ``cmake`` configure + build inside the SDK Docker image."""
     cmake_cmd = (
-        f"cmake -B out -DSTM32_CHIP={target_chip} -DSTM32_SDK=/sdk-repo/sdk "
+        f"cmake -G Ninja -B out -DSTM32_CHIP={target_chip} -DSTM32_SDK=/sdk-repo/sdk "
         f"-DCMAKE_BUILD_TYPE={build_type} && cmake --build out {verbose_flag}"
     )
     docker_cmd: list[str] = [
