@@ -170,6 +170,43 @@ def build(
     raise typer.Exit(code=result.returncode)
 
 
+@app.command(name="test", help=t("test_help"))
+def run_host_tests(
+    verbose: bool = typer.Option(False, "--verbose", "-v", help=t("build_verbose")),
+) -> None:
+    """Build and run the SDK host unit tests (tests/host) inside the Docker image."""
+    try:
+        sdk_root = resolve_sdk_root()
+    except RuntimeError as e:
+        console.print(f"[red]{e}[/red]")
+        raise typer.Exit(code=1) from e
+
+    verbose_flag = "--verbose" if verbose else ""
+    cmake_cmd = (
+        "cmake -G Ninja -S /sdk-repo/tests/host -B /workspace/out/host "
+        f"&& cmake --build /workspace/out/host {verbose_flag} "
+        "&& ctest --test-dir /workspace/out/host --output-on-failure"
+    )
+    docker_cmd: list[str] = [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        f"{Path.cwd()}:/workspace",
+        "-v",
+        f"{sdk_root}:/sdk-repo:ro",
+        "-w",
+        "/workspace",
+        _docker_image(),
+        "bash",
+        "-c",
+        cmake_cmd,
+    ]
+    console.print(f"[bold green]{t('testing_msg')}[/bold green]")
+    result = subprocess.run(docker_cmd, check=False)
+    raise typer.Exit(code=result.returncode)
+
+
 @app.command(help=t("flash_help"))
 def flash(
     tool: str = typer.Option(

@@ -218,6 +218,33 @@ def test_build_honours_docker_image_env(
     assert "stm32-sdk-build:ci" in captured[-1]
 
 
+def test_run_host_tests_invokes_docker_ctest(
+    project_workdir: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        "stmtool.cli.resolve_sdk_root",
+        lambda **_: project_workdir / "fake-sdk",
+    )
+    (project_workdir / "fake-sdk").mkdir()
+    captured: list[list[str]] = []
+
+    def fake_run(cmd: Any, **_kwargs: Any) -> Any:
+        captured.append(list(cmd))
+
+        class _R:
+            returncode = 0
+
+        return _R()
+
+    monkeypatch.setattr("stmtool.cli.subprocess.run", fake_run)
+    result = runner.invoke(app, ["test"])
+    assert result.exit_code == 0
+    assert captured[-1][0] == "docker"
+    assert "ctest" in captured[-1][-1]
+    assert "tests/host" in captured[-1][-1]
+
+
 def test_flash_unknown_tool(project_workdir: Path) -> None:
     out_dir = project_workdir / "out"
     out_dir.mkdir()

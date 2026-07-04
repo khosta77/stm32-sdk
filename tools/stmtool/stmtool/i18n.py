@@ -33,6 +33,14 @@ _STRINGS: dict[str, dict[str, str]] = {
         "en": "Override chip from stmproject.toml",
         "ru": "Переопределить чип из stmproject.toml",
     },
+    "test_help": {
+        "en": "Build and run the SDK host unit tests in Docker",
+        "ru": "Собрать и запустить host-юнит-тесты SDK в Docker",
+    },
+    "testing_msg": {
+        "en": "Running host unit tests in Docker...",
+        "ru": "Запуск host-юнит-тестов в Docker...",
+    },
     "flash_help": {
         "en": "Flash firmware to target board",
         "ru": "Прошить прошивку на плату",
