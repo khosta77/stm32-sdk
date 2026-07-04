@@ -18,6 +18,7 @@ template.toml, not the directory path):
 - `imu-flash-oled-demo`
 - `signal-bus-demo`
 - `button-events-demo`
+- `unit-test-demo`
 
 Run:
 

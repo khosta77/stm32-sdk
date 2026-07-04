@@ -105,6 +105,7 @@ mkdocs serve
 |----------|---------------------|
 | `bare-metal/blink` | LED on PD12 via SysTick; minimal startup + linker scripts |
 | `bare-metal/i2c-scan` | I2C bus scanner with USART2 output (no FreeRTOS) |
+| `bare-metal/unit-test-demo` | On-device `ASSERT_`/`EXPECT_` unit tests with a UART-reporting runner |
 | `freertos/blink` | FreeRTOS task controlling LED |
 | `freertos/mpu6050-uart` | MPU6050 sampling at 10 Hz, USART2 TX via DMA |
 | `freertos/oled-display-test` | SSD1306 with uptime counter and static text |

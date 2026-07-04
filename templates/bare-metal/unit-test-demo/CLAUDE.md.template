@@ -1,0 +1,79 @@
+# @PROJECT_NAME@
+
+STM32 @STM32_CHIP@ project on stm32-sdk @SDK_VERSION@ — on-device unit tests
+built with the `testing/unit_test.hpp` helpers, reporting PASS/FAIL over USART2.
+
+## SDK rules (must follow)
+
+- CMSIS only, HAL/LL forbidden.
+- C++20 (gnu++20), C11 (gnu11).
+- MMIO access through `driver::reg::set/clear/write/read/get/modify` only.
+- No raw pointers to peripherals — references (`GPIO_TypeDef&`).
+- Configs without defaults — every field must be explicit.
+- Peripheral configs are validated at compile time by a free `consteval`
+  wrapper: `gpio({...})`, `i2c({...})`, `spi({...})`, `uart({...})`. An
+  out-of-range field fails to compile.
+- Trailing comma after the last designated initializer to keep clang-format multi-line.
+
+## Build / flash
+
+```bash
+stmtool build --native
+stmtool flash
+stmtool sdk update          # if [sdk] version = "develop"
+```
+
+## SDK reference
+
+- Documentation: <https://khosta77.github.io/stm32-sdk/>
+- Testing helpers: <https://khosta77.github.io/stm32-sdk/modules/testing/>
+
+## This template
+
+A minimal GTest-style harness for bare metal — no exceptions, no heap, no
+dynamic linking:
+
+- `TEST(name) { ... }` defines a test as a plain function.
+- `EXPECT_*` records a failure and keeps going; `ASSERT_*` records it and
+  returns from the test immediately.
+- `testing::TestRunner runner{writer}` takes a `void(*)(const char*)` sink;
+  `RUN_TEST(runner, name)` runs one test, `runner.summary()` prints the tally
+  and returns `true` when everything passed.
+
+The sink is injected, so the **same test bodies** compile and run on the host
+(point the writer at `stdout`) and on the device (point it at UART/SWO). The
+sample tests exercise `driver::Result<T>`, which is pure logic — no hardware
+needed.
+
+### Pinout
+
+| Function | Pin | Notes |
+|----------|-----|-------|
+| USART2 TX | PA2 | AF7 |
+
+UART: 115200 baud, 8N1.
+
+### Expected serial output
+
+```
+=== unit-test-demo ===
+[PASS] result_ok_carries_value
+[PASS] result_error_reports_status
+[PASS] result_ok_status_normalizes
+3 passed, 0 failed
+```
+
+If you break an invariant (e.g. change a test's expectation), the offending
+line reports as `[FAIL] <name>` with a `  fail: <expression>` detail, and the
+summary count reflects it.
+
+### How to verify
+
+1. Connect an FTDI USB-UART to PA2/GND at 115200 baud.
+2. Open the serial port: `screen /dev/tty.usbserial-* 115200` (macOS) or
+   `minicom -D /dev/ttyUSB0 -b 115200` (Linux).
+3. Reset the board.
+4. The report prints once at startup.
+
+To add a test: write another `TEST(my_case) { ... }` and a matching
+`RUN_TEST(runner, my_case)` before `runner.summary()`.

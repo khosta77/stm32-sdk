@@ -1,0 +1,52 @@
+cmake_minimum_required(VERSION 3.28)
+
+set(STM32_SDK "${CMAKE_CURRENT_SOURCE_DIR}/stm32-sdk/sdk" CACHE PATH "Path to STM32 SDK")
+
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    set(CMAKE_TOOLCHAIN_FILE
+        ${STM32_SDK}/cmake/stm32_toolchain.cmake
+        CACHE FILEPATH "Toolchain file")
+endif()
+
+project(@PROJECT_NAME@ LANGUAGES C CXX)
+
+set(STM32_CHIP "@STM32_CHIP@" CACHE STRING "Target STM32 chip")
+set(STM32_USE_FREERTOS OFF CACHE BOOL "Enable FreeRTOS")
+set(STM32_USE_DRIVERS ON CACHE BOOL "Enable drivers")
+set(STM32_USE_TESTING ON CACHE BOOL "Enable unit-test helpers")
+include(${STM32_SDK}/cmake/stm32_sdk.cmake)
+
+add_executable(${PROJECT_NAME}.elf
+    src/main.cpp
+)
+
+target_compile_options(${PROJECT_NAME}.elf PRIVATE
+    -fmessage-length=0
+)
+
+target_link_libraries(${PROJECT_NAME}.elf PRIVATE
+    stm32_core
+    stm32_hal
+    stm32_drivers
+    stm32_testing
+    stm32_link
+)
+
+target_link_options(${PROJECT_NAME}.elf PRIVATE
+    -Wl,-Map,${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.map
+)
+
+add_custom_command(TARGET ${PROJECT_NAME}.elf POST_BUILD
+    COMMAND ${CMAKE_OBJCOPY} -O ihex
+        $<TARGET_FILE:${PROJECT_NAME}.elf>
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.hex
+    COMMAND ${CMAKE_OBJCOPY} -O binary
+        $<TARGET_FILE:${PROJECT_NAME}.elf>
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.bin
+)
+
+add_custom_target(flash
+    COMMAND st-flash --reset write
+        ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.bin 0x08000000
+    DEPENDS ${PROJECT_NAME}.elf
+)

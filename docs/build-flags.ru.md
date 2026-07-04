@@ -3,10 +3,15 @@
 Все compile-флаги SDK задаются в одной точке — на INTERFACE-таргете
 `stm32_core` в файле `sdk/cmake/stm32_sdk.cmake`. Любая другая
 библиотека (`stm32_hal`, `stm32_drivers`, `stm32_rtos`, `stm32_sensors`,
-`stm32_storage`, `stm32_system`) — а также любой пользовательский проект,
-который делает
+`stm32_storage`, `stm32_system`, `stm32_testing`) — а также любой
+пользовательский проект, который делает
 `target_link_libraries(... stm32_core)`, — наследует тот же набор. Отдельной
 политики «только для SDK» против «только для приложения» нет.
+
+Header-only хелперы юнит-тестов подключаются опционально через
+`STM32_USE_TESTING`, добавляющий INTERFACE-таргет `stm32_testing` (только путь
+`sdk/testing/include` — без исходников и зависимостей линковки). См.
+[Testing](modules/testing.md).
 
 Внутри `stm32_system` модули компилируются условно: `system.component`,
 `system.bootstrap` и `system.work_queue` строятся всегда при включённом
