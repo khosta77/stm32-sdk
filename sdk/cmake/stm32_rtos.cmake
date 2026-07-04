@@ -2,6 +2,18 @@ include(FetchContent)
 
 set(FREERTOS_KERNEL_VERSION "V11.1.0" CACHE STRING "FreeRTOS Kernel version tag")
 
+# Prefer a pre-provisioned FreeRTOS-Kernel checkout over a per-project clone.
+# The SDK Docker image bakes the kernel at /opt/freertos-kernel and exports
+# FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL, so builds are offline and skip the
+# repeated shallow clone (#47). FetchContent honours the CMake variable of that
+# name natively; bridge the environment variable set by the image into it.
+if(NOT FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL
+   AND DEFINED ENV{FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL})
+    set(FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL
+        "$ENV{FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL}"
+        CACHE PATH "Pre-provisioned FreeRTOS-Kernel source directory")
+endif()
+
 FetchContent_Declare(
     freertos_kernel
     GIT_REPOSITORY https://github.com/FreeRTOS/FreeRTOS-Kernel.git

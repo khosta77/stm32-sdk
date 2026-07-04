@@ -23,4 +23,11 @@ RUN wget -q "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_GCC_VER
 
 ENV PATH="/opt/gcc-arm/bin:${PATH}"
 
+# Bake the pinned FreeRTOS-Kernel so builds never re-clone it per project (#47).
+# Keep FREERTOS_KERNEL_VERSION in sdk/cmake/stm32_rtos.cmake in sync with this tag.
+ARG FREERTOS_KERNEL_VERSION=V11.1.0
+RUN git clone --depth 1 -b "${FREERTOS_KERNEL_VERSION}" \
+    https://github.com/FreeRTOS/FreeRTOS-Kernel.git /opt/freertos-kernel
+ENV FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL=/opt/freertos-kernel
+
 WORKDIR /workspace
