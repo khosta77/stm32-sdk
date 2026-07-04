@@ -46,31 +46,31 @@ GpioPin g_ledBlue{
 };
 
 void taskGreen(void *) {
-    while (true) {
-        g_ledGreen.toggle();
-        rtos::Task::delay(pdMS_TO_TICKS(500));
-    }
+  while (true) {
+    g_ledGreen.toggle();
+    rtos::Task::delay(pdMS_TO_TICKS(500));
+  }
 }
 
 void taskRedBlue(void *) {
-    while (true) {
-        g_ledRed.set();
-        rtos::Task::delay(pdMS_TO_TICKS(250));
-        g_ledRed.reset();
-        g_ledBlue.set();
-        rtos::Task::delay(pdMS_TO_TICKS(250));
-        g_ledBlue.reset();
-    }
+  while (true) {
+    g_ledRed.set();
+    rtos::Task::delay(pdMS_TO_TICKS(250));
+    g_ledRed.reset();
+    g_ledBlue.set();
+    rtos::Task::delay(pdMS_TO_TICKS(250));
+    g_ledBlue.reset();
+  }
 }
 
 }  // namespace
 
 int main() {
-    static rtos::Task green("green", 128, 1, taskGreen);
-    static rtos::Task red("red", 128, 1, taskRedBlue);
+  static rtos::Task green("green", 128, 1, taskGreen);
+  static rtos::Task red("red", 128, 1, taskRedBlue);
 
-    rtos::Task::startScheduler();
+  rtos::Task::startScheduler();
 
-    while (true) {
-    }
+  while (true) {
+  }
 }
