@@ -608,6 +608,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#flash" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1346,6 +1357,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#flash" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1415,14 +1437,9 @@
 </thead>
 <tbody>
 <tr>
-<td><code>arm-none-eabi-gcc</code></td>
-<td>14</td>
-<td>Cross-compiler for Cortex-M (14+ required for C++20 module scanning)</td>
-</tr>
-<tr>
-<td><code>cmake</code></td>
-<td>3.28</td>
-<td>C++20 modules support</td>
+<td><code>docker</code></td>
+<td>any recent</td>
+<td>Runs every build; ships the pinned toolchain + FreeRTOS</td>
 </tr>
 <tr>
 <td><code>python</code></td>
@@ -1441,6 +1458,10 @@
 </tr>
 </tbody>
 </table>
+<p>Builds happen inside the SDK Docker image, so a host <code>arm-none-eabi-gcc</code> is not
+required. The image pins <code>arm-none-eabi-gcc</code> 15.2 (GCC &gt;= 14 is mandatory for
+C++20 module scanning). If you do keep a local toolchain, <code>stmtool doctor</code> warns
+when it is older than GCC 14.</p>
 <p>Verify your toolchain after installing:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>stmtool<span class="w"> </span>doctor
 </code></pre></div>
@@ -1477,11 +1498,12 @@ serial output, verification steps for that specific scenario):</p>
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--template<span class="w"> </span>mpu6050-uart<span class="w"> </span>--with-claude
 </code></pre></div>
 <h2 id="build">Build<a class="headerlink" href="#build" title="Permanent link">&para;</a></h2>
-<p>Locally (uses the host's <code>arm-none-eabi-gcc</code> and <code>cmake</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>stmtool<span class="w"> </span>build<span class="w"> </span>--native
+<p>Builds run inside the SDK Docker image; artifacts land in <code>out/</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>stmtool<span class="w"> </span>build
 </code></pre></div>
-<p>Or via Docker (no host toolchain required):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>stmtool<span class="w"> </span>build
+<h2 id="test">Test<a class="headerlink" href="#test" title="Permanent link">&para;</a></h2>
+<p>Run the SDK host unit tests (portable logic on the mock buses, no hardware):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>stmtool<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
 <h2 id="flash">Flash<a class="headerlink" href="#flash" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>stmtool<span class="w"> </span>flash

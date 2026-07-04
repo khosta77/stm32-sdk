@@ -846,6 +846,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#mock-buses-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mock buses (v0.1.13)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-tests-and-stmtool-test-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host tests and stmtool test (v0.1.13)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1293,6 +1315,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#mock-buses-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mock buses (v0.1.13)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-tests-and-stmtool-test-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host tests and stmtool test (v0.1.13)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1410,6 +1454,88 @@ compiler:</p>
 <p>The <code>bare-metal/unit-test-demo</code> template is the worked device example; its
 tests exercise <code>driver::Result&lt;T&gt;</code>, which is pure logic, so they are meaningful
 on either target.</p>
+<h2 id="mock-buses-v0113">Mock buses (v0.1.13)<a class="headerlink" href="#mock-buses-v0113" title="Permanent link">&para;</a></h2>
+<p>Because the bus interfaces are C++20 <strong>concepts</strong>, a mock is just a plain struct
+that satisfies the concept. The SDK ships reusable, programmable mocks as the
+module <code>testing.mock</code> (<code>sdk/testing/mock/mock_bus.cppm</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Mock</th>
+<th>Models</th>
+<th>Programmable via</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>testing::MockI2c</code></td>
+<td><code>driver::II2c</code></td>
+<td><code>loadResponse(...)</code>, <code>written()</code>, <code>nextStatus</code></td>
+</tr>
+<tr>
+<td><code>testing::MockSpi</code></td>
+<td><code>driver::ISpi</code></td>
+<td><code>loadResponse(...)</code>, <code>written()</code>, <code>nextStatus</code></td>
+</tr>
+<tr>
+<td><code>testing::MockUart</code></td>
+<td><code>driver::IUart</code></td>
+<td><code>loadRx(...)</code>, <code>transmitted()</code></td>
+</tr>
+<tr>
+<td><code>testing::MockGpioPin</code></td>
+<td><code>driver::IGpioPin</code></td>
+<td><code>set/reset/toggle</code> counters, level</td>
+</tr>
+<tr>
+<td><code>testing::MockFlash</code></td>
+<td><code>driver::IFlash</code></td>
+<td>in-memory array, <code>eraseSector</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>loadResponse</code> / <code>loadRx</code> script the bytes a read returns; <code>written()</code> /
+<code>transmitted()</code> expose what the code under test sent, so you assert behaviour
+rather than only a return status. <code>nextStatus</code> injects a bus error. They are
+heap-free and exception-free, so they also compile on device.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">mpu6050</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">import</span><span class="w"> </span><span class="n">testing</span><span class="p">.</span><span class="n">mock</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">TEST</span><span class="p">(</span><span class="n">mpu6050_scales_accel</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="n">testing</span><span class="o">::</span><span class="n">MockI2c</span><span class="w"> </span><span class="n">bus</span><span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">frame</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x40</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">};</span><span class="w">  </span><span class="c1">// ACCEL_XOUT hi/lo -&gt; 1 g</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="n">bus</span><span class="p">.</span><span class="n">loadResponse</span><span class="p">({</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="mi">14</span><span class="p">});</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="n">sensor</span><span class="o">::</span><span class="n">Mpu6050</span><span class="w"> </span><span class="n">mpu</span><span class="p">{</span><span class="n">bus</span><span class="p">,</span><span class="w"> </span><span class="n">kCfg</span><span class="p">};</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="n">sensor</span><span class="o">::</span><span class="n">ImuData</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">mpu</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">data</span><span class="p">),</span><span class="w"> </span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">);</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">bus</span><span class="p">.</span><span class="n">lastReg</span><span class="p">,</span><span class="w"> </span><span class="mh">0x3B</span><span class="p">);</span><span class="w">  </span><span class="c1">// addressed ACCEL_XOUT_H</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">accel</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">9.8f</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">accel</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">9.82f</span><span class="p">);</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+</code></pre></div>
+<p>The module is not linked into the <code>stm32_testing</code> INTERFACE target (it imports
+the driver concept modules); a consumer opts in by adding <code>mock_bus.cppm</code> to its
+own <code>CXX_MODULES</code> file set alongside <code>stm32_drivers</code>.</p>
+<h2 id="host-tests-and-stmtool-test-v0113">Host tests and <code>stmtool test</code> (v0.1.13)<a class="headerlink" href="#host-tests-and-stmtool-test-v0113" title="Permanent link">&para;</a></h2>
+<p><code>tests/host/</code> is a standalone CMake tree, built with the image's host <code>g++</code>,
+that compiles the CMSIS-free portable modules plus <code>testing.mock</code> into real
+executables and runs them under <code>ctest</code>. Run the whole suite with:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>stmtool<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+<p>This builds and runs the tests inside the SDK Docker image (into <code>out/host</code>) and
+exits non-zero if anything fails; CI runs the same command in its <code>host-tests</code>
+job. To add a case, drop a <code>test_*.cpp</code> into <code>tests/host/</code> and register it in
+<code>tests/host/CMakeLists.txt</code> via <code>add_host_test(...)</code>.</p>
+<p>Two rules keep C++20 modules happy in a test translation unit that both imports
+modules and includes textual headers:</p>
+<ul>
+<li><strong>Include STL / textual headers before the <code>import</code> lines.</strong> A module includes
+  e.g. <code>&lt;cstddef&gt;</code> in its global module fragment; including it textually <em>after</em>
+  importing that module triggers <code>redefinition of std::__byte_operand</code>.</li>
+<li><strong>Do not <code>#include &lt;span&gt;</code>; brace-initialise spans</strong> (<code>bus.loadResponse({p, n})</code>)
+  and use <code>auto</code> for span returns — mixing <code>#include &lt;span&gt;</code> with an <code>import</code> of a
+  module that includes <code>&lt;span&gt;</code> is rejected by GCC 15.</li>
+</ul>
 
 
 

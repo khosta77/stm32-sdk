@@ -1200,6 +1200,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.1.13
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v0112" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1472,6 +1483,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.1.13
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v0112" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1733,10 +1755,33 @@ upgrade deliberately.</p>
 <li>On a feature branch of your project, bump <code>[sdk] version</code> to the new tag.</li>
 <li>Run <code>stmtool sdk update --version &lt;tag&gt;</code>.</li>
 <li>Re-run formatter: <code>clang-format -i src/**/*.cpp src/**/*.cppm</code>.</li>
-<li>Try <code>stmtool build --native --clean</code>. Address compiler errors one by one.</li>
+<li>Try <code>stmtool build --clean</code>. Address compiler errors one by one.</li>
 <li>Flash to hardware and verify the smoke-test for your scenario.</li>
 <li>Merge back once green.</li>
 </ol>
+<h2 id="new-in-v0113">New in v0.1.13<a class="headerlink" href="#new-in-v0113" title="Permanent link">&para;</a></h2>
+<p>v0.1.13 is a <strong>quality / infrastructure</strong> release. There are no SDK API changes,
+but the build workflow changes in a breaking way:</p>
+<ul>
+<li><strong><code>stmtool build --native</code> is removed.</strong> All builds now run inside the SDK
+  Docker image; there is no host-toolchain path. Drop <code>--native</code> from any
+  scripts. Docker is now required. If you relied on a local <code>arm-none-eabi-gcc</code>,
+  install Docker instead — the image ships the pinned toolchain (15.2).</li>
+<li><strong>Artifacts move from <code>build/</code> to <code>out/</code>.</strong> <code>stmtool build</code> configures into
+  <code>out/</code>, <code>stmtool flash</code> reads the <code>.bin</code> from <code>out/</code>, and <code>--clean</code> wipes
+  <code>out/</code>. Add <code>out/</code> to your project <code>.gitignore</code> (SDK templates already do). Any
+  CI or scripts that referenced <code>build/*.elf</code> should use <code>out/*.elf</code>.</li>
+<li><strong><code>stmtool test</code></strong> is new: it builds and runs the SDK host unit tests in the
+  image. Reusable mock buses (<code>testing::MockI2c</code> / <code>MockSpi</code> / <code>MockUart</code> /
+  <code>MockGpioPin</code> / <code>MockFlash</code>, module <code>testing.mock</code>) let you unit-test
+  driver/sensor logic on the host — see the testing module docs.</li>
+<li><strong>GCC &gt;= 14 is enforced.</strong> <code>stm32_sdk.cmake</code> fails configuration if the ARM
+  compiler is older than GCC 14 (C++20 module scanning needs it). Inside the
+  image this is always satisfied; <code>stmtool doctor</code> flags a stale local toolchain.</li>
+<li><strong>FreeRTOS-Kernel is baked into the image</strong> and no longer re-cloned per build,
+  so builds are offline. Outside Docker, <code>stm32_rtos.cmake</code> still honours
+  <code>FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL</code> for an offline checkout.</li>
+</ul>
 <h2 id="new-in-v0112">New in v0.1.12<a class="headerlink" href="#new-in-v0112" title="Permanent link">&para;</a></h2>
 <p>v0.1.12 is a <strong>formatting and tooling</strong> release — no source-behaviour or API
 changes. There is nothing to change in your project's C++ source. Two things

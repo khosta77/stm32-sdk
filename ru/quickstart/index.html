@@ -611,6 +611,17 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
+        Тесты
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         Прошивка
       
     </span>
@@ -630,7 +641,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         Что дальше
@@ -1349,6 +1360,17 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
+        Тесты
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         Прошивка
       
     </span>
@@ -1368,7 +1390,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         Что дальше
@@ -1415,14 +1437,9 @@
 </thead>
 <tbody>
 <tr>
-<td><code>arm-none-eabi-gcc</code></td>
-<td>14</td>
-<td>Кросс-компилятор для Cortex-M (14+ нужен для сканирования модулей C++20)</td>
-</tr>
-<tr>
-<td><code>cmake</code></td>
-<td>3.28</td>
-<td>Поддержка модулей C++20</td>
+<td><code>docker</code></td>
+<td>любая свежая</td>
+<td>Выполняет любую сборку; содержит запиненный тулчейн и FreeRTOS</td>
 </tr>
 <tr>
 <td><code>python</code></td>
@@ -1441,6 +1458,10 @@
 </tr>
 </tbody>
 </table>
+<p>Сборка выполняется внутри Docker-образа SDK, поэтому хостовый <code>arm-none-eabi-gcc</code>
+не требуется. Образ пинит <code>arm-none-eabi-gcc</code> 15.2 (GCC &gt;= 14 обязателен для
+сканирования модулей C++20). Если локальный тулчейн всё же установлен, <code>stmtool
+doctor</code> предупредит, когда он старше GCC 14.</p>
 <p>Проверить окружение:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>stmtool<span class="w"> </span>doctor
 </code></pre></div>
@@ -1475,13 +1496,14 @@
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--template<span class="w"> </span>mpu6050-uart<span class="w"> </span>--with-claude
 </code></pre></div>
 <h2 id="_4">Сборка<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
-<p>Локально (использует <code>arm-none-eabi-gcc</code> и <code>cmake</code> хоста):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>stmtool<span class="w"> </span>build<span class="w"> </span>--native
+<p>Сборка выполняется внутри Docker-образа SDK; артефакты кладутся в <code>out/</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>stmtool<span class="w"> </span>build
 </code></pre></div>
-<p>Или через Docker (тулчейн на хосте не нужен):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>stmtool<span class="w"> </span>build
+<h2 id="_5">Тесты<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>Запустить host-юнит-тесты SDK (переносимая логика на мок-шинах, без железа):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>stmtool<span class="w"> </span><span class="nb">test</span>
 </code></pre></div>
-<h2 id="_5">Прошивка<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h2 id="_6">Прошивка<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>stmtool<span class="w"> </span>flash
 </code></pre></div>
 <p>По умолчанию используется <code>st-flash</code>. Если у вас другой программатор —
@@ -1496,7 +1518,7 @@
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>update<span class="w"> </span>--version<span class="w"> </span><span class="m">0</span>.1.2<span class="w">       </span><span class="c1"># явный тег</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>list-versions<span class="w">                </span><span class="c1"># доступные теги</span>
 </code></pre></div>
-<h2 id="_6">Что дальше<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h2 id="_7">Что дальше<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Прочитать <a href="../stmtool/">справочник по stmtool</a> — все команды.</li>
 <li>Посмотреть API <a href="../modules/drivers/">драйверов</a> и <a href="../modules/sensors/">сенсоров</a>.</li>

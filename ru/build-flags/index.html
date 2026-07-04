@@ -618,6 +618,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Окружение сборки (Docker, офлайн)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v014" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1269,6 +1280,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Окружение сборки (Docker, офлайн)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v014" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1354,6 +1376,17 @@
 <code>STM32_USE_SYSTEM</code>, а <code>system.executor</code> и <code>system.signal_bus</code> (которым нужны
 обёртки FreeRTOS) — только когда дополнительно включён <code>STM32_USE_FREERTOS</code>;
 ядро очереди остаётся пригодным для bare-metal-сборок.</p>
+<h2 id="docker">Окружение сборки (Docker, офлайн)<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h2>
+<p>Начиная с v0.1.13 любая сборка идёт внутри Docker-образа SDK
+(<code>ghcr.io/khosta77/stm32-sdk-build:latest</code>) — у <code>stmtool build</code> нет пути через
+хостовый тулчейн. Образ пинит <code>arm-none-eabi-gcc</code> 15.2 (GCC &gt;= 14 обязателен для
+сканирования зависимостей модулей C++20; иначе <code>stm32_sdk.cmake</code> прерывает
+конфигурацию) и хостовый <code>g++</code> для <a href="../modules/testing/">host-тестов</a>.</p>
+<p>Образ также <strong>вшивает FreeRTOS-Kernel</strong> (<code>V11.1.0</code>) в <code>/opt/freertos-kernel</code> и
+экспортирует <code>FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL</code>, поэтому сборки с FreeRTOS
+больше не клонируют ядро для каждого проекта и работают офлайн. Вне Docker
+<code>stm32_rtos.cmake</code> по-прежнему уважает эту переменную (в том числе из окружения)
+для заранее подготовленного чекаута, откатываясь к shallow-клону <code>FetchContent</code>.</p>
 <h2 id="v014">Активные флаги (v0.1.4)<a class="headerlink" href="#v014" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">target_compile_options</span><span class="p">(</span><span class="s">stm32_core</span><span class="w"> </span><span class="s">INTERFACE</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_ARCH_FLAGS</span><span class="o">}</span><span class="w">      </span><span class="c"># -mcpu, -mfpu, -mfloat-abi от семейства чипа</span>

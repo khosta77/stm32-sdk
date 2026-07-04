@@ -647,6 +647,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#stmtool-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stmtool test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stmtool-flash" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1430,6 +1441,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#stmtool-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stmtool test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stmtool-flash" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1617,9 +1639,10 @@
 </code></pre></div>
 <p>Показать все доступные шаблоны с категориями и описанием.</p>
 <h3 id="stmtool-build"><code>stmtool build</code><a class="headerlink" href="#stmtool-build" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>stmtool<span class="w"> </span>build<span class="w"> </span><span class="o">[</span>--native<span class="o">]</span><span class="w"> </span><span class="o">[</span>--release<span class="o">]</span><span class="w"> </span><span class="o">[</span>--clean<span class="o">]</span><span class="w"> </span><span class="o">[</span>--chip<span class="w"> </span>&lt;чип&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--verbose<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>stmtool<span class="w"> </span>build<span class="w"> </span><span class="o">[</span>--release<span class="o">]</span><span class="w"> </span><span class="o">[</span>--clean<span class="o">]</span><span class="w"> </span><span class="o">[</span>--chip<span class="w"> </span>&lt;чип&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--verbose<span class="o">]</span>
 </code></pre></div>
-<p>Собрать проект в текущей директории.</p>
+<p>Собрать проект в текущей директории. Любая сборка выполняется внутри Docker-образа
+SDK — пути через хостовый тулчейн больше нет. Артефакты кладутся в <code>out/</code>.</p>
 <table>
 <thead>
 <tr>
@@ -1630,11 +1653,6 @@
 </thead>
 <tbody>
 <tr>
-<td><code>--native</code></td>
-<td>выкл.</td>
-<td>Использовать хостовые <code>arm-none-eabi-gcc</code> и <code>cmake</code> вместо Docker</td>
-</tr>
-<tr>
 <td><code>--release</code></td>
 <td>выкл.</td>
 <td>Сборка с <code>-O2 -DNDEBUG</code></td>
@@ -1642,7 +1660,7 @@
 <tr>
 <td><code>--clean</code></td>
 <td>выкл.</td>
-<td>Очистить директорию сборки перед сборкой</td>
+<td>Очистить директорию <code>out/</code> перед сборкой</td>
 </tr>
 <tr>
 <td><code>--chip</code></td>
@@ -1656,9 +1674,19 @@
 </tr>
 </tbody>
 </table>
-<p>Docker-образ — <code>ghcr.io/khosta77/stm32-sdk-build:latest</code>.</p>
+<p>Docker-образ — <code>ghcr.io/khosta77/stm32-sdk-build:latest</code>, переопределяется
+переменной окружения <code>STMTOOL_DOCKER_IMAGE</code> (в CI она указывает на локально
+собранный образ). Образ содержит запиненный ARM-тулчейн и заранее подготовленный
+FreeRTOS-Kernel, поэтому сборка не требует сети.</p>
+<h3 id="stmtool-test"><code>stmtool test</code><a class="headerlink" href="#stmtool-test" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>stmtool<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="o">[</span>--verbose<span class="o">]</span>
+</code></pre></div>
+<p>Собрать и запустить host-юнит-тесты SDK (<code>tests/host</code>) внутри Docker-образа,
+используя его хостовый <code>g++</code>. Они проверяют переносимый слой — <code>driver::Result&lt;T&gt;</code>,
+<code>DRV_TRY</code> и логику драйверов / сенсоров на переиспользуемых мок-шинах — без железа.
+Код возврата ненулевой при любом провале.</p>
 <h3 id="stmtool-flash"><code>stmtool flash</code><a class="headerlink" href="#stmtool-flash" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>stmtool<span class="w"> </span>flash<span class="w"> </span><span class="o">[</span>--tool<span class="w"> </span>&lt;tool&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--verify<span class="o">]</span><span class="w"> </span><span class="o">[</span>--erase<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>stmtool<span class="w"> </span>flash<span class="w"> </span><span class="o">[</span>--tool<span class="w"> </span>&lt;tool&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--verify<span class="o">]</span><span class="w"> </span><span class="o">[</span>--erase<span class="o">]</span>
 </code></pre></div>
 <p>Прошить бинарник в подключённую плату.</p>
 <table>
@@ -1688,7 +1716,7 @@
 </tbody>
 </table>
 <h3 id="stmtool-sdk-update"><code>stmtool sdk update</code><a class="headerlink" href="#stmtool-sdk-update" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>update<span class="w"> </span><span class="o">[</span>--version<span class="w"> </span>&lt;тег&gt;<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>update<span class="w"> </span><span class="o">[</span>--version<span class="w"> </span>&lt;тег&gt;<span class="o">]</span>
 </code></pre></div>
 <p>Обновить кэш SDK в <code>~/.stmtool/stm32-sdk/</code>.</p>
 <ul>
@@ -1698,26 +1726,27 @@
 <li>С <code>--version develop</code> — pull последних изменений с <code>origin/develop</code>.</li>
 </ul>
 <h3 id="stmtool-sdk-list-versions"><code>stmtool sdk list-versions</code><a class="headerlink" href="#stmtool-sdk-list-versions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>list-versions
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>list-versions
 </code></pre></div>
 <p>Печатает все доступные теги SDK (сортировка по убыванию). Текущая
 checked-out версия помечается <code>*</code> в конце строки.</p>
 <h3 id="stmtool-sdk-path"><code>stmtool sdk path</code><a class="headerlink" href="#stmtool-sdk-path" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>path
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>path
 </code></pre></div>
 <p>Печатает резолвнутый путь к корню SDK — удобно для отладки и скриптов.</p>
 <h3 id="stmtool-doctor"><code>stmtool doctor</code><a class="headerlink" href="#stmtool-doctor" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>stmtool<span class="w"> </span>doctor
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>stmtool<span class="w"> </span>doctor
 </code></pre></div>
-<p>Проверяет наличие в <code>PATH</code>: Docker (опционально), <code>arm-none-eabi-gcc</code>,
-<code>cmake</code>, <code>st-flash</code>.</p>
+<p>Проверяет наличие в <code>PATH</code>: Docker, <code>arm-none-eabi-gcc</code>, <code>cmake</code>, <code>st-flash</code>,
+а также присутствует ли SDK-образ локально. Локальный <code>arm-none-eabi-gcc</code> ниже
+GCC 14 отмечается как ошибка (сканирование модулей C++20 требует GCC &gt;= 14).</p>
 <h3 id="stmtool-completion"><code>stmtool completion</code><a class="headerlink" href="#stmtool-completion" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>stmtool<span class="w"> </span>completion<span class="w"> </span>&lt;shell&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>stmtool<span class="w"> </span>completion<span class="w"> </span>&lt;shell&gt;
 </code></pre></div>
 <p>Печатает скрипт shell-completion для <code>bash</code>, <code>zsh</code> или <code>fish</code>. <code>install.sh</code>
 устанавливает его автоматически.</p>
 <h3 id="stmtool-version"><code>stmtool version</code><a class="headerlink" href="#stmtool-version" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>stmtool<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>stmtool<span class="w"> </span>version
 </code></pre></div>
 <p>Печатает версию <code>stmtool</code>. Версия выводится из git-тегов через
 <code>setuptools-scm</code>, поэтому совпадает с релизом SDK.</p>

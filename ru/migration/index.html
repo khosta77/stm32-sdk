@@ -1200,6 +1200,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.1.13
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v0112" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1472,6 +1483,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.1.13
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v0112" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1733,10 +1755,33 @@
 <li>На отдельной ветке вашего проекта обновите <code>[sdk] version</code> до нового тега.</li>
 <li><code>stmtool sdk update --version &lt;тег&gt;</code>.</li>
 <li>Перепрогон форматтера: <code>clang-format -i src/**/*.cpp src/**/*.cppm</code>.</li>
-<li><code>stmtool build --native --clean</code>. Разбирайте ошибки компиляции по одной.</li>
+<li><code>stmtool build --clean</code>. Разбирайте ошибки компиляции по одной.</li>
 <li>Прошейте на железо и убедитесь, что ваш smoke-test проходит.</li>
 <li>Сливайте, когда всё зелёное.</li>
 </ol>
+<h2 id="v0113">Новое в v0.1.13<a class="headerlink" href="#v0113" title="Permanent link">&para;</a></h2>
+<p>v0.1.13 — релиз <strong>про качество и инфраструктуру</strong>. Изменений публичного API SDK
+нет, но сборочный workflow меняется ломающим образом:</p>
+<ul>
+<li><strong><code>stmtool build --native</code> удалён.</strong> Любая сборка теперь идёт внутри Docker-образа
+  SDK; пути через хостовый тулчейн больше нет. Уберите <code>--native</code> из скриптов.
+  Docker теперь обязателен. Если вы полагались на локальный <code>arm-none-eabi-gcc</code>,
+  установите Docker — образ содержит запиненный тулчейн (15.2).</li>
+<li><strong>Артефакты переезжают из <code>build/</code> в <code>out/</code>.</strong> <code>stmtool build</code> конфигурирует в
+  <code>out/</code>, <code>stmtool flash</code> читает <code>.bin</code> из <code>out/</code>, <code>--clean</code> чистит <code>out/</code>.
+  Добавьте <code>out/</code> в <code>.gitignore</code> проекта (шаблоны SDK уже это делают). Любые CI
+  или скрипты, ссылавшиеся на <code>build/*.elf</code>, переведите на <code>out/*.elf</code>.</li>
+<li><strong><code>stmtool test</code></strong> — новая команда: собирает и запускает host-юнит-тесты SDK в
+  образе. Переиспользуемые мок-шины (<code>testing::MockI2c</code> / <code>MockSpi</code> / <code>MockUart</code> /
+  <code>MockGpioPin</code> / <code>MockFlash</code>, модуль <code>testing.mock</code>) позволяют тестировать логику
+  драйверов / сенсоров на хосте — см. документацию модуля тестирования.</li>
+<li><strong>Требуется GCC &gt;= 14.</strong> <code>stm32_sdk.cmake</code> прерывает конфигурацию, если ARM-компилятор
+  старше GCC 14 (сканирование модулей C++20 его требует). Внутри образа это всегда
+  выполнено; <code>stmtool doctor</code> отмечает устаревший локальный тулчейн.</li>
+<li><strong>FreeRTOS-Kernel вшит в образ</strong> и больше не клонируется при каждой сборке —
+  сборка идёт офлайн. Вне Docker <code>stm32_rtos.cmake</code> по-прежнему уважает
+  <code>FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL</code> для локального чекаута.</li>
+</ul>
 <h2 id="v0112">Новое в v0.1.12<a class="headerlink" href="#v0112" title="Permanent link">&para;</a></h2>
 <p>v0.1.12 — релиз <strong>про форматирование и инструменты</strong>, без изменений поведения
 исходников и API. В C++-коде вашего проекта менять нечего. На локальный workflow

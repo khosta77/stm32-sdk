@@ -846,6 +846,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Мок-шины (v0.1.13)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-stmtool-test-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host-тесты и stmtool test (v0.1.13)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1293,6 +1315,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Мок-шины (v0.1.13)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-stmtool-test-v0113" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host-тесты и stmtool test (v0.1.13)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1410,6 +1454,89 @@ bare-metal.</p>
 <p>Шаблон <code>bare-metal/unit-test-demo</code> — рабочий пример для устройства; его тесты
 проверяют <code>driver::Result&lt;T&gt;</code> — чистую логику, поэтому они осмысленны на любой
 из платформ.</p>
+<h2 id="-v0113">Мок-шины (v0.1.13)<a class="headerlink" href="#-v0113" title="Permanent link">&para;</a></h2>
+<p>Поскольку интерфейсы шин — это <strong>концепты</strong> C++20, мок — это обычный struct,
+удовлетворяющий концепту. SDK поставляет переиспользуемые программируемые моки в
+модуле <code>testing.mock</code> (<code>sdk/testing/mock/mock_bus.cppm</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Мок</th>
+<th>Моделирует</th>
+<th>Программируется через</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>testing::MockI2c</code></td>
+<td><code>driver::II2c</code></td>
+<td><code>loadResponse(...)</code>, <code>written()</code>, <code>nextStatus</code></td>
+</tr>
+<tr>
+<td><code>testing::MockSpi</code></td>
+<td><code>driver::ISpi</code></td>
+<td><code>loadResponse(...)</code>, <code>written()</code>, <code>nextStatus</code></td>
+</tr>
+<tr>
+<td><code>testing::MockUart</code></td>
+<td><code>driver::IUart</code></td>
+<td><code>loadRx(...)</code>, <code>transmitted()</code></td>
+</tr>
+<tr>
+<td><code>testing::MockGpioPin</code></td>
+<td><code>driver::IGpioPin</code></td>
+<td>счётчики <code>set/reset/toggle</code>, уровень</td>
+</tr>
+<tr>
+<td><code>testing::MockFlash</code></td>
+<td><code>driver::IFlash</code></td>
+<td>массив в памяти, <code>eraseSector</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>loadResponse</code> / <code>loadRx</code> задают байты, которые вернёт чтение; <code>written()</code> /
+<code>transmitted()</code> показывают, что отправил тестируемый код, — так проверяется
+поведение, а не только код возврата. <code>nextStatus</code> инжектирует ошибку шины. Моки
+без кучи и исключений, поэтому компилируются и на устройстве.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">mpu6050</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">import</span><span class="w"> </span><span class="n">testing</span><span class="p">.</span><span class="n">mock</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="n">TEST</span><span class="p">(</span><span class="n">mpu6050_scales_accel</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">  </span><span class="n">testing</span><span class="o">::</span><span class="n">MockI2c</span><span class="w"> </span><span class="n">bus</span><span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">frame</span><span class="p">[</span><span class="mi">14</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x40</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">};</span><span class="w">  </span><span class="c1">// ACCEL_XOUT hi/lo -&gt; 1 g</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">  </span><span class="n">bus</span><span class="p">.</span><span class="n">loadResponse</span><span class="p">({</span><span class="n">frame</span><span class="p">,</span><span class="w"> </span><span class="mi">14</span><span class="p">});</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="n">sensor</span><span class="o">::</span><span class="n">Mpu6050</span><span class="w"> </span><span class="n">mpu</span><span class="p">{</span><span class="n">bus</span><span class="p">,</span><span class="w"> </span><span class="n">kCfg</span><span class="p">};</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="n">sensor</span><span class="o">::</span><span class="n">ImuData</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">  </span><span class="n">ASSERT_EQ</span><span class="p">(</span><span class="n">mpu</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">data</span><span class="p">),</span><span class="w"> </span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">);</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">  </span><span class="n">EXPECT_EQ</span><span class="p">(</span><span class="n">bus</span><span class="p">.</span><span class="n">lastReg</span><span class="p">,</span><span class="w"> </span><span class="mh">0x3B</span><span class="p">);</span><span class="w">  </span><span class="c1">// обратился к ACCEL_XOUT_H</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">  </span><span class="n">EXPECT_TRUE</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">accel</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">9.8f</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">accel</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">9.82f</span><span class="p">);</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="p">}</span>
+</code></pre></div>
+<p>Модуль не линкуется в INTERFACE-таргет <code>stm32_testing</code> (он импортирует
+driver-концепты); потребитель подключает его, добавив <code>mock_bus.cppm</code> в свой
+набор <code>CXX_MODULES</code> рядом со <code>stm32_drivers</code>.</p>
+<h2 id="host-stmtool-test-v0113">Host-тесты и <code>stmtool test</code> (v0.1.13)<a class="headerlink" href="#host-stmtool-test-v0113" title="Permanent link">&para;</a></h2>
+<p><code>tests/host/</code> — отдельное CMake-дерево, собираемое хостовым <code>g++</code> из образа: оно
+компилирует CMSIS-free переносимые модули плюс <code>testing.mock</code> в исполняемые файлы
+и запускает их под <code>ctest</code>. Прогнать весь набор:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>stmtool<span class="w"> </span><span class="nb">test</span>
+</code></pre></div>
+<p>Команда собирает и запускает тесты внутри Docker-образа SDK (в <code>out/host</code>) и
+возвращает ненулевой код при любом провале; CI выполняет ту же команду в job
+<code>host-tests</code>. Чтобы добавить случай, положите <code>test_*.cpp</code> в <code>tests/host/</code> и
+зарегистрируйте его в <code>tests/host/CMakeLists.txt</code> через <code>add_host_test(...)</code>.</p>
+<p>Два правила, чтобы модули C++20 не ломались в TU, который одновременно импортирует
+модули и включает текстовые заголовки:</p>
+<ul>
+<li><strong>Включайте STL / текстовые заголовки до строк <code>import</code>.</strong> Модуль включает,
+  например, <code>&lt;cstddef&gt;</code> в global module fragment; текстовое включение <em>после</em>
+  импорта такого модуля вызывает <code>redefinition of std::__byte_operand</code>.</li>
+<li><strong>Не пишите <code>#include &lt;span&gt;</code>; инициализируйте span через фигурные скобки</strong>
+  (<code>bus.loadResponse({p, n})</code>) и используйте <code>auto</code> для возвращаемых span —
+  смешение <code>#include &lt;span&gt;</code> с <code>import</code> модуля, включающего <code>&lt;span&gt;</code>, отвергается
+  GCC 15.</li>
+</ul>
 
 
 

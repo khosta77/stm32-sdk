@@ -618,6 +618,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#build-environment-docker-offline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build environment (Docker, offline)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#active-flags-v014" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1269,6 +1280,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#build-environment-docker-offline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build environment (Docker, offline)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#active-flags-v014" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1353,6 +1375,17 @@ path — no sources, no link dependencies). See <a href="../modules/testing/">Te
 on, while <code>system.executor</code> and <code>system.signal_bus</code> (which need the FreeRTOS
 wrappers) are compiled only when <code>STM32_USE_FREERTOS</code> is also on — the queue core
 stays usable in bare-metal builds.</p>
+<h2 id="build-environment-docker-offline">Build environment (Docker, offline)<a class="headerlink" href="#build-environment-docker-offline" title="Permanent link">&para;</a></h2>
+<p>Since v0.1.13 all builds run inside the SDK Docker image
+(<code>ghcr.io/khosta77/stm32-sdk-build:latest</code>) — <code>stmtool build</code> has no
+host-toolchain path. The image pins <code>arm-none-eabi-gcc</code> 15.2 (GCC &gt;= 14 is
+required for C++20 module dependency scanning; <code>stm32_sdk.cmake</code> fails
+configuration otherwise) and a host <code>g++</code> for the <a href="../modules/testing/">host tests</a>.</p>
+<p>The image also <strong>bakes FreeRTOS-Kernel</strong> (<code>V11.1.0</code>) at <code>/opt/freertos-kernel</code>
+and exports <code>FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL</code>, so FreeRTOS builds no
+longer re-clone the kernel per project and work offline. Outside Docker,
+<code>stm32_rtos.cmake</code> still honours that variable (or environment variable) for a
+pre-provisioned checkout, falling back to a shallow <code>FetchContent</code> clone.</p>
 <h2 id="active-flags-v014">Active flags (v0.1.4)<a class="headerlink" href="#active-flags-v014" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">target_compile_options</span><span class="p">(</span><span class="s">stm32_core</span><span class="w"> </span><span class="s">INTERFACE</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_ARCH_FLAGS</span><span class="o">}</span><span class="w">      </span><span class="c"># -mcpu, -mfpu, -mfloat-abi from the chip family</span>

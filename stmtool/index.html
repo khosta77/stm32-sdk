@@ -647,6 +647,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#stmtool-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stmtool test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stmtool-flash" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1430,6 +1441,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#stmtool-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        stmtool test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#stmtool-flash" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1617,9 +1639,10 @@ to pin a specific tag.</p>
 </code></pre></div>
 <p>List all available templates with their categories and descriptions.</p>
 <h3 id="stmtool-build"><code>stmtool build</code><a class="headerlink" href="#stmtool-build" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>stmtool<span class="w"> </span>build<span class="w"> </span><span class="o">[</span>--native<span class="o">]</span><span class="w"> </span><span class="o">[</span>--release<span class="o">]</span><span class="w"> </span><span class="o">[</span>--clean<span class="o">]</span><span class="w"> </span><span class="o">[</span>--chip<span class="w"> </span>&lt;chip&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--verbose<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>stmtool<span class="w"> </span>build<span class="w"> </span><span class="o">[</span>--release<span class="o">]</span><span class="w"> </span><span class="o">[</span>--clean<span class="o">]</span><span class="w"> </span><span class="o">[</span>--chip<span class="w"> </span>&lt;chip&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--verbose<span class="o">]</span>
 </code></pre></div>
-<p>Build the project in the current directory.</p>
+<p>Build the project in the current directory. Every build runs inside the SDK
+Docker image — there is no host-toolchain path. Artifacts are written to <code>out/</code>.</p>
 <table>
 <thead>
 <tr>
@@ -1630,11 +1653,6 @@ to pin a specific tag.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>--native</code></td>
-<td>off</td>
-<td>Use host's <code>arm-none-eabi-gcc</code> and <code>cmake</code> instead of Docker</td>
-</tr>
-<tr>
 <td><code>--release</code></td>
 <td>off</td>
 <td>Build with <code>-O2 -DNDEBUG</code></td>
@@ -1642,7 +1660,7 @@ to pin a specific tag.</p>
 <tr>
 <td><code>--clean</code></td>
 <td>off</td>
-<td>Wipe the build directory first</td>
+<td>Wipe the <code>out/</code> directory first</td>
 </tr>
 <tr>
 <td><code>--chip</code></td>
@@ -1656,9 +1674,19 @@ to pin a specific tag.</p>
 </tr>
 </tbody>
 </table>
-<p>The Docker image is <code>ghcr.io/khosta77/stm32-sdk-build:latest</code>.</p>
+<p>The Docker image is <code>ghcr.io/khosta77/stm32-sdk-build:latest</code>, overridable via
+the <code>STMTOOL_DOCKER_IMAGE</code> environment variable (CI points it at a locally built
+image). The image bundles the pinned ARM toolchain and a pre-provisioned
+FreeRTOS-Kernel, so builds need no network.</p>
+<h3 id="stmtool-test"><code>stmtool test</code><a class="headerlink" href="#stmtool-test" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>stmtool<span class="w"> </span><span class="nb">test</span><span class="w"> </span><span class="o">[</span>--verbose<span class="o">]</span>
+</code></pre></div>
+<p>Build and run the SDK host unit tests (<code>tests/host</code>) inside the Docker image,
+using its host <code>g++</code>. These exercise the portable layer — <code>driver::Result&lt;T&gt;</code>,
+<code>DRV_TRY</code>, and driver/sensor logic driven by the reusable mock buses — without
+hardware. Exit code is non-zero if any test fails.</p>
 <h3 id="stmtool-flash"><code>stmtool flash</code><a class="headerlink" href="#stmtool-flash" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>stmtool<span class="w"> </span>flash<span class="w"> </span><span class="o">[</span>--tool<span class="w"> </span>&lt;tool&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--verify<span class="o">]</span><span class="w"> </span><span class="o">[</span>--erase<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>stmtool<span class="w"> </span>flash<span class="w"> </span><span class="o">[</span>--tool<span class="w"> </span>&lt;tool&gt;<span class="o">]</span><span class="w"> </span><span class="o">[</span>--verify<span class="o">]</span><span class="w"> </span><span class="o">[</span>--erase<span class="o">]</span>
 </code></pre></div>
 <p>Flash the firmware binary onto the connected board.</p>
 <table>
@@ -1688,7 +1716,7 @@ to pin a specific tag.</p>
 </tbody>
 </table>
 <h3 id="stmtool-sdk-update"><code>stmtool sdk update</code><a class="headerlink" href="#stmtool-sdk-update" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>update<span class="w"> </span><span class="o">[</span>--version<span class="w"> </span>&lt;tag&gt;<span class="o">]</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>update<span class="w"> </span><span class="o">[</span>--version<span class="w"> </span>&lt;tag&gt;<span class="o">]</span>
 </code></pre></div>
 <p>Update the cached SDK at <code>~/.stmtool/stm32-sdk/</code>.</p>
 <ul>
@@ -1698,26 +1726,28 @@ to pin a specific tag.</p>
 <li>With <code>--version develop</code>, pulls the latest from <code>origin/develop</code>.</li>
 </ul>
 <h3 id="stmtool-sdk-list-versions"><code>stmtool sdk list-versions</code><a class="headerlink" href="#stmtool-sdk-list-versions" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>list-versions
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>list-versions
 </code></pre></div>
 <p>Print all available SDK tags (sorted, newest first). The currently checked-out
 version is marked with a trailing <code>*</code>.</p>
 <h3 id="stmtool-sdk-path"><code>stmtool sdk path</code><a class="headerlink" href="#stmtool-sdk-path" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>path
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>path
 </code></pre></div>
 <p>Print the resolved SDK root path — useful for debugging or scripting.</p>
 <h3 id="stmtool-doctor"><code>stmtool doctor</code><a class="headerlink" href="#stmtool-doctor" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>stmtool<span class="w"> </span>doctor
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>stmtool<span class="w"> </span>doctor
 </code></pre></div>
-<p>Check that all required tools are installed and on <code>PATH</code>: Docker (optional),
-<code>arm-none-eabi-gcc</code>, <code>cmake</code>, <code>st-flash</code>.</p>
+<p>Check that all required tools are installed and on <code>PATH</code>: Docker,
+<code>arm-none-eabi-gcc</code>, <code>cmake</code>, <code>st-flash</code>, plus whether the SDK image is present
+locally. A local <code>arm-none-eabi-gcc</code> below GCC 14 is flagged as an error (C++20
+module scanning needs GCC &gt;= 14).</p>
 <h3 id="stmtool-completion"><code>stmtool completion</code><a class="headerlink" href="#stmtool-completion" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>stmtool<span class="w"> </span>completion<span class="w"> </span>&lt;shell&gt;
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>stmtool<span class="w"> </span>completion<span class="w"> </span>&lt;shell&gt;
 </code></pre></div>
 <p>Print a shell-completion script for <code>bash</code>, <code>zsh</code>, or <code>fish</code>. The <code>install.sh</code>
 script installs this automatically.</p>
 <h3 id="stmtool-version"><code>stmtool version</code><a class="headerlink" href="#stmtool-version" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>stmtool<span class="w"> </span>version
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>stmtool<span class="w"> </span>version
 </code></pre></div>
 <p>Print the <code>stmtool</code> version. The version is derived from git tags via
 <code>setuptools-scm</code>, so it matches the SDK release.</p>
