@@ -191,3 +191,112 @@ deferred start yet).
 
 See the `imu-flash-oled-demo` template for the full worked example
 (`ImuSampler` + `DisplayView` + `FlashLogger` on shared buses).
+
+---
+
+# Concurrency layer (v0.1.9)
+
+On top of the component framework the `system` library ships three layered
+primitives that let components talk without calling each other directly:
+`WorkQueue`, `SingleThreadExecutor`, and a type-safe signal bus. All three keep
+the SDK style — **zero vtable, zero heap, client-owned storage** — and reuse the
+same `void(*)(void*)` thunk mechanism as the FreeRTOS task trampolines.
+
+| Module | Depends on | Built when |
+|--------|------------|------------|
+| `system.work_queue` | CMSIS only (PRIMASK) | always (part of `stm32_system`) |
+| `system.executor` | `rtos.hpp` (FreeRTOS) | only with `STM32_USE_FREERTOS` |
+| `system.signal_bus` | executor + work queue | only with `STM32_USE_FREERTOS` |
+
+The queue core is RTOS-free on purpose: time is injected (`runDue(now)`), so it
+also drives bare-metal super-loops via `runOnce()` and stays host-testable.
+
+## `WorkQueue` and `WorkItem` — zero-alloc deferred work
+
+A `WorkItem` is an **intrusive, client-owned** node: the client keeps it as a
+member for its whole lifetime, so scheduling never allocates. It carries a
+`void(*)(void*)` thunk plus context; bind a member function with the captureless
+factory:
+
+```cpp
+system::WorkItem item = system::WorkItem::bind<&MyType::onWork>(myObject);
+```
+
+`WorkQueue` is a non-template intrusive list ordered by due-tick:
+
+```cpp
+void   schedule(WorkItem&);                       // FIFO, due at epoch (super-loop)
+void   schedulePriority(WorkItem&);               // jump ahead of equal-due items
+void   scheduleAt(WorkItem&, uint32_t due, bool priority);  // absolute tick
+void   scheduleAfter(WorkItem&, uint32_t now, uint32_t delay);
+void   cancel(WorkItem&);
+size_t runDue(uint32_t now);                       // run everything due ≤ now
+size_t runOnce();                                  // drain all, ignoring due-tick (super-loop)
+bool   nextDue(uint32_t& out) const;
+bool   pending() const;
+```
+
+Two properties are load-bearing:
+
+- **Idempotent scheduling.** A `WorkItem` already in the queue is not re-linked;
+  a second `schedule()` before it runs is a no-op. This is what makes a channel
+  *coalesce* repeated publishes instead of corrupting the list.
+- **Handlers run outside the critical section.** `runDue`/`runOnce` unlink the
+  item under a brief CMSIS PRIMASK critical section, then call the thunk with
+  interrupts restored — so a handler may re-schedule itself (periodic items
+  auto-rearm at `due + period`).
+
+Ordering (FIFO / priority / cancel) is verified at compile time by a
+`consteval` self-check inside the module, the same pattern as `resultSelfCheck`
+in `driver.types`.
+
+## `SingleThreadExecutor` — the system thread
+
+The executor binds a `WorkQueue` to one dedicated `rtos::Task` and a wake
+semaphore. Handlers posted to it run **serially on that one task**, so there are
+no data races between them by design — no per-handler mutex.
+
+```cpp
+system::SingleThreadExecutor exec{{.name = "sys", .stackDepth = 512, .priority = 2}};
+
+exec.post(item);                 // run ASAP on the executor task
+exec.postAfter(item, 50);        // run after 50 ms
+exec.addPeriodic(item, 1000);    // re-run every 1000 ms (core-driven re-arm)
+exec.postFromISR(item);          // defer work out of an ISR
+```
+
+Its run loop calls `runDue(xTaskGetTickCount())`, then sleeps on the semaphore
+until the next due item (or until a `post` wakes it). Like every SDK object, the
+executor is a global/composition-root member: its task is created at static init
+but only runs after `vTaskStartScheduler()`.
+
+## Signal bus — type-safe `Channel<Event, MaxSubs>`
+
+Modules communicate through typed channels, not strings and `reinterpret_cast`.
+An event is any trivially-copyable tag struct; a channel holds a fixed array of
+`MaxSubs` subscriber slots (no heap) and its own `WorkItem`:
+
+```cpp
+struct HeartbeatEvent { uint32_t seq; int16_t value; };
+system::Channel<HeartbeatEvent, 4> bus{exec};
+
+// subscribe a member handler (returns non-Ok if the table is full)
+driver::Status st = bus.subscribe<&Consumer::onBeat>(consumer);
+
+// publish — fan-out runs later, serially, on the executor
+(void) bus.publish({.seq = n, .value = v});
+```
+
+`publish` stores the event under a critical section and posts the channel's
+`WorkItem` to the executor; `dispatch()` then copies the event and calls each
+subscriber. Because delivery is serialized on the executor, subscribers never
+race. The default single event slot **coalesces** — if two publishes land before
+dispatch, subscribers see the latest (ideal for "latest sample" semantics); swap
+in a ring buffer if you need every event.
+
+Handlers must be short — they run on the shared executor task. For heavy work,
+post a separate `WorkItem` back to the executor from inside the handler.
+
+See the `signal-bus-demo` template for a two-component example: a `Producer`
+with its own task publishes, and a reactive `Consumer` with **no task of its
+own** handles events on the executor, subscribing in `onBind()`.

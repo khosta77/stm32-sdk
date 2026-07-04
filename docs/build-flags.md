@@ -8,6 +8,12 @@ The SDK defines its compile flags on a single CMake INTERFACE target,
 in a project template — inherits the same set. There is no separate
 "SDK-only" vs "user-app" warning policy.
 
+Within `stm32_system` the modules are conditionally compiled: `system.component`,
+`system.bootstrap` and `system.work_queue` build whenever `STM32_USE_SYSTEM` is
+on, while `system.executor` and `system.signal_bus` (which need the FreeRTOS
+wrappers) are compiled only when `STM32_USE_FREERTOS` is also on — the queue core
+stays usable in bare-metal builds.
+
 ## Active flags (v0.1.4)
 
 ```cmake

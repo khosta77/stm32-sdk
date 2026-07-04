@@ -53,6 +53,41 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.9
+
+Focus: a zero-cost concurrency layer on top of the component framework —
+work queue, single-thread executor, type-safe signal bus (issues #30–#32).
+
+Highlights:
+
+- Three new modules in `stm32_system`: `system.work_queue`, `system.executor`,
+  `system.signal_bus`. Same zero-vtable / zero-heap style as v0.1.7/v0.1.8 —
+  callables are `void(*)(void*)` thunks, not `std::function`.
+- `WorkQueue` + `WorkItem`: an **intrusive, client-owned** deferred-work queue
+  (no heap). `schedule` / `schedulePriority` / `scheduleAfter` / `cancel`,
+  `runDue(now)` for tick-driven dispatch and `runOnce()` for bare-metal
+  super-loops. Scheduling is idempotent; ordering is verified by a `consteval`
+  self-check.
+- `SingleThreadExecutor`: binds a `WorkQueue` to one `rtos::Task` + wake
+  semaphore. Handlers run **serially on one task** (no per-handler mutex);
+  `post` / `postAfter` / `addPeriodic` / `postFromISR`.
+- `Channel<Event, MaxSubs>`: **type-safe** pub/sub — an event is a
+  trivially-copyable tag struct, subscribers live in a fixed array (no heap),
+  fan-out is dispatched on the executor so subscribers never race. Diverges from
+  the reference on purpose: no string publisher names, no `reinterpret_cast`.
+- New `signal-bus-demo` template: a `Producer` (own task) publishes and a
+  reactive `Consumer` (no task of its own) handles events on the executor,
+  subscribing in `onBind()`.
+
+Notes:
+
+- **Additive** — the layer is opt-in. The queue core is RTOS-free (CMSIS PRIMASK
+  only) and builds always; the executor and signal bus compile only under
+  `STM32_USE_FREERTOS`. All existing templates stay unchanged and green. See
+  [migration](migration.md#new-in-v019).
+- No `<tuple>`, no heap, no runtime polymorphism. `system.work_queue` depends on
+  CMSIS only, keeping the queue core host-testable for a future release.
+
 ### v0.1.8
 
 Focus: a zero-cost application framework — component lifecycle, DI convention,

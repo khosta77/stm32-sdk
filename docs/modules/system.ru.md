@@ -193,3 +193,115 @@ int main() {
 
 Полный рабочий пример — в шаблоне `imu-flash-oled-demo`
 (`ImuSampler` + `DisplayView` + `FlashLogger` на общих шинах).
+
+---
+
+# Слой конкурентности (v0.1.9)
+
+Поверх каркаса компонентов библиотека `system` даёт три слоистых примитива,
+позволяющих компонентам общаться без прямых вызовов друг друга: `WorkQueue`,
+`SingleThreadExecutor` и типобезопасную шину сигналов. Все три держат стиль SDK
+— **ноль vtable, ноль кучи, хранилище у клиента** — и переиспользуют тот же
+механизм thunk'ов `void(*)(void*)`, что и трамплины задач FreeRTOS.
+
+| Модуль | Зависит от | Строится когда |
+|--------|------------|----------------|
+| `system.work_queue` | только CMSIS (PRIMASK) | всегда (часть `stm32_system`) |
+| `system.executor` | `rtos.hpp` (FreeRTOS) | только с `STM32_USE_FREERTOS` |
+| `system.signal_bus` | executor + work queue | только с `STM32_USE_FREERTOS` |
+
+Ядро очереди намеренно RTOS-free: время инъектируется (`runDue(now)`), поэтому
+оно же приводит bare-metal super-loop через `runOnce()` и остаётся
+host-тестируемым.
+
+## `WorkQueue` и `WorkItem` — отложенная работа без аллокаций
+
+`WorkItem` — **интрузивный узел, которым владеет клиент**: клиент держит его
+членом на всё время жизни, поэтому постановка в очередь ничего не аллоцирует.
+Узел несёт thunk `void(*)(void*)` плюс контекст; метод привязывается
+captureless-фабрикой:
+
+```cpp
+system::WorkItem item = system::WorkItem::bind<&MyType::onWork>(myObject);
+```
+
+`WorkQueue` — не-шаблонный интрузивный список, упорядоченный по due-тику:
+
+```cpp
+void   schedule(WorkItem&);                       // FIFO, due на эпохе (super-loop)
+void   schedulePriority(WorkItem&);               // вперёд равных по due
+void   scheduleAt(WorkItem&, uint32_t due, bool priority);  // абсолютный тик
+void   scheduleAfter(WorkItem&, uint32_t now, uint32_t delay);
+void   cancel(WorkItem&);
+size_t runDue(uint32_t now);                       // исполнить всё с due ≤ now
+size_t runOnce();                                  // слить всё, игнорируя due (super-loop)
+bool   nextDue(uint32_t& out) const;
+bool   pending() const;
+```
+
+Два свойства несущие:
+
+- **Идемпотентная постановка.** Уже стоящий в очереди `WorkItem` повторно не
+  вставляется; второй `schedule()` до исполнения — no-op. Именно это позволяет
+  каналу *коалесцировать* повторные публикации, а не рвать список.
+- **Обработчики исполняются вне критической секции.** `runDue`/`runOnce`
+  отцепляют элемент под короткой CMSIS-PRIMASK-секцией, затем зовут thunk с
+  восстановленными прерываниями — поэтому обработчик может пере-планировать себя
+  (периодические авто-перевзводятся на `due + period`).
+
+Порядок (FIFO / priority / cancel) проверяется в compile-time `consteval`
+self-check'ом внутри модуля — тот же паттерн, что `resultSelfCheck` в
+`driver.types`.
+
+## `SingleThreadExecutor` — системный поток
+
+Executor связывает `WorkQueue` с одной выделенной `rtos::Task` и семафором
+пробуждения. Обработчики, поставленные ему, исполняются **последовательно на
+этой одной задаче**, поэтому гонок между ними нет by design — без мьютекса на
+обработчик.
+
+```cpp
+system::SingleThreadExecutor exec{{.name = "sys", .stackDepth = 512, .priority = 2}};
+
+exec.post(item);                 // исполнить как можно скорее на задаче executor
+exec.postAfter(item, 50);        // исполнить через 50 мс
+exec.addPeriodic(item, 1000);    // повторять каждые 1000 мс (перевзвод в ядре)
+exec.postFromISR(item);          // отложить работу из ISR
+```
+
+Его цикл зовёт `runDue(xTaskGetTickCount())`, затем спит на семафоре до
+ближайшего due-элемента (или пока `post` не разбудит). Как всякий объект SDK,
+executor — глобальный член composition-root: задача создаётся на static-init, но
+бежит только после `vTaskStartScheduler()`.
+
+## Шина сигналов — типобезопасный `Channel<Event, MaxSubs>`
+
+Модули общаются через типизированные каналы, а не строки и `reinterpret_cast`.
+Событие — любая тривиально копируемая тег-структура; канал держит фикс-массив из
+`MaxSubs` слотов подписчиков (без кучи) и собственный `WorkItem`:
+
+```cpp
+struct HeartbeatEvent { uint32_t seq; int16_t value; };
+system::Channel<HeartbeatEvent, 4> bus{exec};
+
+// подписать метод-обработчик (возвращает не-Ok, если таблица полна)
+driver::Status st = bus.subscribe<&Consumer::onBeat>(consumer);
+
+// опубликовать — веерная рассылка идёт позже, последовательно, на executor
+(void) bus.publish({.seq = n, .value = v});
+```
+
+`publish` сохраняет событие под критической секцией и ставит `WorkItem` канала в
+executor; `dispatch()` затем копирует событие и зовёт каждого подписчика.
+Поскольку доставка сериализована на executor, подписчики не гоняются.
+Одиночный слот события по умолчанию **коалесцирует** — если две публикации
+попадут до dispatch, подписчики увидят последнюю (идеально для семантики
+«последняя выборка»); подставьте ring-буфер, если нужно каждое событие.
+
+Обработчики должны быть короткими — они бегут на общей задаче executor. Тяжёлую
+работу откладывайте, поставив из обработчика отдельный `WorkItem` обратно в
+executor.
+
+Пример на два компонента — в шаблоне `signal-bus-demo`: `Producer` со своей
+задачей публикует, а реактивный `Consumer` **без собственной задачи**
+обрабатывает события на executor, подписавшись в `onBind()`.

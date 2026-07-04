@@ -14,6 +14,31 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.1.9
+
+v0.1.9 adds the optional concurrency layer to `sdk/system/` — `WorkQueue`,
+`SingleThreadExecutor`, and a type-safe signal bus. It is **additive**: nothing
+in your existing project breaks, and no edits are required to upgrade. Every
+in-tree template is byte-for-byte unchanged; the new `signal-bus-demo` template
+is the worked example.
+
+If you want to adopt it in your own project (requires `STM32_USE_SYSTEM` +
+FreeRTOS):
+
+1. `import system.work_queue;` for the RTOS-free queue, and/or
+   `import system.executor; import system.signal_bus;` for the FreeRTOS layers.
+   No CMake change beyond what `STM32_USE_SYSTEM` already gives you — the
+   executor and signal bus are compiled automatically when FreeRTOS is on.
+2. Give each component that defers work an intrusive `system::WorkItem` member
+   (`WorkItem::bind<&T::method>(*this)`) and post it to a shared
+   `system::SingleThreadExecutor`.
+3. Decouple components with `system::Channel<Event, MaxSubs>`: publishers call
+   `publish`, subscribers call `subscribe<&T::handler>(*this)` (typically in
+   `onBind()`). See [System](modules/system.md#concurrency-layer-v019).
+
+Nothing here changes the v0.1.8 component API — the concurrency layer sits
+beside it. If you do not import the new modules, your build is unaffected.
+
 ## New in v0.1.8
 
 v0.1.8 adds the optional `sdk/system/` component framework. It is **additive**:

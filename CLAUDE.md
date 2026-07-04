@@ -192,9 +192,14 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
   `component.cppm` (`system::Component` concept + `ComponentBase` +
   `ComponentState`/`Criticality`), `bootstrap.cppm` (variadic
   `bootstrap(...)` + `BootReport`). Zero vtable, depends only on `driver.types`.
-- `templates/` — 7 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
+  Concurrency layer (v0.1.9): `work_queue.cppm` (intrusive `WorkItem` +
+  `WorkQueue`, RTOS-free, CMSIS PRIMASK), `executor.cppm`
+  (`SingleThreadExecutor` on an `rtos::Task`) and `signal_bus.cppm`
+  (type-safe `Channel<Event, MaxSubs>`) — the last two only under FreeRTOS.
+- `templates/` — 8 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
   `freertos/blink`, `freertos/mpu6050-uart`, `freertos/oled-display-test`,
-  `freertos/w25q32-flash-test`, `freertos/imu-flash-oled-demo`).
+  `freertos/w25q32-flash-test`, `freertos/imu-flash-oled-demo`,
+  `freertos/signal-bus-demo`).
 - `tools/stmtool/` — Python CLI tool (Typer + Rich).
 - `tools/docs/` — MkDocs build dependencies.
 - `docs/` — MkDocs source (EN + RU via suffix mode).
@@ -351,6 +356,33 @@ style — **zero vtable, no heap**. Full guide: `docs/modules/system.md`.
 - FreeRTOS tasks created before `startScheduler()` don't run until it starts, so
   `boot()` (the four hooks) and task creation both happen in `main` pre-scheduler.
   Task entry is a static trampoline; cast `void*` with `decltype(&app.member)`.
+
+### Concurrency layer (v0.1.9)
+
+Three layered modules in the same `stm32_system` lib, same zero-vtable/zero-heap
+style. Callables are `void(*)(void*)` thunks (never `std::function`). Full guide:
+`docs/modules/system.md#concurrency-layer-v019`.
+
+- **`WorkItem` / `WorkQueue` (`system.work_queue`)** — intrusive, client-owned
+  deferred work; **no heap, no RTOS** (CMSIS PRIMASK critical section behind
+  `system::detail::enterCritical/leaveCritical`, the only TU-local CMSIS touch
+  point). `WorkItem::bind<&T::method>(obj)` is the captureless factory. Time is
+  injected: `runDue(now)` for ticks, `runOnce()` for super-loops. Scheduling is
+  **idempotent** (`_queued` guard) — this is what makes a channel coalesce, not
+  corrupt the list. Ordering has a `consteval` self-check (like `resultSelfCheck`).
+- **`SingleThreadExecutor` (`system.executor`, FreeRTOS only)** — a `WorkQueue`
+  bound to one `rtos::Task` + wake semaphore; `_task` is the LAST member (ctor
+  captures `this` after `_wq`/`_wake` exist). Handlers run serially on one task —
+  no per-handler mutex. `post/postAfter/addPeriodic/postFromISR`; periodic
+  re-arm is core-driven (`WorkItem::setPeriodTicks`).
+- **`Channel<Event, MaxSubs>` (`system.signal_bus`, FreeRTOS only)** — type-safe
+  pub/sub: `Event` is a trivially-copyable tag, subscribers in a fixed array.
+  `publish` stores under a critical section + posts the channel's `WorkItem` to
+  the executor; `dispatch()` fans out with an **index loop** (never range-for /
+  span across the module boundary — the GCC-15 gotcha). Diverges from the
+  reference on purpose: no string publisher names, no `reinterpret_cast`.
+- Demo: `freertos/signal-bus-demo` (a `Producer` with a task publishes; a
+  reactive `Consumer` with no task subscribes in `onBind()`).
 
 ## CMake
 

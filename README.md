@@ -110,6 +110,7 @@ mkdocs serve
 | `freertos/oled-display-test` | SSD1306 with uptime counter and static text |
 | `freertos/w25q32-flash-test` | W25Q32 round-trip: erase, page-program, read, verify |
 | `freertos/imu-flash-oled-demo` | MPU + OLED + W25Q32 on one board, built on the `system` component framework |
+| `freertos/signal-bus-demo` | Two components decoupled through a type-safe signal bus on one `SingleThreadExecutor` |
 
 ## Supported chips
 
