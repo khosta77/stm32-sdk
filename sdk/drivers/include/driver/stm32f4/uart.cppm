@@ -51,15 +51,6 @@ class Uart {
     static_assert(RxBufSize >= 16, "RxBufSize too small");
     static_assert(TxBufSize >= 16, "TxBufSize too small");
 
-public:
-    struct Config {
-        uint32_t baudrate;
-        uint8_t dataBits;
-        uint8_t stopBits;
-        Parity parity;
-    };
-
-private:
     USART_TypeDef &_periph;
     IRQn_Type const _irqn;
     CircularBuffer<uint8_t, RxBufSize> _rxBuf;
@@ -72,7 +63,8 @@ private:
 #endif
 
 public:
-    Uart(USART_TypeDef &periph, IRQn_Type irqn, const Config &cfg) : _periph(periph), _irqn(irqn) {
+    Uart(USART_TypeDef &periph, IRQn_Type irqn, const UartConfig &cfg)
+        : _periph(periph), _irqn(irqn) {
         uint32_t pclk;
         if (&_periph == USART1 || &_periph == USART6) {
             pclk = getApb2Clock();
@@ -88,7 +80,7 @@ public:
 
         uint32_t cr1 = USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
 
-        if (cfg.dataBits == 9) {
+        if (cfg.dataBits == DataBits::Nine) {
             cr1 |= USART_CR1_M;
         }
 
@@ -98,7 +90,7 @@ public:
             cr1 |= USART_CR1_PCE | USART_CR1_PS;
         }
 
-        if (cfg.stopBits == 2) {
+        if (cfg.stopBits == StopBits::Two) {
             reg::set(_periph.CR2, USART_CR2_STOP_1);
         }
 
@@ -250,15 +242,6 @@ class Uart<RxBufSize, TxBufSize, UartMode::Dma> {
     static_assert((RxBufSize & (RxBufSize - 1)) == 0, "RxBufSize must be power of 2");
     static_assert(RxBufSize >= 16, "RxBufSize too small");
 
-public:
-    struct Config {
-        uint32_t baudrate;
-        uint8_t dataBits;
-        uint8_t stopBits;
-        Parity parity;
-    };
-
-private:
     USART_TypeDef &_periph;
     IRQn_Type const _irqn;
     DmaStream _txDma;
@@ -271,7 +254,7 @@ private:
 #endif
 
 public:
-    Uart(USART_TypeDef &periph, IRQn_Type irqn, DmaStreamId txStreamId, const Config &cfg)
+    Uart(USART_TypeDef &periph, IRQn_Type irqn, DmaStreamId txStreamId, const UartConfig &cfg)
         : _periph(periph), _irqn(irqn), _txDma(txStreamId) {
         uint32_t pclk;
         if (&_periph == USART1 || &_periph == USART6) {
@@ -287,7 +270,7 @@ public:
         reg::write(_periph.BRR, (pclk + cfg.baudrate / 2) / cfg.baudrate);
 
         uint32_t cr1 = USART_CR1_UE | USART_CR1_TE | USART_CR1_RE | USART_CR1_RXNEIE;
-        if (cfg.dataBits == 9) {
+        if (cfg.dataBits == DataBits::Nine) {
             cr1 |= USART_CR1_M;
         }
         if (cfg.parity == Parity::Even) {
@@ -295,7 +278,7 @@ public:
         } else if (cfg.parity == Parity::Odd) {
             cr1 |= USART_CR1_PCE | USART_CR1_PS;
         }
-        if (cfg.stopBits == 2) {
+        if (cfg.stopBits == StopBits::Two) {
             reg::set(_periph.CR2, USART_CR2_STOP_1);
         }
         reg::write(_periph.CR1, cr1);

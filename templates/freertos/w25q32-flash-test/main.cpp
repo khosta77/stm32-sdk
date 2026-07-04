@@ -4,6 +4,7 @@
 import driver.types;
 import driver.gpio;
 import driver.reg;
+import driver.spi;
 import driver.uart;
 import driver.stm32f4.gpio;
 import driver.stm32f4.spi;
@@ -15,6 +16,7 @@ extern "C" {
 int snprintf(char *str, size_t size, const char *format, ...);
 }
 
+using driver::DataBits;
 using driver::gpio;
 using driver::GpioConfig;
 using driver::OutputSpeed;
@@ -22,6 +24,11 @@ using driver::OutputType;
 using driver::Parity;
 using driver::PinMode;
 using driver::PullMode;
+using driver::spi;
+using driver::SpiDataSize;
+using driver::SpiMode;
+using driver::StopBits;
+using driver::uart;
 using driver::stm32f4::GpioPin;
 using driver::stm32f4::Spi;
 using driver::stm32f4::Uart;
@@ -103,22 +110,22 @@ GpioPin g_flashCs{
 
 Spi g_spi2{
     *SPI2,
-    {
+    spi({
         .clockHz = 10000000,
-        .mode = 0,
+        .mode = SpiMode::Mode0,
         .lsbFirst = false,
-        .dataSize = 8,
-    },
+        .dataSize = SpiDataSize::Bits8,
+    }),
 };
 Uart<> g_uart2{
     *USART2,
     USART2_IRQn,
-    {
+    uart({
         .baudrate = 115200,
-        .dataBits = 8,
-        .stopBits = 1,
+        .dataBits = DataBits::Eight,
+        .stopBits = StopBits::One,
         .parity = Parity::None,
-    },
+    }),
 };
 sensor::W25q32 g_flash{
     g_spi2,

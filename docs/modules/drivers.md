@@ -147,17 +147,25 @@ intentionally chip-agnostic and lives at the top of
 ## I2C — `driver.stm32f4.i2c`
 
 ```cpp
+import driver.i2c;             // I2cConfig + the i2c() validator
 import driver.stm32f4.i2c;
+using driver::i2c;
 using driver::stm32f4::I2c;
 
 I2c g_i2c1{
     *I2C1,
-    {
+    i2c({
         .clockSpeed = 400000,
         .fastMode = true,
-    },
+    }),
 };
 ```
+
+`i2c({...})` is a `consteval` validator (like `gpio()` / `exti()`): it throws at
+compile time on `clockSpeed` outside `[1, 400000]`, or `clockSpeed > 100000`
+without `fastMode`. `I2cConfig` and `i2c()` live in the interface module
+`driver.i2c` — import it alongside `driver.stm32f4.i2c` (the implementation does
+not re-export it).
 
 Methods (required by the `II2c` concept):
 
@@ -183,24 +191,32 @@ driver::reg::set(RCC->APB1ENR, RCC_APB1ENR_I2C1EN);
 ## UART — `driver.stm32f4.uart`
 
 ```cpp
+import driver.uart;           // UartConfig, DataBits/StopBits/Parity, uart()
 import driver.stm32f4.uart;
 using driver::stm32f4::Uart;
 using driver::stm32f4::UartMode;
+using driver::DataBits;
+using driver::StopBits;
 using driver::Parity;
+using driver::uart;
 
 // Interrupt mode (default)
 Uart<512, 256> g_uart2{
     *USART2, USART2_IRQn,
-    {
+    uart({
         .baudrate = 115200,
-        .dataBits = 8,
-        .stopBits = 1,
+        .dataBits = DataBits::Eight,
+        .stopBits = StopBits::One,
         .parity = Parity::None,
-    },
+    }),
 };
 
 extern "C" void USART2_IRQHandler() { g_uart2.irqHandler(); }
 ```
+
+`uart({...})` is a `consteval` validator: it throws at compile time on
+`baudrate == 0` or an unset `dataBits`/`stopBits` (`DataBits::None` /
+`StopBits::None`). `UartConfig` and the enums live in `driver.uart`.
 
 Template parameters: `Uart<RxBufSize, TxBufSize, Mode>` where:
 
@@ -213,7 +229,8 @@ DMA mode requires extra ctor arguments and DMA ISR registration:
 Uart<512, 256, UartMode::Dma> g_uart2{
     *USART2, USART2_IRQn,
     driver::stm32f4::dmaMap::usart2_tx,
-    { .baudrate = 115200, ... },
+    uart({ .baudrate = 115200, .dataBits = DataBits::Eight,
+           .stopBits = StopBits::One, .parity = Parity::None }),
 };
 
 extern "C" void DMA1_Stream6_IRQHandler() { g_uart2.dmaTxIrqHandler(); }
@@ -226,20 +243,28 @@ drops from ~11 ms to under 50 µs.
 ## SPI — `driver.stm32f4.spi`
 
 ```cpp
+import driver.spi;            // SpiConfig, SpiMode/SpiDataSize, spi()
 import driver.stm32f4.spi;
 using driver::stm32f4::Spi;
 using driver::SpiMode;
-using driver::SpiBitOrder;
+using driver::SpiDataSize;
+using driver::spi;
 
 Spi g_spi2{
     *SPI2,
-    {
+    spi({
+        .clockHz = 10'000'000,
         .mode = SpiMode::Mode0,
-        .speed = 10'000'000,
-        .bitOrder = SpiBitOrder::MsbFirst,
-    },
+        .lsbFirst = false,
+        .dataSize = SpiDataSize::Bits8,
+    }),
 };
 ```
+
+`spi({...})` is a `consteval` validator: it throws at compile time on
+`clockHz == 0` or an unset `mode`/`dataSize` (`SpiMode::None` /
+`SpiDataSize::None`). `SpiConfig`, `SpiMode` (`Mode0..Mode3`, CPOL/CPHA) and
+`SpiDataSize` (`Bits8`/`Bits16`) live in `driver.spi`.
 
 `Spi` selects `PCLK1` for SPI2/SPI3 (APB1) and `PCLK2` for SPI1/SPI4/SPI5/SPI6
 (APB2) when computing the BR divisor.

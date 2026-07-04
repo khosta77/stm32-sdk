@@ -3,6 +3,7 @@
 
 import driver.types;
 import driver.gpio;
+import driver.i2c;
 import driver.reg;
 import driver.stm32f4.gpio;
 import driver.stm32f4.i2c;
@@ -15,6 +16,7 @@ int snprintf(char *str, size_t size, const char *format, ...);
 
 using driver::gpio;
 using driver::GpioConfig;
+using driver::i2c;
 using driver::OutputSpeed;
 using driver::OutputType;
 using driver::PinMode;
@@ -56,10 +58,10 @@ GpioPin g_i2cSda{
 
 I2c g_i2c1{
     *I2C1,
-    {
+    i2c({
         .clockSpeed = 400000,
         .fastMode = true,
-    },
+    }),
 };
 sensor::Ssd1306 g_oled{
     g_i2c1,
