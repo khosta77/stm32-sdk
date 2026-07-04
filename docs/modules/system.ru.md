@@ -253,6 +253,18 @@ bool   pending() const;
 self-check'ом внутри модуля — тот же паттерн, что `resultSelfCheck` в
 `driver.types`.
 
+### Thread-safety аннотации (v0.1.11)
+
+PRIMASK-критсекция смоделирована как Clang thread-safety **capability**
+(`util/thread_safety.hpp`): `system::detail::g_criticalSection` — токен,
+`enterCritical()` / `leaveCritical()` размечены `ACQUIRE` / `RELEASE`, а головы
+интрузивных списков, которых касаются только внутри секции — `WorkQueue::_head`
+и `Channel::_ring` — помечены `GUARDED_BY`. `rtos::Mutex` / `rtos::LockGuard`
+несут `CAPABILITY` / `SCOPED_CAPABILITY`. Под Clang `-Wthread-safety` это даёт
+статические проверки «поле трогается только под своей блокировкой»; под GCC
+(компилятор SDK) каждый макрос разворачивается в пусто, поэтому кодоген не
+меняется. Прогон анализа в CI приедет с clang-tidy (issue #73).
+
 ## `SingleThreadExecutor` — системный поток
 
 Executor связывает `WorkQueue` с одной выделенной `rtos::Task` и семафором

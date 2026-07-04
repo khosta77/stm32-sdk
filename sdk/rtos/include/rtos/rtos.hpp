@@ -6,13 +6,15 @@
 #include "task.h"
 #include "timers.h"
 
+#include "util/thread_safety.hpp"
+
 #include <cstddef>
 #include <cstdint>
 #include <utility>
 
 namespace rtos {
 
-class Mutex {
+class CAPABILITY("mutex") Mutex {
     SemaphoreHandle_t _handle;
 
 public:
@@ -27,19 +29,21 @@ public:
     Mutex(const Mutex &) = delete;
     Mutex &operator=(const Mutex &) = delete;
 
-    bool lock(TickType_t timeout = portMAX_DELAY) { return xSemaphoreTake(_handle, timeout) == pdTRUE; }
+    bool lock(TickType_t timeout = portMAX_DELAY) ACQUIRE() {
+        return xSemaphoreTake(_handle, timeout) == pdTRUE;
+    }
 
-    void unlock() { xSemaphoreGive(_handle); }
+    void unlock() RELEASE() { xSemaphoreGive(_handle); }
 
     SemaphoreHandle_t handle() const { return _handle; }
 };
 
-class LockGuard {
+class SCOPED_CAPABILITY LockGuard {
     Mutex &_mtx;
 
 public:
-    explicit LockGuard(Mutex &m) : _mtx(m) { _mtx.lock(); }
-    ~LockGuard() { _mtx.unlock(); }
+    explicit LockGuard(Mutex &m) ACQUIRE(m) : _mtx(m) { _mtx.lock(); }
+    ~LockGuard() RELEASE() { _mtx.unlock(); }
     LockGuard(const LockGuard &) = delete;
     LockGuard &operator=(const LockGuard &) = delete;
 };
