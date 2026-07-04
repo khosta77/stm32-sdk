@@ -250,6 +250,18 @@ Ordering (FIFO / priority / cancel) is verified at compile time by a
 `consteval` self-check inside the module, the same pattern as `resultSelfCheck`
 in `driver.types`.
 
+### Thread-safety annotations (v0.1.11)
+
+The PRIMASK critical section is modelled as a Clang thread-safety **capability**
+(`util/thread_safety.hpp`): `system::detail::g_criticalSection` is the token,
+`enterCritical()` / `leaveCritical()` are annotated `ACQUIRE` / `RELEASE`, and
+the intrusive list heads touched only inside a section — `WorkQueue::_head` and
+`Channel::_ring` — are `GUARDED_BY` it. `rtos::Mutex` / `rtos::LockGuard` carry
+`CAPABILITY` / `SCOPED_CAPABILITY`. Under Clang `-Wthread-safety` these drive
+static "field only touched under its lock" checks; under GCC (the SDK's
+compiler) every macro expands to nothing, so codegen is unchanged. Wiring the
+analysis into CI lands with clang-tidy (issue #73).
+
 ## `SingleThreadExecutor` — the system thread
 
 The executor binds a `WorkQueue` to one dedicated `rtos::Task` and a wake

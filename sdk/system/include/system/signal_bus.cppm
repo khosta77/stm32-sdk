@@ -2,6 +2,7 @@ module;
 #include <cstddef>
 #include <cstdint>
 #include <type_traits>
+#include "util/thread_safety.hpp"
 export module system.signal_bus;
 
 import driver.types;
@@ -151,7 +152,7 @@ private:
     WorkItem _item;
     Sub _subs[MaxSubs]{};
     size_t _count{0};
-    detail::EventRing<Event, RingDepth> _ring{};
+    detail::EventRing<Event, RingDepth> _ring GUARDED_BY(detail::g_criticalSection){};
 };
 
 }  // namespace system

@@ -2,6 +2,7 @@ module;
 #include <cstddef>
 #include <cstdint>
 #include "cmsis/stm32f4xx.h"
+#include "util/thread_safety.hpp"
 export module system.work_queue;
 
 export namespace system {
@@ -19,13 +20,20 @@ constexpr void insertSorted(system::WorkItem *&head, system::WorkItem &node, boo
 constexpr bool unlink(system::WorkItem *&head, system::WorkItem &node);
 consteval bool workQueueOrderSelfCheck();
 
-export [[nodiscard]] uint32_t enterCritical() {
+// The PRIMASK interrupt-masking critical section modelled as a Clang
+// thread-safety capability: enterCritical() acquires it, leaveCritical()
+// releases it, and the intrusive list heads touched only inside such a section
+// (WorkQueue::_head, Channel::_ring) are GUARDED_BY it. No-op on GCC.
+struct CAPABILITY("primask") CriticalSectionToken {};
+export inline CriticalSectionToken g_criticalSection;
+
+export [[nodiscard]] uint32_t enterCritical() ACQUIRE(g_criticalSection) {
     const uint32_t primask = __get_PRIMASK();
     __disable_irq();
     return primask;
 }
 
-export void leaveCritical(uint32_t primask) {
+export void leaveCritical(uint32_t primask) RELEASE(g_criticalSection) {
     __set_PRIMASK(primask);
 }
 
@@ -196,7 +204,7 @@ private:
         detail::leaveCritical(saved);
     }
 
-    WorkItem *_head{nullptr};
+    WorkItem *_head GUARDED_BY(detail::g_criticalSection){nullptr};
 };
 
 }  // namespace system
