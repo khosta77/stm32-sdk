@@ -1,6 +1,7 @@
 """Top-level Typer application that wires together the ``stmtool`` CLI commands."""
 
 import os
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -31,6 +32,15 @@ DEFAULT_DOCKER_IMAGE = "ghcr.io/khosta77/stm32-sdk-build:latest"
 def _docker_image() -> str:
     """Return the SDK build image, overridable via ``STMTOOL_DOCKER_IMAGE`` (CI/tests)."""
     return os.environ.get("STMTOOL_DOCKER_IMAGE", DEFAULT_DOCKER_IMAGE)
+
+
+MIN_ARM_GCC_MAJOR = 14
+
+
+def _parse_gcc_major(version_line: str) -> int | None:
+    """Extract the GCC major version from a ``gcc --version`` first line."""
+    match = re.search(r"\b(\d+)\.\d+\.\d+\b", version_line)
+    return int(match.group(1)) if match else None
 
 
 @project_app.command("create", help=t("project_create_help"))
@@ -264,14 +274,44 @@ def doctor() -> None:
                 if result.returncode == 0
                 else result.stderr.split("\n")[0].strip()
             )
-            if result.returncode == 0:
-                table.add_row(name, "[green]OK[/green]", version_line)
-            else:
+            if result.returncode != 0:
                 table.add_row(name, "[red]ERROR[/red]", version_line)
+            elif name == "arm-none-eabi-gcc":
+                major = _parse_gcc_major(version_line)
+                if major is not None and major < MIN_ARM_GCC_MAJOR:
+                    table.add_row(
+                        name,
+                        "[red]ERROR[/red]",
+                        f"{version_line} (need GCC >= {MIN_ARM_GCC_MAJOR} for C++20 modules)",
+                    )
+                else:
+                    table.add_row(name, "[green]OK[/green]", version_line)
+            else:
+                table.add_row(name, "[green]OK[/green]", version_line)
         except FileNotFoundError:
             table.add_row(name, "[red]NOT FOUND[/red]", f"Install {name}")
         except subprocess.TimeoutExpired:
             table.add_row(name, "[yellow]TIMEOUT[/yellow]", "")
+
+    image = _docker_image()
+    try:
+        inspect = subprocess.run(
+            ["docker", "image", "inspect", image],
+            capture_output=True,
+            text=True,
+            timeout=5,
+            check=False,
+        )
+        if inspect.returncode == 0:
+            table.add_row("SDK image", "[green]OK[/green]", image)
+        else:
+            table.add_row(
+                "SDK image", "[yellow]MISSING[/yellow]", f"pulled on first build: {image}"
+            )
+    except FileNotFoundError:
+        table.add_row("SDK image", "[red]NOT FOUND[/red]", "Install Docker")
+    except subprocess.TimeoutExpired:
+        table.add_row("SDK image", "[yellow]TIMEOUT[/yellow]", "")
 
     console.print(table)
 

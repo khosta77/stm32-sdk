@@ -50,6 +50,32 @@ def test_doctor_reports_versions() -> None:
     assert "OK" in result.stdout
 
 
+def test_parse_gcc_major_extracts_version() -> None:
+    from stmtool.cli import _parse_gcc_major
+
+    assert _parse_gcc_major("arm-none-eabi-gcc (Arm GNU Toolchain 15.2.Rel1) 15.2.1 20250401") == 15
+    assert _parse_gcc_major("arm-none-eabi-gcc (Arm GNU Toolchain 13.2.Rel1) 13.2.1 20231009") == 13
+    assert _parse_gcc_major("no version here") is None
+
+
+def test_doctor_flags_old_gcc(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_run(cmd: Any, **_kwargs: Any) -> Any:
+        class _R:
+            returncode = 0
+            stderr = ""
+            stdout = "some tool 15.2.1\n"
+
+        r = _R()
+        if cmd[:1] == ["arm-none-eabi-gcc"]:
+            r.stdout = "arm-none-eabi-gcc (Arm GNU Toolchain 13.2.Rel1) 13.2.1 20231009\n"
+        return r
+
+    monkeypatch.setattr("stmtool.cli.subprocess.run", fake_run)
+    result = runner.invoke(app, ["doctor"])
+    assert result.exit_code == 0
+    assert "ERROR" in result.stdout
+
+
 def test_flash_no_bin_files(project_workdir: Path) -> None:
     (project_workdir / "out").mkdir()
     result = runner.invoke(app, ["flash"])
