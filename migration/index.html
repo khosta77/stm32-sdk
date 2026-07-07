@@ -1228,6 +1228,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v0115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.1.15
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v0114" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1522,6 +1533,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v0115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.1.15
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v0114" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1809,6 +1831,22 @@ upgrade deliberately.</p>
 <li>Flash to hardware and verify the smoke-test for your scenario.</li>
 <li>Merge back once green.</li>
 </ol>
+<h2 id="new-in-v0115">New in v0.1.15<a class="headerlink" href="#new-in-v0115" title="Permanent link">&para;</a></h2>
+<p>v0.1.15 migrates the SDK's own low-level runtime glue from C to idiomatic C++.
+<strong>No breaking changes, nothing to do on upgrade</strong> — symbol names, linkage and
+behaviour are byte-for-byte identical.</p>
+<ul>
+<li><strong>Nothing to change.</strong> <code>trace.c</code>/<code>trace-impl.c</code>, <code>initialize-hardware.c</code>,
+  <code>reset-hardware.c</code>, <code>exception-handlers.c</code> and <code>freertos_hooks.c</code> became
+  <code>.cpp</code>, but every symbol the vector table, newlib startup and the FreeRTOS
+  kernel reference stays <code>extern "C"</code> with the same name.</li>
+<li><strong>Overrides still work.</strong> If your application redefines the weak
+  <code>__initialize_hardware</code>, <code>__initialize_hardware_early</code>, <code>__reset_hardware</code>, an
+  exception handler, or a <code>vApplication*</code> hook — from a <code>.cpp</code> or a <code>.c</code> file —
+  it keeps overriding the SDK default exactly as before.</li>
+<li><strong>Vendor code is untouched.</strong> The CMSIS <code>system_*</code> files, the per-family
+  vector tables and the newlib runtime remain C and pristine.</li>
+</ul>
 <h2 id="new-in-v0114">New in v0.1.14<a class="headerlink" href="#new-in-v0114" title="Permanent link">&para;</a></h2>
 <p>v0.1.14 adds logging and a multi-arch build image. <strong>No breaking changes</strong> —
 everything below is opt-in.</p>

@@ -1228,6 +1228,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v0115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.1.15
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v0114" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1522,6 +1533,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v0115" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.1.15
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v0114" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1809,6 +1831,22 @@
 <li>Прошейте на железо и убедитесь, что ваш smoke-test проходит.</li>
 <li>Сливайте, когда всё зелёное.</li>
 </ol>
+<h2 id="v0115">Новое в v0.1.15<a class="headerlink" href="#v0115" title="Permanent link">&para;</a></h2>
+<p>v0.1.15 переводит собственный низкоуровневый рантайм-glue SDK с C на идиоматичный
+C++. <strong>Ломающих изменений нет, при обновлении делать ничего не нужно</strong> — имена
+символов, линковка и поведение побайтово идентичны.</p>
+<ul>
+<li><strong>Ничего менять не надо.</strong> <code>trace.c</code>/<code>trace-impl.c</code>, <code>initialize-hardware.c</code>,
+  <code>reset-hardware.c</code>, <code>exception-handlers.c</code> и <code>freertos_hooks.c</code> стали <code>.cpp</code>,
+  но каждый символ, на который ссылаются таблица векторов, newlib-startup и ядро
+  FreeRTOS, остаётся <code>extern "C"</code> с тем же именем.</li>
+<li><strong>Переопределения продолжают работать.</strong> Если приложение переопределяет weak
+  <code>__initialize_hardware</code>, <code>__initialize_hardware_early</code>, <code>__reset_hardware</code>,
+  обработчик исключения или хук <code>vApplication*</code> — из <code>.cpp</code> или <code>.c</code> — оно
+  по-прежнему перекрывает умолчание SDK ровно как раньше.</li>
+<li><strong>Вендорный код не тронут.</strong> Файлы CMSIS <code>system_*</code>, таблицы векторов по
+  семействам и newlib-рантайм остаются на C и нетронутыми.</li>
+</ul>
 <h2 id="v0114">Новое в v0.1.14<a class="headerlink" href="#v0114" title="Permanent link">&para;</a></h2>
 <p>v0.1.14 добавляет логирование и мультиарх-образ сборки. <strong>Ломающих изменений
 нет</strong> — всё ниже опционально.</p>
