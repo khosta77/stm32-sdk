@@ -14,6 +14,22 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.1.14
+
+v0.1.14 adds logging and a multi-arch build image. **No breaking changes** —
+everything below is opt-in.
+
+- **Logging facility.** `import driver.log;` plus `#include "driver/log.hpp"`
+  give the `LOG_*` macros; install a backend (`driver::log::ItmBackend` or
+  `driver::log::UartBackend<UartDriver>`) once at startup. Tune it with the
+  `STM32_LOG_LEVEL` and `STM32_LOG_BACKEND` cache variables. Defaults
+  (`INFO` / `none`) emit nothing until you install a backend, so existing
+  projects are unaffected. See [Logging](modules/logging.md).
+- **Apple Silicon: `docker pull` once.** The build image is now multi-arch
+  (`linux/amd64,linux/arm64`). If you have an amd64 image cached from v0.1.13,
+  pull again to get the arm64 layer with a native toolchain — `stmtool build`
+  and `stmtool test` then run without the Rosetta crash. No flags or CLI change.
+
 ## New in v0.1.13
 
 v0.1.13 is a **quality / infrastructure** release. There are no SDK API changes,
