@@ -21,7 +21,7 @@ repos:
         exclude: |
           (?x)^(
             sdk/core/include/(cmsis|cortexm|arm|diag)/|
-            sdk/core/src/|
+            sdk/core/src/newlib/|
             sdk/hal/[^/]+/(include|src)/cmsis/|
             sdk/sensors/displays/ssd1306/font5x7\.cppm$
           )
