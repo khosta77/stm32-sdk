@@ -211,6 +211,14 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
     - `stm32f4/*.cppm` — implementations (`GpioPin`, `Uart<>`, `I2c`, `Spi`,
       `DmaStream`, `InternalFlash`, `ExtiLine`, `clock`); model the concepts
       without inheritance, each ends with `static_assert(IXxx<Impl>)`.
+    - `log.cppm` + textual `log.hpp` (since v0.1.14) — `driver.log`: compile-time
+      `LOG_*` macros (`STM32_LOG_LEVEL` strips levels to `((void)0)`), runtime
+      `setLevel`, sink installed via a `void(*)(void*, const char*, size_t)`
+      thunk (WorkItem style). Backends `log_backend_itm.cppm` (`ItmBackend`, calls
+      CMSIS `ITM_SendChar` directly — non-template, like `GpioPin`) and
+      `log_backend_uart.cppm` (`UartBackend<UartDriver>` over `driver.uart`).
+      `STM32_LOG_BACKEND` (none/itm/uart) names the build-selected sink. Core
+      module is CMSIS-free → host-tested (`tests/host/test_log.cpp`).
 - `sdk/sensors/` — sensor concepts (`IImu`/`IDisplay`/`IExternalFlash`) +
   implementations. Sensors are templates on their bus type
   (`template <driver::II2c I2cDriver> class Mpu6050`); MPU6050, SSD1306, W25Q32.
