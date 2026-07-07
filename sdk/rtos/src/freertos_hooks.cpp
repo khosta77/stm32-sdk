@@ -1,24 +1,38 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName) {
-  (void) xTask;
-  (void) pcTaskName;
+// The application hooks keep C linkage: the FreeRTOS kernel (compiled as C)
+// resolves them by their unmangled names.
+
+#if (configSUPPORT_STATIC_ALLOCATION == 1)
+
+namespace {
+StaticTask_t xIdleTaskTCB;
+StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
+StaticTask_t xTimerTaskTCB;
+StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
+}  // namespace
+
+#endif
+
+extern "C" {
+
+void vApplicationStackOverflowHook(
+    [[maybe_unused]] TaskHandle_t xTask,
+    [[maybe_unused]] char *pcTaskName
+) {
   __asm volatile("cpsid i" ::: "memory");
   while (1) {
   }
 }
 
-void vApplicationMallocFailedHook(void) {
+void vApplicationMallocFailedHook() {
   __asm volatile("cpsid i" ::: "memory");
   while (1) {
   }
 }
 
 #if (configSUPPORT_STATIC_ALLOCATION == 1)
-
-static StaticTask_t xIdleTaskTCB;
-static StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
 
 void vApplicationGetIdleTaskMemory(
     StaticTask_t **ppxIdleTaskTCBBuffer,
@@ -29,9 +43,6 @@ void vApplicationGetIdleTaskMemory(
   *ppxIdleTaskStackBuffer = uxIdleTaskStack;
   *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
-
-static StaticTask_t xTimerTaskTCB;
-static StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
 
 void vApplicationGetTimerTaskMemory(
     StaticTask_t **ppxTimerTaskTCBBuffer,
@@ -44,3 +55,5 @@ void vApplicationGetTimerTaskMemory(
 }
 
 #endif
+
+}  // extern "C"
