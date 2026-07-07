@@ -10,35 +10,35 @@
       
       
       
-        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/build-flags/">
+        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/modules/logging/">
       
       
-        <link rel="prev" href="../stmtool/">
+        <link rel="prev" href="../system/">
       
       
-        <link rel="next" href="../modules/drivers/">
+        <link rel="next" href="../testing/">
       
       
         
           <link rel="alternate" href="./" hreflang="en">
         
-          <link rel="alternate" href="../ru/build-flags/" hreflang="ru">
+          <link rel="alternate" href="../../ru/modules/logging/" hreflang="ru">
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
     
     
       
-        <title>Build flags - stm32-sdk</title>
+        <title>Logging - stm32-sdk</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -57,7 +57,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#compiler-and-warning-flags" class="md-skip">
+        <a href="#logging" class="md-skip">
           Skip to content
         </a>
       
@@ -96,7 +96,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="stm32-sdk" class="md-header__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+    <a href="../.." title="stm32-sdk" class="md-header__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Build flags
+              Logging
             
           </span>
         </div>
@@ -169,7 +169,7 @@
           </li>
         
           <li class="md-select__item">
-            <a href="../ru/build-flags/" hreflang="ru" class="md-select__link">
+            <a href="../../ru/modules/logging/" hreflang="ru" class="md-select__link">
               Русский
             </a>
           </li>
@@ -255,7 +255,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -274,7 +274,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../quickstart/" class="md-tabs__link">
+      <a href="../../quickstart/" class="md-tabs__link">
         
   
   
@@ -293,7 +293,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../stmtool/" class="md-tabs__link">
+      <a href="../../stmtool/" class="md-tabs__link">
         
   
   
@@ -310,11 +310,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../../build-flags/" class="md-tabs__link">
         
   
   
@@ -331,11 +329,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../modules/drivers/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../drivers/" class="md-tabs__link">
           
   
   
@@ -355,7 +355,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../chips/" class="md-tabs__link">
+        <a href="../../chips/" class="md-tabs__link">
           
   
   
@@ -375,7 +375,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../sensors/" class="md-tabs__link">
+        <a href="../../sensors/" class="md-tabs__link">
           
   
   
@@ -393,7 +393,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../release/" class="md-tabs__link">
+      <a href="../../release/" class="md-tabs__link">
         
   
   
@@ -412,7 +412,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../migration/" class="md-tabs__link">
+      <a href="../../migration/" class="md-tabs__link">
         
   
   
@@ -447,7 +447,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="stm32-sdk" class="md-nav__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+    <a href="../.." title="stm32-sdk" class="md-nav__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -477,7 +477,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -504,7 +504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../quickstart/" class="md-nav__link">
+      <a href="../../quickstart/" class="md-nav__link">
         
   
   
@@ -531,7 +531,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../stmtool/" class="md-nav__link">
+      <a href="../../stmtool/" class="md-nav__link">
         
   
   
@@ -555,37 +555,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Build flags
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../build-flags/" class="md-nav__link">
         
   
   
@@ -601,92 +574,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#logging-flags-v0114" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Logging flags (v0.1.14)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#build-environment-docker-offline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Build environment (Docker, offline)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#active-flags-v014" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Active flags (v0.1.4)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#-werror-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        -Werror policy
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#nodiscard-enforcement-v015" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        [[nodiscard]] enforcement (v0.1.5)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#c-language-exceptions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        C++ language exceptions
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -695,28 +582,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -734,7 +624,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -752,7 +642,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../modules/drivers/" class="md-nav__link">
+      <a href="../drivers/" class="md-nav__link">
         
   
   
@@ -780,7 +670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../modules/sensors/" class="md-nav__link">
+      <a href="../sensors/" class="md-nav__link">
         
   
   
@@ -808,7 +698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../modules/freertos/" class="md-nav__link">
+      <a href="../freertos/" class="md-nav__link">
         
   
   
@@ -836,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../modules/system/" class="md-nav__link">
+      <a href="../system/" class="md-nav__link">
         
   
   
@@ -861,10 +751,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../modules/logging/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -880,6 +797,103 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#two-levels-of-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two levels of filtering
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#levels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Levels
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#selecting-the-compile-time-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selecting the compile-time level
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backends
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -892,7 +906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../modules/testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -981,7 +995,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../chips/" class="md-nav__link">
+      <a href="../../chips/" class="md-nav__link">
         
   
   
@@ -1009,7 +1023,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../chips/datasheets/" class="md-nav__link">
+      <a href="../../chips/datasheets/" class="md-nav__link">
         
   
   
@@ -1037,7 +1051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../chips/stm32f4/" class="md-nav__link">
+      <a href="../../chips/stm32f4/" class="md-nav__link">
         
   
   
@@ -1126,7 +1140,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sensors/" class="md-nav__link">
+      <a href="../../sensors/" class="md-nav__link">
         
   
   
@@ -1154,7 +1168,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sensors/mpu6050/" class="md-nav__link">
+      <a href="../../sensors/mpu6050/" class="md-nav__link">
         
   
   
@@ -1182,7 +1196,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sensors/ssd1306/" class="md-nav__link">
+      <a href="../../sensors/ssd1306/" class="md-nav__link">
         
   
   
@@ -1210,7 +1224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../sensors/w25q32/" class="md-nav__link">
+      <a href="../../sensors/w25q32/" class="md-nav__link">
         
   
   
@@ -1245,7 +1259,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../release/" class="md-nav__link">
+      <a href="../../release/" class="md-nav__link">
         
   
   
@@ -1272,7 +1286,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../migration/" class="md-nav__link">
+      <a href="../../migration/" class="md-nav__link">
         
   
   
@@ -1319,10 +1333,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#logging-flags-v0114" class="md-nav__link">
+  <a href="#two-levels-of-filtering" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Logging flags (v0.1.14)
+        Two levels of filtering
       
     </span>
   </a>
@@ -1330,10 +1344,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#build-environment-docker-offline" class="md-nav__link">
+  <a href="#levels" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Build environment (Docker, offline)
+        Levels
       
     </span>
   </a>
@@ -1341,10 +1355,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#active-flags-v014" class="md-nav__link">
+  <a href="#using-it" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Active flags (v0.1.4)
+        Using it
       
     </span>
   </a>
@@ -1352,10 +1366,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#-werror-policy" class="md-nav__link">
+  <a href="#selecting-the-compile-time-level" class="md-nav__link">
     <span class="md-ellipsis">
       
-        -Werror policy
+        Selecting the compile-time level
       
     </span>
   </a>
@@ -1363,10 +1377,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#nodiscard-enforcement-v015" class="md-nav__link">
+  <a href="#backends" class="md-nav__link">
     <span class="md-ellipsis">
       
-        [[nodiscard]] enforcement (v0.1.5)
+        Backends
       
     </span>
   </a>
@@ -1374,10 +1388,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#c-language-exceptions" class="md-nav__link">
+  <a href="#custom-backend" class="md-nav__link">
     <span class="md-ellipsis">
       
-        C++ language exceptions
+        Custom backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host testing
       
     </span>
   </a>
@@ -1401,7 +1426,7 @@
 
 
   
-    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/build-flags.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/modules/logging.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1409,117 +1434,150 @@
   
 
 
-<h1 id="compiler-and-warning-flags">Compiler and warning flags<a class="headerlink" href="#compiler-and-warning-flags" title="Permanent link">&para;</a></h1>
-<p>The SDK defines its compile flags on a single CMake INTERFACE target,
-<code>stm32_core</code>, in <code>sdk/cmake/stm32_sdk.cmake</code>. Every other library
-(<code>stm32_hal</code>, <code>stm32_drivers</code>, <code>stm32_rtos</code>, <code>stm32_sensors</code>,
-<code>stm32_storage</code>, <code>stm32_system</code>, <code>stm32_testing</code>) — and every user-app
-<code>target_link_libraries(... stm32_core)</code>
-in a project template — inherits the same set. There is no separate
-"SDK-only" vs "user-app" warning policy.</p>
-<p>The header-only unit-test helpers are opt-in via <code>STM32_USE_TESTING</code>, which
-adds the <code>stm32_testing</code> INTERFACE target (just the <code>sdk/testing/include</code>
-path — no sources, no link dependencies). See <a href="../modules/testing/">Testing</a>.</p>
-<p>Within <code>stm32_system</code> the modules are conditionally compiled: <code>system.component</code>,
-<code>system.bootstrap</code> and <code>system.work_queue</code> build whenever <code>STM32_USE_SYSTEM</code> is
-on, while <code>system.executor</code> and <code>system.signal_bus</code> (which need the FreeRTOS
-wrappers) are compiled only when <code>STM32_USE_FREERTOS</code> is also on — the queue core
-stays usable in bare-metal builds.</p>
-<h2 id="logging-flags-v0114">Logging flags (v0.1.14)<a class="headerlink" href="#logging-flags-v0114" title="Permanent link">&para;</a></h2>
-<p>The <a href="../modules/logging/">logging facility</a> ships with <code>stm32_drivers</code> and is
-tuned by two cache variables, both mapped to compile definitions on the driver
-target:</p>
+<h1 id="logging">Logging<a class="headerlink" href="#logging" title="Permanent link">&para;</a></h1>
+<p>A compile-time-filtered logging facility for bare-metal targets (since
+v0.1.14). It ships with the driver library (<code>STM32_USE_DRIVERS</code>) and follows the
+same zero-vtable / zero-heap style as the rest of the SDK: the output backend is
+a captureless function pointer, never <code>std::function</code>, and there is no dynamic
+allocation.</p>
+<h2 id="two-levels-of-filtering">Two levels of filtering<a class="headerlink" href="#two-levels-of-filtering" title="Permanent link">&para;</a></h2>
+<p>The facility has two independent filters, which is what makes it cheap in a
+release build and flexible during bring-up:</p>
 <ul>
-<li><code>STM32_LOG_LEVEL</code> (<code>NONE</code>/<code>ERROR</code>/<code>WARN</code>/<code>INFO</code>/<code>DEBUG</code>/<code>TRACE</code>, default
-  <code>INFO</code>) — the compile-time ceiling. <code>LOG_*</code> above it expand to <code>((void)0)</code>, so
-  their format strings never reach flash. Set <code>NONE</code> in a release build to strip
-  logging entirely.</li>
-<li><code>STM32_LOG_BACKEND</code> (<code>none</code>/<code>itm</code>/<code>uart</code>, default <code>none</code>) — names the intended
-  sink. Both backend modules always compile, so this does not gate availability;
-  it exposes the <code>STM32_LOG_BACKEND</code> define (with <code>STM32_LOG_BACKEND_NONE</code>/<code>_ITM</code>/
-  <code>_UART</code>) so app code can pick the matching backend type generically.</li>
+<li><strong>Compile-time (<code>STM32_LOG_LEVEL</code>).</strong> The <code>LOG_*</code> macros above the configured
+  ceiling expand to <code>((void)0)</code>. Both the call <em>and its format string</em> are
+  removed from the binary, so silenced levels cost zero flash and zero cycles.</li>
+<li><strong>Runtime (<code>driver::log::setLevel</code>).</strong> Of the calls that survived compilation,
+  records strictly above the runtime level are dropped without a rebuild — handy
+  for turning <code>Debug</code> on over a serial command.</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_LEVEL<span class="o">=</span>DEBUG<span class="w"> </span>-DSTM32_LOG_BACKEND<span class="o">=</span>itm<span class="w"> </span>...
+<p>A record is emitted only when its level is <code>&lt;=</code> <strong>both</strong> ceilings.</p>
+<h2 id="levels">Levels<a class="headerlink" href="#levels" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Value</th>
+<th>Macro prefix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>None</code></td>
+<td>0</td>
+<td>(silences everything)</td>
+</tr>
+<tr>
+<td><code>Error</code></td>
+<td>1</td>
+<td><code>LOG_ERROR</code></td>
+</tr>
+<tr>
+<td><code>Warn</code></td>
+<td>2</td>
+<td><code>LOG_WARN</code></td>
+</tr>
+<tr>
+<td><code>Info</code></td>
+<td>3</td>
+<td><code>LOG_INFO</code></td>
+</tr>
+<tr>
+<td><code>Debug</code></td>
+<td>4</td>
+<td><code>LOG_DEBUG</code></td>
+</tr>
+<tr>
+<td><code>Trace</code></td>
+<td>5</td>
+<td><code>LOG_TRACE</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="using-it">Using it<a class="headerlink" href="#using-it" title="Permanent link">&para;</a></h2>
+<p><code>import driver.log;</code>, then include the macro header <strong>after</strong> the import (macros
+cannot be exported by a C++20 module, so they live in a textual header — the same
+pattern as <code>driver/try.hpp</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">log</span><span class="p">;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">log</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span><span class="w">      </span><span class="c1">// the backend you picked</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span><span class="w">          </span><span class="c1">// its bus, for the UART backend</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;driver/log.hpp&quot;</span><span class="c1">    // LOG_* macros, AFTER the imports</span>
 </code></pre></div>
-<h2 id="build-environment-docker-offline">Build environment (Docker, offline)<a class="headerlink" href="#build-environment-docker-offline" title="Permanent link">&para;</a></h2>
-<p>Since v0.1.13 all builds run inside the SDK Docker image
-(<code>ghcr.io/khosta77/stm32-sdk-build:latest</code>) — <code>stmtool build</code> has no
-host-toolchain path. The image pins <code>arm-none-eabi-gcc</code> 15.2 (GCC &gt;= 14 is
-required for C++20 module dependency scanning; <code>stm32_sdk.cmake</code> fails
-configuration otherwise) and a host <code>g++</code> for the <a href="../modules/testing/">host tests</a>.</p>
-<p>The image also <strong>bakes FreeRTOS-Kernel</strong> (<code>V11.1.0</code>) at <code>/opt/freertos-kernel</code>
-and exports <code>FETCHCONTENT_SOURCE_DIR_FREERTOS_KERNEL</code>, so FreeRTOS builds no
-longer re-clone the kernel per project and work offline. Outside Docker,
-<code>stm32_rtos.cmake</code> still honours that variable (or environment variable) for a
-pre-provisioned checkout, falling back to a shallow <code>FetchContent</code> clone.</p>
-<h2 id="active-flags-v014">Active flags (v0.1.4)<a class="headerlink" href="#active-flags-v014" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">target_compile_options</span><span class="p">(</span><span class="s">stm32_core</span><span class="w"> </span><span class="s">INTERFACE</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_ARCH_FLAGS</span><span class="o">}</span><span class="w">      </span><span class="c"># -mcpu, -mfpu, -mfloat-abi from the chip family</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s">-Os</span><span class="w">                      </span><span class="c"># size-optimised by default; -O0 is opt-in via CMAKE_BUILD_TYPE</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="s">-ffreestanding</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="s">-ffunction-sections</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="s">-fdata-sections</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="s">-fsigned-char</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="s">-fno-move-loop-invariants</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="s">-Wall</span><span class="w">                    </span><span class="c"># standard set</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="s">-Wextra</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="s">-Wpedantic</span><span class="w">               </span><span class="c"># ISO conformance</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="s">-Wshadow</span><span class="w">                 </span><span class="c"># catches accidental local override of outer scope</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="s">-Werror</span><span class="w">                  </span><span class="c"># warnings ARE errors — see policy below</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:C</span><span class="o">&gt;</span><span class="s">:-std=gnu11&gt;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:CXX</span><span class="o">&gt;</span><span class="s">:-std=gnu++20&gt;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">)</span>
+<p>Install a backend once at startup and set the runtime level, then log:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Uart</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">g_uart</span><span class="p">{</span><span class="o">*</span><span class="n">USART2</span><span class="p">,</span><span class="w"> </span><span class="n">USART2_IRQn</span><span class="p">,</span><span class="w"> </span><span class="n">uart</span><span class="p">({...})};</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">UartBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">{</span><span class="n">g_uart</span><span class="p">};</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="n">g_logSink</span><span class="p">.</span><span class="n">install</span><span class="p">();</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">setLevel</span><span class="p">(</span><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">Level</span><span class="o">::</span><span class="n">Debug</span><span class="p">);</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="n">LOG_INFO</span><span class="p">(</span><span class="s">&quot;boot&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;system up&quot;</span><span class="p">);</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="n">LOG_DEBUG_U32</span><span class="p">(</span><span class="s">&quot;adc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;raw=&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">reading</span><span class="p">);</span><span class="w">      </span><span class="c1">// &quot;D [adc] raw=1234&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="n">LOG_ERROR_HEX</span><span class="p">(</span><span class="s">&quot;reg&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CR1=&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">USART2</span><span class="o">-&gt;</span><span class="n">CR1</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;E [reg] CR1=0x2000000c&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
 </code></pre></div>
-<p><code>-Wconversion</code> is intentionally NOT enabled — on hand-written embedded
-code that mixes 8/16/32-bit register fields, it produces a wall of
-noise without finding real bugs. It may return in a future release after
-a focused cleanup pass.</p>
-<h2 id="-werror-policy"><code>-Werror</code> policy<a class="headerlink" href="#-werror-policy" title="Permanent link">&para;</a></h2>
-<p><code>-Werror</code> is permanently on starting with v0.1.4. Any warning that
-reaches the compiler is a build failure, in both the SDK itself and in
-projects generated via <code>stmtool project create</code>.</p>
-<p><strong>Do not disable <code>-Werror</code></strong> to make a build go green. Instead:</p>
-<ol>
-<li><strong>Fix the source</strong> if the warning is in code you control. Most
-   <code>-Wshadow</code> and <code>-Wpedantic</code> warnings have a one-line cleanup.</li>
-<li><strong>Suppress at the file level</strong> if the warning is in vendor code
-   (CMSIS device headers, generated vector tables, FreeRTOS sources).
-   Use <code>set_source_files_properties</code> next to the file in question, not
-   a global <code>-Wno-*</code>. Example from the SDK:</li>
-</ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_HAL_DIR</span><span class="o">}</span><span class="s">/src/cmsis/</span><span class="o">${</span><span class="nv">STM32_VECTORS_FILE</span><span class="o">}</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span><span class="w"> </span><span class="s2">&quot;-Wno-pedantic&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">)</span>
+<p>Each level has three macro forms:</p>
+<ul>
+<li><code>LOG_INFO(tag, msg)</code> — a bare message.</li>
+<li><code>LOG_INFO_U32(tag, msg, value)</code> — appends a <code>uint32_t</code> in decimal.</li>
+<li><code>LOG_INFO_HEX(tag, msg, value)</code> — appends a <code>uint32_t</code> as <code>0x</code>-prefixed
+  lowercase hex.</li>
+</ul>
+<p>Output is framed as <code>&lt;L&gt; [tag] msg\r\n</code>, where <code>&lt;L&gt;</code> is the level's initial
+(<code>E</code>/<code>W</code>/<code>I</code>/<code>D</code>/<code>T</code>). Formatting is done by hand (no <code>printf</code>/<code>snprintf</code>), so it
+works under <code>nano.specs</code> and adds no float-formatting weight.</p>
+<h2 id="selecting-the-compile-time-level">Selecting the compile-time level<a class="headerlink" href="#selecting-the-compile-time-level" title="Permanent link">&para;</a></h2>
+<p>Set it through the CMake cache variable <code>STM32_LOG_LEVEL</code> (one of <code>NONE</code>,
+<code>ERROR</code>, <code>WARN</code>, <code>INFO</code>, <code>DEBUG</code>, <code>TRACE</code>; default <code>INFO</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_LEVEL<span class="o">=</span>DEBUG<span class="w"> </span>...
 </code></pre></div>
-<p>This keeps the warning visible everywhere else and isolates the
-   exemption to a single, named file.</p>
-<p>In downstream projects the same rule applies: if your application uses
-a vendor SDK that triggers warnings, suppress them locally on those
-sources, not on the whole target.</p>
-<h2 id="nodiscard-enforcement-v015"><code>[[nodiscard]]</code> enforcement (v0.1.5)<a class="headerlink" href="#nodiscard-enforcement-v015" title="Permanent link">&para;</a></h2>
-<p><code>driver::Status</code> and <code>driver::Result&lt;T&gt;</code> are marked <code>[[nodiscard]]</code>. Combined
-with <code>-Werror</code>, this turns any ignored error return into a build failure —
-the compiler enforces that every <code>Status</code> is checked. When a discard is
-genuinely intended (e.g. dropping a byte in a full ISR ring buffer), make it
-explicit with <code>(void)</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// ISR: drop byte if RX buffer is full</span>
+<p>It maps to <code>-DSTM32_LOG_LEVEL=&lt;0..5&gt;</code>; the header defaults to <code>INFO</code> when the
+define is absent. A release build that sets <code>NONE</code> (or any level below your
+<code>LOG_DEBUG</code>/<code>LOG_TRACE</code> calls) strips those statements entirely.</p>
+<h2 id="backends">Backends<a class="headerlink" href="#backends" title="Permanent link">&para;</a></h2>
+<p>A backend is a sink — a <code>void(*)(void* ctx, const char* data, size_t len)</code> thunk
+installed via <code>driver::log::setSink</code>. The SDK ships two, both exposing
+<code>install()</code>:</p>
+<ul>
+<li><strong><code>driver::log::ItmBackend</code></strong> (<code>import driver.log.itm</code>) — streams every byte to
+  ITM stimulus port 0, read back over SWO by the debugger (OpenOCD <code>itm port 0
+  on</code>, ST-Link SWV). Stateless. If the debugger has not enabled trace,
+  <code>ITM_SendChar</code> is a no-op, so it is safe to install unconditionally.</li>
+<li><strong><code>driver::log::UartBackend&lt;UartDriver&gt;</code></strong> (<code>import driver.log.uart</code>) — forwards
+  to any <code>driver::IUart</code> implementation, so logs share the application's serial
+  line. Generic over the bus in the terse constrained style; CTAD deduces the
+  parameter from the constructor (<code>UartBackend g_sink{g_uart}</code>).</li>
+</ul>
+<p>The intended backend is named at build time via <code>STM32_LOG_BACKEND</code>
+(<code>none</code> / <code>itm</code> / <code>uart</code>, default <code>none</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_BACKEND<span class="o">=</span>itm<span class="w"> </span>...
 </code></pre></div>
-<p>This is a deliberate compile-time policy, not a warning to suppress. See
-<a href="../modules/drivers/#error-handling-drivertypes-v015">drivers</a> for <code>Result&lt;T&gt;</code>
-and the <code>DRV_TRY</code> helpers.</p>
-<h2 id="c-language-exceptions">C++ language exceptions<a class="headerlink" href="#c-language-exceptions" title="Permanent link">&para;</a></h2>
-<p><code>sdk/core/src/newlib/cxx.cpp</code> is the C++ runtime support translation
-unit. It must be compiled with GCC 11-era C++ to match newlib's ABI
-expectations. The SDK enforces this with a per-file override:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">_STM32_SDK_DIR</span><span class="o">}</span><span class="s">/core/src/newlib/cxx.cpp</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="s2">&quot;-std=gnu++11;-fabi-version=0;-fno-exceptions;-fno-rtti;-fno-use-cxa-atexit;-fno-threadsafe-statics&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
+<p>Both backend modules always compile (a template and inline CMSIS code cost
+nothing until instantiated), so the flag does not gate availability — it sets the
+<code>STM32_LOG_BACKEND</code> define (with the symbolic <code>STM32_LOG_BACKEND_NONE</code> / <code>_ITM</code> /
+<code>_UART</code> values), letting application code pick the matching type generically:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">#if STM32_LOG_BACKEND == STM32_LOG_BACKEND_ITM</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">ItmBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="cp">#else</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">UartBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">{</span><span class="n">g_uart</span><span class="p">};</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="cp">#endif</span>
 </code></pre></div>
-<p>Everything else, including templates' <code>main.cpp</code>, compiles with C++20
-(<code>gnu++20</code>).</p>
+<h2 id="custom-backend">Custom backend<a class="headerlink" href="#custom-backend" title="Permanent link">&para;</a></h2>
+<p>Any function with the sink signature works. Install it directly:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">mySink</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="cm">/*ctx*/</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">len</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">semihostPut</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">}</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">setSink</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mySink</span><span class="p">,</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+</code></pre></div>
+<p><code>ctx</code> is passed back verbatim, so a stateful backend can carry <code>this</code> through it
+— exactly how <code>UartBackend</code> reaches its captured <code>UartDriver&amp;</code>.</p>
+<h2 id="host-testing">Host testing<a class="headerlink" href="#host-testing" title="Permanent link">&para;</a></h2>
+<p><code>driver.log</code> is CMSIS-free, so it compiles and runs on the host. <code>tests/host/</code>
+exercises the framing, the runtime gate, and decimal/hex formatting against a
+capturing sink — see <a href="../testing/">Testing</a>.</p>
 
 
 
@@ -1575,10 +1633,10 @@ expectations. The SDK enforces this with a per-file override:</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
       
     
   </body>

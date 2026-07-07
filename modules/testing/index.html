@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/modules/testing/">
       
       
-        <link rel="prev" href="../system/">
+        <link rel="prev" href="../logging/">
       
       
         <link rel="next" href="../../chips/">
@@ -734,6 +734,34 @@
     
   
     System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
   
 
     
@@ -1524,7 +1552,10 @@ executables and runs them under <code>ctest</code>. Run the whole suite with:</p
 </code></pre></div>
 <p>This builds and runs the tests inside the SDK Docker image (into <code>out/host</code>) and
 exits non-zero if anything fails; CI runs the same command in its <code>host-tests</code>
-job. To add a case, drop a <code>test_*.cpp</code> into <code>tests/host/</code> and register it in
+job. The suite currently covers <code>Result&lt;T&gt;</code> / <code>DRV_TRY</code> (<code>test_result</code>), the mock
+buses (<code>test_mock</code>), an MPU6050-on-mock example (<code>test_sensor_mock</code>), and the
+<a href="../logging/">logging</a> framing / gating / formatting (<code>test_log</code>). To add a case,
+drop a <code>test_*.cpp</code> into <code>tests/host/</code> and register it in
 <code>tests/host/CMakeLists.txt</code> via <code>add_host_test(...)</code>.</p>
 <p>Two rules keep C++20 modules happy in a test translation unit that both imports
 modules and includes textual headers:</p>

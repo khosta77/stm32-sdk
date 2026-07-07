@@ -10,17 +10,17 @@
       
       
       
-        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/sensors/ssd1306/">
+        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/modules/logging/">
       
       
-        <link rel="prev" href="../mpu6050/">
+        <link rel="prev" href="../system/">
       
       
-        <link rel="next" href="../w25q32/">
+        <link rel="next" href="../testing/">
       
       
         
-          <link rel="alternate" href="../../../sensors/ssd1306/" hreflang="en">
+          <link rel="alternate" href="../../../modules/logging/" hreflang="en">
         
           <link rel="alternate" href="./" hreflang="ru">
         
@@ -31,7 +31,7 @@
     
     
       
-        <title>SSD1306 - stm32-sdk</title>
+        <title>Logging - stm32-sdk</title>
       
     
     
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#oled-ssd1306" class="md-skip">
+        <a href="#_1" class="md-skip">
           Перейти к содержанию
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              SSD1306
+              Logging
             
           </span>
         </div>
@@ -163,7 +163,7 @@
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../../sensors/ssd1306/" hreflang="en" class="md-select__link">
+            <a href="../../../modules/logging/" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -329,11 +329,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../modules/drivers/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../drivers/" class="md-tabs__link">
           
   
   
@@ -369,13 +371,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../sensors/" class="md-tabs__link">
           
   
   
@@ -582,28 +582,31 @@
       
   
   
+    
   
   
+  
     
     
     
     
+      
+        
+        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
-        
-          
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -621,7 +624,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -639,7 +642,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/drivers/" class="md-nav__link">
+      <a href="../drivers/" class="md-nav__link">
         
   
   
@@ -667,7 +670,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/sensors/" class="md-nav__link">
+      <a href="../sensors/" class="md-nav__link">
         
   
   
@@ -695,7 +698,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/freertos/" class="md-nav__link">
+      <a href="../freertos/" class="md-nav__link">
         
   
   
@@ -723,7 +726,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/system/" class="md-nav__link">
+      <a href="../system/" class="md-nav__link">
         
   
   
@@ -748,10 +751,37 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../modules/logging/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -767,6 +797,103 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Два уровня фильтрации
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Уровни
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Использование
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compile-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Выбор compile-time уровня
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend'ы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Свой backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host-тестирование
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -779,7 +906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/testing/" class="md-nav__link">
+      <a href="../testing/" class="md-nav__link">
         
   
   
@@ -956,31 +1083,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -998,7 +1122,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1016,7 +1140,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../../sensors/" class="md-nav__link">
         
   
   
@@ -1044,7 +1168,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../mpu6050/" class="md-nav__link">
+      <a href="../../sensors/mpu6050/" class="md-nav__link">
         
   
   
@@ -1069,37 +1193,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    SSD1306
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../sensors/ssd1306/" class="md-nav__link">
         
   
   
@@ -1115,98 +1212,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Содержание">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Содержание
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Распиновка
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Даташит
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Драйвер
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Драйвер">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Рисование
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Шрифт
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Верификация
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1219,7 +1224,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../w25q32/" class="md-nav__link">
+      <a href="../../sensors/w25q32/" class="md-nav__link">
         
   
   
@@ -1328,21 +1333,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Распиновка
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Даташит
+        Два уровня фильтрации
       
     </span>
   </a>
@@ -1353,46 +1347,62 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Драйвер
+        Уровни
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Драйвер">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Рисование
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Шрифт
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Верификация
+        Использование
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compile-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Выбор compile-time уровня
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend'ы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backend_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Свой backend
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#host-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Host-тестирование
       
     </span>
   </a>
@@ -1416,7 +1426,7 @@
 
 
   
-    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/sensors/ssd1306.ru.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/modules/logging.ru.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1424,89 +1434,151 @@
   
 
 
-<h1 id="oled-ssd1306">OLED-дисплей SSD1306<a class="headerlink" href="#oled-ssd1306" title="Permanent link">&para;</a></h1>
-<p>Монохромный OLED-контроллер 128×64. Драйвер заточен под I2C-вариант;
-SPI-вариант пока не реализован.</p>
-<h2 id="_1">Распиновка<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<h1 id="_1">Логирование<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
+<p>Логирование с фильтрацией на этапе компиляции для bare-metal (с v0.1.14).
+Поставляется вместе с библиотекой драйверов (<code>STM32_USE_DRIVERS</code>) и следует тому
+же стилю zero-vtable / zero-heap, что и остальной SDK: backend вывода — это
+captureless-указатель на функцию, никогда <code>std::function</code>, и без динамической
+аллокации.</p>
+<h2 id="_2">Два уровня фильтрации<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>У логгера два независимых фильтра — именно это делает его дешёвым в релизе и
+гибким на этапе отладки:</p>
+<ul>
+<li><strong>Compile-time (<code>STM32_LOG_LEVEL</code>).</strong> Макросы <code>LOG_*</code> выше заданного порога
+  раскрываются в <code>((void)0)</code>. Из бинарника убирается и вызов, <em>и его
+  строка-формат</em>, поэтому заглушённые уровни стоят ноль flash и ноль тактов.</li>
+<li><strong>Runtime (<code>driver::log::setLevel</code>).</strong> Из вызовов, переживших компиляцию,
+  записи строго выше runtime-уровня отбрасываются без пересборки — удобно
+  включать <code>Debug</code> по последовательной команде.</li>
+</ul>
+<p>Запись выводится, только если её уровень <code>&lt;=</code> <strong>обоим</strong> порогам.</p>
+<h2 id="_3">Уровни<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Контакт OLED</th>
-<th>Пин STM32</th>
-<th>Примечание</th>
+<th>Уровень</th>
+<th>Значение</th>
+<th>Префикс макроса</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>VCC</td>
-<td>3.3 V</td>
-<td>Некоторые модули принимают 5 V — проверьте шелкографию</td>
+<td><code>None</code></td>
+<td>0</td>
+<td>(глушит всё)</td>
 </tr>
 <tr>
-<td>GND</td>
-<td>GND</td>
-<td></td>
+<td><code>Error</code></td>
+<td>1</td>
+<td><code>LOG_ERROR</code></td>
 </tr>
 <tr>
-<td>SCL</td>
-<td>PB6</td>
-<td>I2C1 SCL, AF4</td>
+<td><code>Warn</code></td>
+<td>2</td>
+<td><code>LOG_WARN</code></td>
 </tr>
 <tr>
-<td>SDA</td>
-<td>PB7</td>
-<td>I2C1 SDA, AF4</td>
+<td><code>Info</code></td>
+<td>3</td>
+<td><code>LOG_INFO</code></td>
+</tr>
+<tr>
+<td><code>Debug</code></td>
+<td>4</td>
+<td><code>LOG_DEBUG</code></td>
+</tr>
+<tr>
+<td><code>Trace</code></td>
+<td>5</td>
+<td><code>LOG_TRACE</code></td>
 </tr>
 </tbody>
 </table>
-<p>I2C-адрес (7 бит): чаще всего <code>0x3C</code> (запись 8-бит <code>0x78</code>, чтение <code>0x79</code>).
-Иногда модули используют <code>0x3D</code> (<code>0x7A</code> / <code>0x7B</code>). Если шелкография
-не читается — запустите шаблон
-<a href="https://github.com/khosta77/stm32-sdk/tree/develop/templates/bare-metal/i2c-scan"><code>bare-metal/i2c-scan</code></a>,
-он печатает все адреса на шине.</p>
-<h2 id="_2">Даташит<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<ul>
-<li><a href="https://cdn-shop.adafruit.com/datasheets/SSD1306.pdf">SSD1306 datasheet (Solomon Systech)</a></li>
-</ul>
-<h2 id="_3">Драйвер<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">i2c</span><span class="p">;</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">import</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">ssd1306</span><span class="p">;</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">using</span><span class="w"> </span><span class="n">sensor</span><span class="o">::</span><span class="n">Ssd1306</span><span class="p">;</span>
+<h2 id="_4">Использование<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p><code>import driver.log;</code>, затем подключите хедер с макросами <strong>после</strong> import
+(макросы не экспортируются модулем C++20, поэтому живут в текстовом хедере — тот
+же приём, что и <code>driver/try.hpp</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">log</span><span class="p">;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">log</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span><span class="w">      </span><span class="c1">// выбранный backend</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span><span class="w">          </span><span class="c1">// его шина, для UART-backend</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">I2c</span><span class="w"> </span><span class="n">g_i2c1</span><span class="p">{</span><span class="o">*</span><span class="n">I2C1</span><span class="p">,</span><span class="w"> </span><span class="p">{.</span><span class="n">clockSpeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">fastMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">}};</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">Ssd1306</span><span class="w"> </span><span class="n">g_oled</span><span class="p">{</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="n">g_i2c1</span><span class="p">,</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">        </span><span class="p">.</span><span class="n">addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x3C</span><span class="p">,</span>
-<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">        </span><span class="p">.</span><span class="n">contrast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x7F</span><span class="p">,</span>
-<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">        </span><span class="p">.</span><span class="n">flipH</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span>
-<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">        </span><span class="p">.</span><span class="n">flipV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span>
-<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="p">},</span>
-<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">};</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;driver/log.hpp&quot;</span><span class="c1">    // макросы LOG_*, ПОСЛЕ import</span>
 </code></pre></div>
-<h3 id="_4">Рисование<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">g_oled</span><span class="p">.</span><span class="n">init</span><span class="p">();</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">g_oled</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">g_oled</span><span class="p">.</span><span class="n">drawText</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;STM32 SDK&quot;</span><span class="p">);</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">g_oled</span><span class="p">.</span><span class="n">drawText</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;SSD1306 128x64&quot;</span><span class="p">);</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">g_oled</span><span class="p">.</span><span class="n">flush</span><span class="p">();</span>
+<p>Установите backend один раз при старте, задайте runtime-уровень и логируйте:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">Uart</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">g_uart</span><span class="p">{</span><span class="o">*</span><span class="n">USART2</span><span class="p">,</span><span class="w"> </span><span class="n">USART2_IRQn</span><span class="p">,</span><span class="w"> </span><span class="n">uart</span><span class="p">({...})};</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">UartBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">{</span><span class="n">g_uart</span><span class="p">};</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="n">g_logSink</span><span class="p">.</span><span class="n">install</span><span class="p">();</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">setLevel</span><span class="p">(</span><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">Level</span><span class="o">::</span><span class="n">Debug</span><span class="p">);</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="n">LOG_INFO</span><span class="p">(</span><span class="s">&quot;boot&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;system up&quot;</span><span class="p">);</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">  </span><span class="n">LOG_DEBUG_U32</span><span class="p">(</span><span class="s">&quot;adc&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;raw=&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">reading</span><span class="p">);</span><span class="w">      </span><span class="c1">// &quot;D [adc] raw=1234&quot;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="n">LOG_ERROR_HEX</span><span class="p">(</span><span class="s">&quot;reg&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CR1=&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">USART2</span><span class="o">-&gt;</span><span class="n">CR1</span><span class="p">);</span><span class="w">  </span><span class="c1">// &quot;E [reg] CR1=0x2000000c&quot;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
 </code></pre></div>
-<p>Драйвер держит framebuffer 1024 байт (128 × 64 / 8) в RAM. <code>flush()</code> отсылает
-весь framebuffer по I2C — на 400 кГц это ~25 мс.</p>
-<h3 id="_5">Шрифт<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
-<p>Встроенный ASCII-шрифт 5×7 (0x20–0x7E), 95 глифов, column-major LSB-first. Для
-крупного текста или anti-aliasing — рендерите off-line и копируйте во
-framebuffer через <code>setPixel</code>.</p>
-<h2 id="_6">Верификация<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
-<p>После прошивки <code>freertos/oled-display-test</code>:</p>
-<ol>
-<li>Подайте питание; в течение ~200 мс дисплей зажигается.</li>
-<li>Сверху появляется заголовок <code>STM32 SDK</code>.</li>
-<li>Строка <code>uptime: Ns</code> обновляется раз в секунду.</li>
-<li>Без тиринга и битых пикселей.</li>
-</ol>
+<p>У каждого уровня три формы макроса:</p>
+<ul>
+<li><code>LOG_INFO(tag, msg)</code> — просто сообщение.</li>
+<li><code>LOG_INFO_U32(tag, msg, value)</code> — дописывает <code>uint32_t</code> в десятичном виде.</li>
+<li><code>LOG_INFO_HEX(tag, msg, value)</code> — дописывает <code>uint32_t</code> как hex с префиксом
+  <code>0x</code> в нижнем регистре.</li>
+</ul>
+<p>Запись оформляется как <code>&lt;L&gt; [tag] msg\r\n</code>, где <code>&lt;L&gt;</code> — первая буква уровня
+(<code>E</code>/<code>W</code>/<code>I</code>/<code>D</code>/<code>T</code>). Форматирование сделано вручную (без <code>printf</code>/<code>snprintf</code>),
+поэтому работает под <code>nano.specs</code> и не тянет форматирование float.</p>
+<h2 id="compile-time">Выбор compile-time уровня<a class="headerlink" href="#compile-time" title="Permanent link">&para;</a></h2>
+<p>Задаётся через CMake-переменную <code>STM32_LOG_LEVEL</code> (одно из <code>NONE</code>, <code>ERROR</code>,
+<code>WARN</code>, <code>INFO</code>, <code>DEBUG</code>, <code>TRACE</code>; по умолчанию <code>INFO</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_LEVEL<span class="o">=</span>DEBUG<span class="w"> </span>...
+</code></pre></div>
+<p>Она отображается в <code>-DSTM32_LOG_LEVEL=&lt;0..5&gt;</code>; при отсутствии define хедер берёт
+<code>INFO</code>. Релизная сборка с <code>NONE</code> (или любым уровнем ниже ваших вызовов
+<code>LOG_DEBUG</code>/<code>LOG_TRACE</code>) вырезает эти операторы целиком.</p>
+<h2 id="backend">Backend'ы<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h2>
+<p>Backend — это sink, thunk <code>void(*)(void* ctx, const char* data, size_t len)</code>,
+устанавливаемый через <code>driver::log::setSink</code>. SDK поставляет два, оба с методом
+<code>install()</code>:</p>
+<ul>
+<li><strong><code>driver::log::ItmBackend</code></strong> (<code>import driver.log.itm</code>) — шлёт каждый байт в
+  ITM stimulus port 0, читается отладчиком по SWO (OpenOCD <code>itm port 0 on</code>,
+  ST-Link SWV). Без состояния. Если отладчик не включил трассировку,
+  <code>ITM_SendChar</code> — no-op, поэтому устанавливать его безопасно безусловно.</li>
+<li><strong><code>driver::log::UartBackend&lt;UartDriver&gt;</code></strong> (<code>import driver.log.uart</code>) — шлёт в
+  любую реализацию <code>driver::IUart</code>, поэтому логи идут по той же последовательной
+  линии, что и вывод приложения. Обобщён по шине в краткой constrained-форме;
+  CTAD выводит параметр из конструктора (<code>UartBackend g_sink{g_uart}</code>).</li>
+</ul>
+<p>Предполагаемый backend называется на этапе сборки через <code>STM32_LOG_BACKEND</code>
+(<code>none</code> / <code>itm</code> / <code>uart</code>, по умолчанию <code>none</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_BACKEND<span class="o">=</span>itm<span class="w"> </span>...
+</code></pre></div>
+<p>Оба backend-модуля компилируются всегда (шаблон и inline-CMSIS ничего не стоят до
+инстанцирования), поэтому флаг не ограничивает доступность — он задаёт define
+<code>STM32_LOG_BACKEND</code> (с символьными значениями <code>STM32_LOG_BACKEND_NONE</code> / <code>_ITM</code> /
+<code>_UART</code>), позволяя коду приложения выбрать подходящий тип обобщённо:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">#if STM32_LOG_BACKEND == STM32_LOG_BACKEND_ITM</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">ItmBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="cp">#else</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">UartBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">{</span><span class="n">g_uart</span><span class="p">};</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="cp">#endif</span>
+</code></pre></div>
+<h2 id="backend_1">Свой backend<a class="headerlink" href="#backend_1" title="Permanent link">&para;</a></h2>
+<p>Подойдёт любая функция с сигнатурой sink. Устанавливается напрямую:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">mySink</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="cm">/*ctx*/</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">len</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">semihostPut</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">}</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">setSink</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mySink</span><span class="p">,</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+</code></pre></div>
+<p><code>ctx</code> передаётся обратно как есть, поэтому backend с состоянием может протащить
+через него <code>this</code> — ровно так <code>UartBackend</code> достаёт свой захваченный
+<code>UartDriver&amp;</code>.</p>
+<h2 id="host-">Host-тестирование<a class="headerlink" href="#host-" title="Permanent link">&para;</a></h2>
+<p><code>driver.log</code> — CMSIS-free, поэтому компилируется и запускается на хосте.
+<code>tests/host/</code> проверяет оформление записи, runtime-фильтр и десятичное/hex
+форматирование против захватывающего sink — см. <a href="../testing/">Тестирование</a>.</p>
 
 
 

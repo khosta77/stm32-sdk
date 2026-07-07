@@ -749,6 +749,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../modules/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../modules/testing/" class="md-nav__link">
         
   
@@ -1200,6 +1228,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v0114" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.1.14
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v0113" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1483,6 +1522,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v0114" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.1.14
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v0113" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1759,6 +1809,22 @@
 <li>Прошейте на железо и убедитесь, что ваш smoke-test проходит.</li>
 <li>Сливайте, когда всё зелёное.</li>
 </ol>
+<h2 id="v0114">Новое в v0.1.14<a class="headerlink" href="#v0114" title="Permanent link">&para;</a></h2>
+<p>v0.1.14 добавляет логирование и мультиарх-образ сборки. <strong>Ломающих изменений
+нет</strong> — всё ниже опционально.</p>
+<ul>
+<li><strong>Логгер.</strong> <code>import driver.log;</code> плюс <code>#include "driver/log.hpp"</code> дают макросы
+  <code>LOG_*</code>; установите backend (<code>driver::log::ItmBackend</code> или
+  <code>driver::log::UartBackend&lt;UartDriver&gt;</code>) один раз при старте. Настраивается
+  cache-переменными <code>STM32_LOG_LEVEL</code> и <code>STM32_LOG_BACKEND</code>. Значения по умолчанию
+  (<code>INFO</code> / <code>none</code>) ничего не выводят, пока вы не установите backend, поэтому
+  существующие проекты не затронуты. См. <a href="../modules/logging/">Логирование</a>.</li>
+<li><strong>Apple Silicon: один <code>docker pull</code>.</strong> Образ сборки теперь мультиарховый
+  (<code>linux/amd64,linux/arm64</code>). Если у вас закэширован amd64-образ с v0.1.13,
+  сделайте pull ещё раз, чтобы получить arm64-слой с нативным тулчейном — тогда
+  <code>stmtool build</code> и <code>stmtool test</code> работают без падения под Rosetta. Флаги и CLI
+  не меняются.</li>
+</ul>
 <h2 id="v0113">Новое в v0.1.13<a class="headerlink" href="#v0113" title="Permanent link">&para;</a></h2>
 <p>v0.1.13 — релиз <strong>про качество и инфраструктуру</strong>. Изменений публичного API SDK
 нет, но сборочный workflow меняется ломающим образом:</p>

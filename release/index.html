@@ -751,6 +751,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../modules/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../modules/testing/" class="md-nav__link">
         
   
@@ -1209,10 +1237,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#v0113" class="md-nav__link">
+  <a href="#v0114" class="md-nav__link">
     <span class="md-ellipsis">
       
-        v0.1.13
+        v0.1.14
       
     </span>
   </a>
@@ -1331,10 +1359,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#v0113" class="md-nav__link">
+  <a href="#v0114" class="md-nav__link">
     <span class="md-ellipsis">
       
-        v0.1.13
+        v0.1.14
       
     </span>
   </a>
@@ -1415,6 +1443,41 @@ the same source of truth the SDK CMake side already uses.</p>
    <a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a> picks up the new content.</li>
 </ol>
 <h2 id="release-history">Release history<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h2>
+<h3 id="v0114">v0.1.14<a class="headerlink" href="#v0114" title="Permanent link">&para;</a></h3>
+<p>Focus: a compile-time-filtered logging facility with swappable backends, plus a
+multi-arch build image so local builds run natively on Apple Silicon (issues</p>
+<h1 id="36-37-81">36, #37, #81).<a class="headerlink" href="#36-37-81" title="Permanent link">&para;</a></h1>
+<p>Highlights:</p>
+<ul>
+<li><strong>Compile-time logging <code>LOG_*</code> (#36).</strong> A new <code>driver.log</code> module plus the
+  textual <code>driver/log.hpp</code> macro header give <code>LOG_ERROR</code>/<code>WARN</code>/<code>INFO</code>/<code>DEBUG</code>/
+  <code>TRACE</code>, each in bare / <code>_U32</code> / <code>_HEX</code> forms. Two filters: the compile-time
+  ceiling <code>STM32_LOG_LEVEL</code> expands stripped levels to <code>((void)0)</code> (format string
+  and all — zero flash), and the runtime <code>driver::log::setLevel</code> gates the rest
+  without a rebuild. Formatting is by hand, so it works under <code>nano.specs</code>.</li>
+<li><strong>Swappable backends (#37).</strong> The sink is a captureless
+  <code>void(*)(void*, const char*, size_t)</code> thunk installed via
+  <code>driver::log::setSink</code>. Two ship with <code>install()</code>: <code>ItmBackend</code> (SWO/ITM port
+  0, read over SWV) and <code>UartBackend&lt;UartDriver&gt;</code> (generic over any
+  <code>driver::IUart</code>). <code>STM32_LOG_BACKEND</code> (<code>none</code>/<code>itm</code>/<code>uart</code>) names the intended
+  one at build time and exposes a <code>STM32_LOG_BACKEND</code> define for generic app
+  code.</li>
+<li><strong>Multi-arch build image (#81).</strong> <code>docker/Dockerfile.build</code> and <code>.ci</code> pick the
+  ARM toolchain by host architecture (<code>uname -m</code>), and <code>docker-image.yml</code>
+  publishes a <code>linux/amd64,linux/arm64</code> manifest. On Apple Silicon <code>docker pull</code>
+  now fetches the arm64 layer with a native <code>aarch64</code> toolchain, so
+  <code>stmtool build</code> / <code>stmtool test</code> no longer crash under Rosetta. The user
+  contract is unchanged — image only, no new flags.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>No breaking changes. Logging is opt-in and ships with <code>STM32_USE_DRIVERS</code>; the
+  defaults (<code>STM32_LOG_LEVEL=INFO</code>, <code>STM32_LOG_BACKEND=none</code>) add nothing until
+  you install a backend. See <a href="../modules/logging/">Logging</a> and the
+  <a href="../migration/#new-in-v0114">upgrade notes</a>.</li>
+<li>Apple Silicon users on a cached amd64 image should <code>docker pull</code> once to
+  replace it with the multi-arch manifest.</li>
+</ul>
 <h3 id="v0113">v0.1.13<a class="headerlink" href="#v0113" title="Permanent link">&para;</a></h3>
 <p>Focus: a quality / infrastructure release that makes the toolchain reproducible,
 adds a real host-test path, and removes the divergent local build (issues #33,</p>

@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/modules/testing/">
       
       
-        <link rel="prev" href="../system/">
+        <link rel="prev" href="../logging/">
       
       
         <link rel="next" href="../../chips/">
@@ -734,6 +734,34 @@
     
   
     System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
   
 
     
@@ -1524,8 +1552,11 @@ driver-концепты); потребитель подключает его, д
 </code></pre></div>
 <p>Команда собирает и запускает тесты внутри Docker-образа SDK (в <code>out/host</code>) и
 возвращает ненулевой код при любом провале; CI выполняет ту же команду в job
-<code>host-tests</code>. Чтобы добавить случай, положите <code>test_*.cpp</code> в <code>tests/host/</code> и
-зарегистрируйте его в <code>tests/host/CMakeLists.txt</code> через <code>add_host_test(...)</code>.</p>
+<code>host-tests</code>. Набор сейчас покрывает <code>Result&lt;T&gt;</code> / <code>DRV_TRY</code> (<code>test_result</code>),
+мок-шины (<code>test_mock</code>), пример MPU6050-на-моке (<code>test_sensor_mock</code>) и оформление
+/ фильтрацию / форматирование <a href="../logging/">логгера</a> (<code>test_log</code>). Чтобы добавить
+случай, положите <code>test_*.cpp</code> в <code>tests/host/</code> и зарегистрируйте его в
+<code>tests/host/CMakeLists.txt</code> через <code>add_host_test(...)</code>.</p>
 <p>Два правила, чтобы модули C++20 не ломались в TU, который одновременно импортирует
 модули и включает текстовые заголовки:</p>
 <ul>

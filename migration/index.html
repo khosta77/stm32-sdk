@@ -749,6 +749,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../modules/logging/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Logging
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../modules/testing/" class="md-nav__link">
         
   
@@ -1200,6 +1228,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v0114" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.1.14
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v0113" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1483,6 +1522,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v0114" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.1.14
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v0113" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1759,6 +1809,21 @@ upgrade deliberately.</p>
 <li>Flash to hardware and verify the smoke-test for your scenario.</li>
 <li>Merge back once green.</li>
 </ol>
+<h2 id="new-in-v0114">New in v0.1.14<a class="headerlink" href="#new-in-v0114" title="Permanent link">&para;</a></h2>
+<p>v0.1.14 adds logging and a multi-arch build image. <strong>No breaking changes</strong> —
+everything below is opt-in.</p>
+<ul>
+<li><strong>Logging facility.</strong> <code>import driver.log;</code> plus <code>#include "driver/log.hpp"</code>
+  give the <code>LOG_*</code> macros; install a backend (<code>driver::log::ItmBackend</code> or
+  <code>driver::log::UartBackend&lt;UartDriver&gt;</code>) once at startup. Tune it with the
+  <code>STM32_LOG_LEVEL</code> and <code>STM32_LOG_BACKEND</code> cache variables. Defaults
+  (<code>INFO</code> / <code>none</code>) emit nothing until you install a backend, so existing
+  projects are unaffected. See <a href="../modules/logging/">Logging</a>.</li>
+<li><strong>Apple Silicon: <code>docker pull</code> once.</strong> The build image is now multi-arch
+  (<code>linux/amd64,linux/arm64</code>). If you have an amd64 image cached from v0.1.13,
+  pull again to get the arm64 layer with a native toolchain — <code>stmtool build</code>
+  and <code>stmtool test</code> then run without the Rosetta crash. No flags or CLI change.</li>
+</ul>
 <h2 id="new-in-v0113">New in v0.1.13<a class="headerlink" href="#new-in-v0113" title="Permanent link">&para;</a></h2>
 <p>v0.1.13 is a <strong>quality / infrastructure</strong> release. There are no SDK API changes,
 but the build workflow changes in a breaking way:</p>
