@@ -21,6 +21,7 @@ add_library(sdk_portable STATIC)
 target_sources(sdk_portable PUBLIC
   FILE_SET modules TYPE CXX_MODULES BASE_DIRS ${SDK} FILES
     ${SDK}/drivers/include/driver/types.cppm
+    ${SDK}/drivers/include/driver/log.cppm
     ${SDK}/drivers/include/driver/interface/i_i2c.cppm
     ${SDK}/drivers/include/driver/interface/i_spi.cppm
     ${SDK}/drivers/include/driver/interface/i_uart.cppm
@@ -47,3 +48,4 @@ endfunction()
 add_host_test(test_result)
 add_host_test(test_mock)
 add_host_test(test_sensor_mock)
+add_host_test(test_log)
