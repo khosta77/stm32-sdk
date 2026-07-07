@@ -14,6 +14,23 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.1.15
+
+v0.1.15 migrates the SDK's own low-level runtime glue from C to idiomatic C++.
+**No breaking changes, nothing to do on upgrade** — symbol names, linkage and
+behaviour are byte-for-byte identical.
+
+- **Nothing to change.** `trace.c`/`trace-impl.c`, `initialize-hardware.c`,
+  `reset-hardware.c`, `exception-handlers.c` and `freertos_hooks.c` became
+  `.cpp`, but every symbol the vector table, newlib startup and the FreeRTOS
+  kernel reference stays `extern "C"` with the same name.
+- **Overrides still work.** If your application redefines the weak
+  `__initialize_hardware`, `__initialize_hardware_early`, `__reset_hardware`, an
+  exception handler, or a `vApplication*` hook — from a `.cpp` or a `.c` file —
+  it keeps overriding the SDK default exactly as before.
+- **Vendor code is untouched.** The CMSIS `system_*` files, the per-family
+  vector tables and the newlib runtime remain C and pristine.
+
 ## New in v0.1.14
 
 v0.1.14 adds logging and a multi-arch build image. **No breaking changes** —

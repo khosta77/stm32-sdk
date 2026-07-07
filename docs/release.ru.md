@@ -52,6 +52,39 @@ style = "pep440"
 
 ## История релизов
 
+### v0.1.15
+
+Фокус: перевод собственного низкоуровневого C-glue SDK на идиоматичный C++, без
+изменения ABI и поведения (issues #38, #39, #40, #41).
+
+Основное:
+
+- **Диагностический trace-glue → C++ (#38).** `core/src/diag/trace.cpp` и
+  `trace-impl.cpp` заменяют прежние `.c`: `constexpr` для размера буфера,
+  `static_cast`/`reinterpret_cast`, файл-локальные backend'ы в анонимном
+  namespace. Переносимые `trace_*` сохраняют C-линковку через `diag/trace.h`.
+- **Glue инициализации/сброса → C++ (#39).** `initialize-hardware.cpp` и
+  `reset-hardware.cpp` оборачивают `__initialize_hardware_early` /
+  `__initialize_hardware` / `__reset_hardware` в `extern "C"`, чтобы остающиеся
+  C `_start` / `_exit` из newlib резолвили их без изменений; `weak`-переопределения
+  и доступ к CMSIS `SCB->` сохранены дословно.
+- **Обработчики исключений → C++ (#40).** `exception-handlers.cpp` держит все
+  `Reset_Handler` / `HardFault_Handler` / `SysTick_Handler` … как `extern "C"`
+  (вендорная таблица векторов ссылается на них по имени), с целыми naked-asm-
+  трамплинами, секциями `.after_vectors` и диагностикой `TRACE`/`DEBUG`.
+- **Хуки FreeRTOS → C++ (#41).** `rtos/src/freertos_hooks.cpp` держит
+  `vApplicationStackOverflowHook` и прочие как `extern "C"` для ядра; статическое
+  хранилище idle/timer-задач переезжает в анонимный namespace.
+
+Замечания:
+
+- Ломающих изменений нет. Имена символов и поведение побайтово идентичны —
+  переопределение `__initialize_hardware`, `__reset_hardware` или любого
+  обработчика из кода приложения (в том числе из `.c`-файла) по-прежнему работает
+  через границу `extern "C"` + `weak`. Мигрированные файлы теперь форматируются
+  как остальной SDK; вендорные `system_*` / таблицы векторов и newlib-рантайм
+  остаются на C. См. [заметки по обновлению](migration.md#new-in-v0115).
+
 ### v0.1.14
 
 Фокус: логирование с фильтрацией на этапе компиляции и сменными backend'ами, плюс

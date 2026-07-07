@@ -53,6 +53,39 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.15
+
+Focus: migrating the SDK's own low-level C glue to idiomatic C++, with no ABI
+or behaviour change (issues #38, #39, #40, #41).
+
+Highlights:
+
+- **Diagnostic trace glue → C++ (#38).** `core/src/diag/trace.cpp` and
+  `trace-impl.cpp` replace the former `.c` files: `constexpr` buffer size,
+  `static_cast`/`reinterpret_cast`, file-local backends in an anonymous
+  namespace. The portable `trace_*` helpers keep C linkage via `diag/trace.h`.
+- **Hardware init/reset glue → C++ (#39).** `initialize-hardware.cpp` and
+  `reset-hardware.cpp` wrap `__initialize_hardware_early` /
+  `__initialize_hardware` / `__reset_hardware` in `extern "C"` so the still-C
+  newlib `_start` / `_exit` resolve them unchanged; the `weak` overrides and
+  CMSIS `SCB->` access are preserved verbatim.
+- **Exception handlers → C++ (#40).** `exception-handlers.cpp` keeps every
+  `Reset_Handler` / `HardFault_Handler` / `SysTick_Handler` … as `extern "C"`
+  (the vendor vector table references them by name), with the naked assembly
+  trampolines, `.after_vectors` sections and `TRACE`/`DEBUG` diagnostics intact.
+- **FreeRTOS hooks → C++ (#41).** `rtos/src/freertos_hooks.cpp` keeps
+  `vApplicationStackOverflowHook` and friends as `extern "C"` for the kernel;
+  the static idle/timer task storage moves into an anonymous namespace.
+
+Notes:
+
+- No breaking changes. Symbol names and behaviour are byte-for-byte identical —
+  overriding `__initialize_hardware`, `__reset_hardware` or any handler from
+  application code (including a `.c` file) still works through the `extern "C"`
+  + `weak` boundary. The migrated files are now formatted like the rest of the
+  SDK; the vendor `system_*` / vector tables and newlib runtime stay C. See the
+  [upgrade notes](migration.md#new-in-v0115).
+
 ### v0.1.14
 
 Focus: a compile-time-filtered logging facility with swappable backends, plus a
