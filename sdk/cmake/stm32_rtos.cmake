@@ -44,7 +44,7 @@ add_library(stm32_rtos STATIC
     ${freertos_kernel_SOURCE_DIR}/stream_buffer.c
     ${_FREERTOS_PORT_DIR}/port.c
     ${freertos_kernel_SOURCE_DIR}/portable/MemMang/heap_4.c
-    ${_STM32_SDK_DIR}/rtos/src/freertos_hooks.c
+    ${_STM32_SDK_DIR}/rtos/src/freertos_hooks.cpp
 )
 
 target_include_directories(stm32_rtos PUBLIC
@@ -68,6 +68,7 @@ target_compile_options(stm32_rtos PRIVATE
     -ffunction-sections
     -fdata-sections
     $<$<COMPILE_LANGUAGE:C>:-std=gnu11>
+    $<$<COMPILE_LANGUAGE:CXX>:-std=gnu++20>
 )
 
 target_compile_definitions(stm32_rtos PRIVATE
