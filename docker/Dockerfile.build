@@ -20,12 +20,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-15 100 \
     && rm -rf /var/lib/apt/lists/*
 
+# Download the ARM toolchain matching the image's host architecture, so the
+# image is multi-arch: on amd64 (CI) the x86_64 build, on arm64 (Apple Silicon)
+# the aarch64 build -- the latter runs natively instead of crashing under
+# Rosetta. `uname -m` reflects the target platform (buildx emulates the RUN).
 # Download from the Arm CDN blob directly (the developer.arm.com redirect host
 # does not resolve inside some Docker DNS setups). The blob path lowercases the
 # version (15.2.Rel1 -> 15.2.rel1).
 RUN ARM_GCC_LC="$(echo "${ARM_GCC_VERSION}" | tr '[:upper:]' '[:lower:]')" \
+    && case "$(uname -m)" in \
+         x86_64)  HOST_ARCH=x86_64 ;; \
+         aarch64) HOST_ARCH=aarch64 ;; \
+         *) echo "unsupported host arch $(uname -m)" >&2; exit 1 ;; \
+       esac \
     && wget -q --retry-connrefused --tries=5 --timeout=120 --waitretry=5 \
-    "https://armkeil.blob.core.windows.net/developer/files/downloads/gnu/${ARM_GCC_LC}/binrel/arm-gnu-toolchain-${ARM_GCC_LC}-x86_64-arm-none-eabi.tar.xz" \
+    "https://armkeil.blob.core.windows.net/developer/files/downloads/gnu/${ARM_GCC_LC}/binrel/arm-gnu-toolchain-${ARM_GCC_LC}-${HOST_ARCH}-arm-none-eabi.tar.xz" \
     -O /tmp/gcc-arm.tar.xz \
     && mkdir -p /opt/gcc-arm \
     && tar xf /tmp/gcc-arm.tar.xz -C /opt/gcc-arm --strip-components=1 \
