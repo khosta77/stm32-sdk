@@ -27,27 +27,73 @@
 
 // ----------------------------------------------------------------------------
 
-#include "cmsis/cmsis_device.h"
+#if defined(TRACE)
+
+#include <cstdarg>
+#include <cstdio>
+#include <cstring>
+
+#include "diag/trace.h"
 
 // ----------------------------------------------------------------------------
 
-extern void __attribute__((noreturn)) NVIC_SystemReset(void);
+// The trace_* portable helpers keep C linkage (declared extern "C" in
+// diag/trace.h) so they remain callable from the still-C newlib glue; the
+// definitions inherit that linkage from the header declaration.
+
+namespace {
+
+#ifdef OS_INTEGER_TRACE_PRINTF_TMP_ARRAY_SIZE
+constexpr std::size_t kTracePrintfBufSize =
+    OS_INTEGER_TRACE_PRINTF_TMP_ARRAY_SIZE;
+#else
+constexpr std::size_t kTracePrintfBufSize = 128;
+#endif
+
+}  // namespace
 
 // ----------------------------------------------------------------------------
 
-// Forward declarations
+int trace_printf(const char *format, ...) {
+  std::va_list ap;
+  va_start(ap, format);
 
-void __reset_hardware(void);
+  // TODO: rewrite it to no longer use newlib, it is way too heavy
 
-// ----------------------------------------------------------------------------
+  static char buf[kTracePrintfBufSize];
 
-// This is the default hardware reset routine; it can be
-// redefined in the application for more complex applications.
-//
-// Called from _exit().
+  // Print to the local buffer
+  int ret = std::vsnprintf(buf, sizeof(buf), format, ap);
+  if (ret > 0) {
+    // Transfer the buffer to the device
+    ret = static_cast<int>(trace_write(buf, static_cast<std::size_t>(ret)));
+  }
 
-void __attribute__((weak, noreturn)) __reset_hardware() {
-    NVIC_SystemReset();
+  va_end(ap);
+  return ret;
+}
+
+int trace_puts(const char *s) {
+  trace_write(s, std::strlen(s));
+  return static_cast<int>(trace_write("\n", 1));
+}
+
+int trace_putchar(int c) {
+  trace_write(reinterpret_cast<const char *>(&c), 1);
+  return c;
+}
+
+void trace_dump_args(int argc, char *argv[]) {
+  trace_printf("main(argc=%d, argv=[", argc);
+  for (int i = 0; i < argc; ++i) {
+    if (i != 0) {
+      trace_printf(", ");
+    }
+    trace_printf("\"%s\"", argv[i]);
+  }
+  trace_printf("]);\n");
 }
 
 // ----------------------------------------------------------------------------
+
+#endif  // TRACE

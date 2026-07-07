@@ -9,8 +9,10 @@ sdk/core/include/cortexm/*
 sdk/core/include/arm/*
 sdk/core/include/diag/*
 
-# newlib / Cortex-M runtime glue (C sources; slated for C++ migration later)
-sdk/core/src/*/*
+# newlib runtime glue kept pristine as C (vendor; C++ migration deferred).
+# The cortexm/ and diag/ glue migrated to idiomatic C++ (issues #38-41) is
+# authored by us and formatted like the rest of the SDK, so it is not listed.
+sdk/core/src/newlib/*
 
 # STM32 device headers, system_*, vector tables (per family)
 sdk/hal/*/include/cmsis/*

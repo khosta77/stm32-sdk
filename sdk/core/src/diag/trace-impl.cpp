@@ -49,31 +49,36 @@
 #endif  // !(defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__))
 
 #if defined(OS_DEBUG_SEMIHOSTING_FAULTS)
-#if defined(OS_USE_TRACE_SEMIHOSTING_STDOUT) || defined(OS_USE_TRACE_SEMIHOSTING_DEBUG)
+#if defined(OS_USE_TRACE_SEMIHOSTING_STDOUT) || \
+    defined(OS_USE_TRACE_SEMIHOSTING_DEBUG)
 #error "Cannot debug semihosting using semihosting trace; use OS_USE_TRACE_ITM"
 #endif
 #endif
 
 // ----------------------------------------------------------------------------
 
-// Forward definitions.
+// Forward definitions of the file-local backends.
+
+namespace {
 
 #if defined(OS_USE_TRACE_ITM)
-static ssize_t _trace_write_itm(const char *buf, size_t nbyte);
+ssize_t trace_write_itm(const char *buf, size_t nbyte);
 #endif
 
 #if defined(OS_USE_TRACE_SEMIHOSTING_STDOUT)
-static ssize_t _trace_write_semihosting_stdout(const char *buf, size_t nbyte);
+ssize_t trace_write_semihosting_stdout(const char *buf, size_t nbyte);
 #endif
 
 #if defined(OS_USE_TRACE_SEMIHOSTING_DEBUG)
-static ssize_t _trace_write_semihosting_debug(const char *buf, size_t nbyte);
+ssize_t trace_write_semihosting_debug(const char *buf, size_t nbyte);
 #endif
+
+}  // namespace
 
 // ----------------------------------------------------------------------------
 
-void trace_initialize(void) {
-    // For regular ITM / semihosting, no inits required.
+void trace_initialize() {
+  // For regular ITM / semihosting, no inits required.
 }
 
 // ----------------------------------------------------------------------------
@@ -81,16 +86,17 @@ void trace_initialize(void) {
 // This function is called from _write() for fd==1 or fd==2 and from some
 // of the trace_* functions.
 
-ssize_t trace_write(const char *buf __attribute__((unused)), size_t nbyte __attribute__((unused))) {
+ssize_t
+trace_write([[maybe_unused]] const char *buf, [[maybe_unused]] size_t nbyte) {
 #if defined(OS_USE_TRACE_ITM)
-    return _trace_write_itm(buf, nbyte);
+  return trace_write_itm(buf, nbyte);
 #elif defined(OS_USE_TRACE_SEMIHOSTING_STDOUT)
-    return _trace_write_semihosting_stdout(buf, nbyte);
+  return trace_write_semihosting_stdout(buf, nbyte);
 #elif defined(OS_USE_TRACE_SEMIHOSTING_DEBUG)
-    return _trace_write_semihosting_debug(buf, nbyte);
+  return trace_write_semihosting_debug(buf, nbyte);
 #endif
 
-    return -1;
+  return -1;
 }
 
 // ----------------------------------------------------------------------------
@@ -112,23 +118,28 @@ ssize_t trace_write(const char *buf __attribute__((unused)), size_t nbyte __attr
 #define OS_INTEGER_TRACE_ITM_STIMULUS_PORT (0)
 #endif
 
-static ssize_t _trace_write_itm(const char *buf, size_t nbyte) {
-    for (size_t i = 0; i < nbyte; i++) {
-        // Check if ITM or the stimulus port are not enabled
-        if (((ITM->TCR & ITM_TCR_ITMENA_Msk) == 0) ||
-            ((ITM->TER & (1UL << OS_INTEGER_TRACE_ITM_STIMULUS_PORT)) == 0)) {
-            return (ssize_t) i;  // return the number of sent characters (may be 0)
-        }
+namespace {
 
-        // Wait until STIMx is ready...
-        while (ITM->PORT[OS_INTEGER_TRACE_ITM_STIMULUS_PORT].u32 == 0)
-            ;
-        // then send data, one byte at a time
-        ITM->PORT[OS_INTEGER_TRACE_ITM_STIMULUS_PORT].u8 = (uint8_t) (*buf++);
+ssize_t trace_write_itm(const char *buf, size_t nbyte) {
+  for (size_t i = 0; i < nbyte; i++) {
+    // Check if ITM or the stimulus port are not enabled
+    if (((ITM->TCR & ITM_TCR_ITMENA_Msk) == 0) ||
+        ((ITM->TER & (1UL << OS_INTEGER_TRACE_ITM_STIMULUS_PORT)) == 0)) {
+      return static_cast<ssize_t>(i);  // number of sent characters (may be 0)
     }
 
-    return (ssize_t) nbyte;  // all characters successfully sent
+    // Wait until STIMx is ready...
+    while (ITM->PORT[OS_INTEGER_TRACE_ITM_STIMULUS_PORT].u32 == 0) {
+    }
+    // then send data, one byte at a time
+    ITM->PORT[OS_INTEGER_TRACE_ITM_STIMULUS_PORT].u8 =
+        static_cast<uint8_t>(*buf++);
+  }
+
+  return static_cast<ssize_t>(nbyte);  // all characters successfully sent
 }
+
+}  // namespace
 
 #endif  // defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7EM__)
 
@@ -136,7 +147,8 @@ static ssize_t _trace_write_itm(const char *buf, size_t nbyte) {
 
 // ----------------------------------------------------------------------------
 
-#if defined(OS_USE_TRACE_SEMIHOSTING_DEBUG) || defined(OS_USE_TRACE_SEMIHOSTING_STDOUT)
+#if defined(OS_USE_TRACE_SEMIHOSTING_DEBUG) || \
+    defined(OS_USE_TRACE_SEMIHOSTING_STDOUT)
 
 #include "arm/semihosting.h"
 
@@ -170,43 +182,47 @@ static ssize_t _trace_write_itm(const char *buf, size_t nbyte) {
 
 #if defined(OS_USE_TRACE_SEMIHOSTING_STDOUT)
 
-static ssize_t _trace_write_semihosting_stdout(const char *buf, size_t nbyte) {
-    static int handle;
-    void *block[3];
-    int ret;
+namespace {
 
-    if (handle == 0) {
-        // On the first call get the file handle from the host
-        block[0] = ":tt";       // special filename to be used for stdin/out/err
-        block[1] = (void *) 4;  // mode "w"
-        // length of ":tt", except null terminator
-        block[2] = (void *) (sizeof(":tt") - 1);
+ssize_t trace_write_semihosting_stdout(const char *buf, size_t nbyte) {
+  static int handle;
+  void *block[3];
+  int ret;
 
-        ret = call_host(SEMIHOSTING_SYS_OPEN, (void *) block);
-        if (ret == -1)
-            return -1;
+  if (handle == 0) {
+    // On the first call get the file handle from the host
+    block[0] = const_cast<char *>(":tt");    // filename for stdin/out/err
+    block[1] = reinterpret_cast<void *>(4);  // mode "w"
+    // length of ":tt", except null terminator
+    block[2] = reinterpret_cast<void *>(sizeof(":tt") - 1);
 
-        handle = ret;
-    }
-
-    block[0] = (void *) handle;
-    block[1] = (void *) buf;
-    block[2] = (void *) nbyte;
-    // send character array to host file/device
-    ret = call_host(SEMIHOSTING_SYS_WRITE, (void *) block);
-    // this call returns the number of bytes NOT written (0 if all ok)
-
-    // -1 is not a legal value, but SEGGER seems to return it
+    ret = call_host(SEMIHOSTING_SYS_OPEN, static_cast<void *>(block));
     if (ret == -1)
-        return -1;
+      return -1;
 
-    // The compliant way of returning errors
-    if (ret == (int) nbyte)
-        return -1;
+    handle = ret;
+  }
 
-    // Return the number of bytes written
-    return (ssize_t) (nbyte) - (ssize_t) ret;
+  block[0] = reinterpret_cast<void *>(handle);
+  block[1] = const_cast<char *>(buf);
+  block[2] = reinterpret_cast<void *>(nbyte);
+  // send character array to host file/device
+  ret = call_host(SEMIHOSTING_SYS_WRITE, static_cast<void *>(block));
+  // this call returns the number of bytes NOT written (0 if all ok)
+
+  // -1 is not a legal value, but SEGGER seems to return it
+  if (ret == -1)
+    return -1;
+
+  // The compliant way of returning errors
+  if (ret == static_cast<int>(nbyte))
+    return -1;
+
+  // Return the number of bytes written
+  return static_cast<ssize_t>(nbyte) - static_cast<ssize_t>(ret);
 }
+
+}  // namespace
 
 #endif  // OS_USE_TRACE_SEMIHOSTING_STDOUT
 
@@ -216,33 +232,37 @@ static ssize_t _trace_write_semihosting_stdout(const char *buf, size_t nbyte) {
 
 #define OS_INTEGER_TRACE_TMP_ARRAY_SIZE (16)
 
-static ssize_t _trace_write_semihosting_debug(const char *buf, size_t nbyte) {
-    // Since the single character debug channel is quite slow, try to
-    // optimise and send a null terminated string, if possible.
-    if (buf[nbyte] == '\0') {
-        // send string
-        call_host(SEMIHOSTING_SYS_WRITE0, (void *) buf);
-    } else {
-        // If not, use a local buffer to speed things up
-        char tmp[OS_INTEGER_TRACE_TMP_ARRAY_SIZE];
-        size_t togo = nbyte;
-        while (togo > 0) {
-            unsigned int n = ((togo < sizeof(tmp)) ? togo : sizeof(tmp));
-            unsigned int i = 0;
-            for (; i < n; ++i, ++buf) {
-                tmp[i] = *buf;
-            }
-            tmp[i] = '\0';
+namespace {
 
-            call_host(SEMIHOSTING_SYS_WRITE0, (void *) tmp);
+ssize_t trace_write_semihosting_debug(const char *buf, size_t nbyte) {
+  // Since the single character debug channel is quite slow, try to
+  // optimise and send a null terminated string, if possible.
+  if (buf[nbyte] == '\0') {
+    // send string
+    call_host(SEMIHOSTING_SYS_WRITE0, const_cast<char *>(buf));
+  } else {
+    // If not, use a local buffer to speed things up
+    char tmp[OS_INTEGER_TRACE_TMP_ARRAY_SIZE];
+    size_t togo = nbyte;
+    while (togo > 0) {
+      unsigned int n = ((togo < sizeof(tmp)) ? togo : sizeof(tmp));
+      unsigned int i = 0;
+      for (; i < n; ++i, ++buf) {
+        tmp[i] = *buf;
+      }
+      tmp[i] = '\0';
 
-            togo -= n;
-        }
+      call_host(SEMIHOSTING_SYS_WRITE0, tmp);
+
+      togo -= n;
     }
+  }
 
-    // All bytes written
-    return (ssize_t) nbyte;
+  // All bytes written
+  return static_cast<ssize_t>(nbyte);
 }
+
+}  // namespace
 
 #endif  // OS_USE_TRACE_SEMIHOSTING_DEBUG
 

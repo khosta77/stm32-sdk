@@ -41,11 +41,11 @@ endif()
 add_library(stm32_core INTERFACE)
 
 target_sources(stm32_core INTERFACE
-    ${_STM32_SDK_DIR}/core/src/cortexm/exception-handlers.c
-    ${_STM32_SDK_DIR}/core/src/cortexm/initialize-hardware.c
-    ${_STM32_SDK_DIR}/core/src/cortexm/reset-hardware.c
-    ${_STM32_SDK_DIR}/core/src/diag/trace-impl.c
-    ${_STM32_SDK_DIR}/core/src/diag/trace.c
+    ${_STM32_SDK_DIR}/core/src/cortexm/exception-handlers.cpp
+    ${_STM32_SDK_DIR}/core/src/cortexm/initialize-hardware.cpp
+    ${_STM32_SDK_DIR}/core/src/cortexm/reset-hardware.cpp
+    ${_STM32_SDK_DIR}/core/src/diag/trace-impl.cpp
+    ${_STM32_SDK_DIR}/core/src/diag/trace.cpp
     ${_STM32_SDK_DIR}/core/src/newlib/assert.c
     ${_STM32_SDK_DIR}/core/src/newlib/exit.c
     ${_STM32_SDK_DIR}/core/src/newlib/sbrk.c
@@ -115,8 +115,8 @@ set_source_files_properties(
 )
 
 set_source_files_properties(
-    ${_STM32_SDK_DIR}/core/src/diag/trace.c
-    ${_STM32_SDK_DIR}/core/src/diag/trace-impl.c
+    ${_STM32_SDK_DIR}/core/src/diag/trace.cpp
+    ${_STM32_SDK_DIR}/core/src/diag/trace-impl.cpp
     PROPERTIES COMPILE_OPTIONS "-Wno-pedantic"
 )
 
