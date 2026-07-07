@@ -53,6 +53,43 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.14
+
+Focus: a compile-time-filtered logging facility with swappable backends, plus a
+multi-arch build image so local builds run natively on Apple Silicon (issues
+#36, #37, #81).
+
+Highlights:
+
+- **Compile-time logging `LOG_*` (#36).** A new `driver.log` module plus the
+  textual `driver/log.hpp` macro header give `LOG_ERROR`/`WARN`/`INFO`/`DEBUG`/
+  `TRACE`, each in bare / `_U32` / `_HEX` forms. Two filters: the compile-time
+  ceiling `STM32_LOG_LEVEL` expands stripped levels to `((void)0)` (format string
+  and all — zero flash), and the runtime `driver::log::setLevel` gates the rest
+  without a rebuild. Formatting is by hand, so it works under `nano.specs`.
+- **Swappable backends (#37).** The sink is a captureless
+  `void(*)(void*, const char*, size_t)` thunk installed via
+  `driver::log::setSink`. Two ship with `install()`: `ItmBackend` (SWO/ITM port
+  0, read over SWV) and `UartBackend<UartDriver>` (generic over any
+  `driver::IUart`). `STM32_LOG_BACKEND` (`none`/`itm`/`uart`) names the intended
+  one at build time and exposes a `STM32_LOG_BACKEND` define for generic app
+  code.
+- **Multi-arch build image (#81).** `docker/Dockerfile.build` and `.ci` pick the
+  ARM toolchain by host architecture (`uname -m`), and `docker-image.yml`
+  publishes a `linux/amd64,linux/arm64` manifest. On Apple Silicon `docker pull`
+  now fetches the arm64 layer with a native `aarch64` toolchain, so
+  `stmtool build` / `stmtool test` no longer crash under Rosetta. The user
+  contract is unchanged — image only, no new flags.
+
+Notes:
+
+- No breaking changes. Logging is opt-in and ships with `STM32_USE_DRIVERS`; the
+  defaults (`STM32_LOG_LEVEL=INFO`, `STM32_LOG_BACKEND=none`) add nothing until
+  you install a backend. See [Logging](modules/logging.md) and the
+  [upgrade notes](migration.md#new-in-v0114).
+- Apple Silicon users on a cached amd64 image should `docker pull` once to
+  replace it with the multi-arch manifest.
+
 ### v0.1.13
 
 Focus: a quality / infrastructure release that makes the toolchain reproducible,

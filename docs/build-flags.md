@@ -18,6 +18,25 @@ on, while `system.executor` and `system.signal_bus` (which need the FreeRTOS
 wrappers) are compiled only when `STM32_USE_FREERTOS` is also on — the queue core
 stays usable in bare-metal builds.
 
+## Logging flags (v0.1.14)
+
+The [logging facility](modules/logging.md) ships with `stm32_drivers` and is
+tuned by two cache variables, both mapped to compile definitions on the driver
+target:
+
+- `STM32_LOG_LEVEL` (`NONE`/`ERROR`/`WARN`/`INFO`/`DEBUG`/`TRACE`, default
+  `INFO`) — the compile-time ceiling. `LOG_*` above it expand to `((void)0)`, so
+  their format strings never reach flash. Set `NONE` in a release build to strip
+  logging entirely.
+- `STM32_LOG_BACKEND` (`none`/`itm`/`uart`, default `none`) — names the intended
+  sink. Both backend modules always compile, so this does not gate availability;
+  it exposes the `STM32_LOG_BACKEND` define (with `STM32_LOG_BACKEND_NONE`/`_ITM`/
+  `_UART`) so app code can pick the matching backend type generically.
+
+```bash
+cmake -B out -DSTM32_LOG_LEVEL=DEBUG -DSTM32_LOG_BACKEND=itm ...
+```
+
 ## Build environment (Docker, offline)
 
 Since v0.1.13 all builds run inside the SDK Docker image

@@ -158,7 +158,10 @@ stmtool test
 
 This builds and runs the tests inside the SDK Docker image (into `out/host`) and
 exits non-zero if anything fails; CI runs the same command in its `host-tests`
-job. To add a case, drop a `test_*.cpp` into `tests/host/` and register it in
+job. The suite currently covers `Result<T>` / `DRV_TRY` (`test_result`), the mock
+buses (`test_mock`), an MPU6050-on-mock example (`test_sensor_mock`), and the
+[logging](logging.md) framing / gating / formatting (`test_log`). To add a case,
+drop a `test_*.cpp` into `tests/host/` and register it in
 `tests/host/CMakeLists.txt` via `add_host_test(...)`.
 
 Two rules keep C++20 modules happy in a test translation unit that both imports
