@@ -200,7 +200,12 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 
 ## Layout
 
-- `sdk/core/` — ARM CMSIS core, Cortex-M runtime, newlib, linker scripts.
+- `sdk/core/` — ARM CMSIS core, Cortex-M runtime, newlib, linker scripts. Our
+  own glue (`src/cortexm/*.cpp`, `src/diag/*.cpp`) is idiomatic C++ since
+  v0.1.15 with `extern "C"` boundaries for the vector-table / newlib / kernel
+  symbols, and is clang-formatted like the rest of the SDK. Only `src/newlib/*`
+  stays vendor C and pristine — it is the one `src/` subtree still listed in
+  `.clang-format-ignore`.
 - `sdk/hal/stm32f4/` — STM32F4 device headers, vector tables, memory layout.
 - `sdk/cmake/` — `stm32_sdk.cmake`, `stm32_toolchain.cmake`, `families/`.
 - `sdk/rtos/` — FreeRTOS (heap_4, 16 KB), RAII wrappers (`rtos.hpp`).
