@@ -1539,6 +1539,10 @@ maintainer, пока API не стабилизируется (цель — v1.0)
   (<code>stm32f4xx.h</code> и их паутина include) остаются <code>.h</code> и нетронутыми — их
   переименование сломало бы внутренние include ST и diff против upstream. См.
   <a href="../migration/#new-in-v0116">заметки по обновлению</a>.</li>
+<li>Инструментарий: <code>stmtool flash --verify</code> больше не передаёт невалидный флаг в
+  <code>st-flash</code> 1.8.0 (который и так сверяет каждую запись), а вендорные
+  CMSIS-заголовки помечены <code>linguist-vendored</code>, чтобы статистика языков GitHub
+  отражала авторский C++, а не ~10 МБ заголовков ARM/ST.</li>
 </ul>
 <h3 id="v0115">v0.1.15<a class="headerlink" href="#v0115" title="Permanent link">&para;</a></h3>
 <p>Фокус: перевод собственного низкоуровневого C-glue SDK на идиоматичный C++, без
