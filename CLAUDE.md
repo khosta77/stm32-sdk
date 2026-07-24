@@ -201,12 +201,19 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 ## Layout
 
 - `sdk/core/` — ARM CMSIS core, Cortex-M runtime, newlib, linker scripts. Our
-  own glue (`src/cortexm/*.cpp`, `src/diag/*.cpp`) is idiomatic C++ since
-  v0.1.15 with `extern "C"` boundaries for the vector-table / newlib / kernel
-  symbols, and is clang-formatted like the rest of the SDK. Only `src/newlib/*`
-  stays vendor C and pristine — it is the one `src/` subtree still listed in
-  `.clang-format-ignore`.
-- `sdk/hal/stm32f4/` — STM32F4 device headers, vector tables, memory layout.
+  own glue (`src/cortexm/*.cpp`, `src/diag/*.cpp`) plus the newlib glue
+  (`src/newlib/*.cpp` — `assert`/`exit`/`sbrk`/`startup`/`syscalls`/`cxx`) is
+  idiomatic C++ since v0.1.15–v0.1.16, with `extern "C"` boundaries for every
+  vector-table / newlib / kernel symbol and `main` declared outside the block
+  (never mangled). All of `src/` is clang-formatted like the rest of the SDK;
+  no `src/` subtree remains in `.clang-format-ignore` (only vendor CMSIS device
+  headers under `include/cmsis` are ignored).
+- `sdk/hal/stm32f4/` — STM32F4 device headers, memory layout, plus the vendor
+  runtime sources `src/cmsis/system_stm32f4xx.cpp` and the per-family
+  `vectors_*.cpp` — C++ since v0.1.16 (`extern "C"` wrap, ST/µOS++ logic
+  verbatim; `__isr_vectors` forced back to external linkage). The CMSIS device
+  headers (`include/cmsis/*.h`) stay `.h` and pristine — renaming them to
+  `.hpp` would break ST's internal cross-includes and upstream diffability.
 - `sdk/cmake/` — `stm32_sdk.cmake`, `stm32_toolchain.cmake`, `families/`.
 - `sdk/rtos/` — FreeRTOS (heap_4, 16 KB), RAII wrappers (`rtos.hpp`).
 - `sdk/drivers/include/driver/` — modules:

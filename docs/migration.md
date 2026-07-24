@@ -14,6 +14,24 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.1.16
+
+v0.1.16 completes the C→C++ migration started in v0.1.15: the newlib glue and
+the CMSIS `system_*` / vector-table sources are now C++. **No breaking changes,
+nothing to do on upgrade** — symbol names, linkage and behaviour are
+byte-for-byte identical.
+
+- **Nothing to change.** `core/src/newlib/*.c`, `system_stm32f4xx.c` and the
+  per-family `vectors_*.c` became `.cpp`, but `_start`, `_sbrk`, `_exit`,
+  `SystemInit`, `Default_Handler`, every IRQ handler and the `__isr_vectors`
+  table keep their `extern "C"` name and linkage.
+- **Weak overrides still work.** Redefining `_sbrk`, `_write`, a weak IRQ
+  handler, `SystemInit` or `__assert_func` from your application (`.cpp` or
+  `.c`) overrides the SDK default exactly as before.
+- **Vendor headers stay C headers.** The CMSIS device headers (`stm32f4xx.h`
+  and the family headers it pulls in) remain `.h` and pristine so they stay
+  diffable against ST upstream; only the `.c` runtime sources moved to `.cpp`.
+
 ## New in v0.1.15
 
 v0.1.15 migrates the SDK's own low-level runtime glue from C to idiomatic C++.
