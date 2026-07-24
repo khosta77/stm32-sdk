@@ -87,6 +87,10 @@ Notes:
   and the device-header web) stay `.h` and pristine, because renaming them would
   break ST's internal cross-includes and upstream diffability. See the
   [upgrade notes](migration.md#new-in-v0116).
+- Tooling: `stmtool flash --verify` no longer passes an invalid flag to
+  `st-flash` 1.8.0 (which verifies every write anyway), and the vendored CMSIS
+  headers are marked `linguist-vendored` so GitHub's language stats reflect the
+  authored C++ instead of the ~10 MB of ARM/ST headers.
 
 ### v0.1.15
 
