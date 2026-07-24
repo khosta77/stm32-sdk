@@ -46,11 +46,11 @@ target_sources(stm32_core INTERFACE
     ${_STM32_SDK_DIR}/core/src/cortexm/reset-hardware.cpp
     ${_STM32_SDK_DIR}/core/src/diag/trace-impl.cpp
     ${_STM32_SDK_DIR}/core/src/diag/trace.cpp
-    ${_STM32_SDK_DIR}/core/src/newlib/assert.c
-    ${_STM32_SDK_DIR}/core/src/newlib/exit.c
-    ${_STM32_SDK_DIR}/core/src/newlib/sbrk.c
-    ${_STM32_SDK_DIR}/core/src/newlib/startup.c
-    ${_STM32_SDK_DIR}/core/src/newlib/syscalls.c
+    ${_STM32_SDK_DIR}/core/src/newlib/assert.cpp
+    ${_STM32_SDK_DIR}/core/src/newlib/exit.cpp
+    ${_STM32_SDK_DIR}/core/src/newlib/sbrk.cpp
+    ${_STM32_SDK_DIR}/core/src/newlib/startup.cpp
+    ${_STM32_SDK_DIR}/core/src/newlib/syscalls.cpp
     ${_STM32_SDK_DIR}/core/src/newlib/cxx.cpp
 )
 
@@ -82,7 +82,7 @@ target_compile_definitions(stm32_core INTERFACE
 )
 
 set_source_files_properties(
-    ${_STM32_SDK_DIR}/core/src/newlib/startup.c
+    ${_STM32_SDK_DIR}/core/src/newlib/startup.cpp
     PROPERTIES COMPILE_DEFINITIONS "OS_INCLUDE_STARTUP_INIT_MULTIPLE_RAM_SECTIONS"
 )
 

@@ -25,15 +25,18 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-// ----------------------------------------------------------------------------
-
 #include <stdlib.h>
+
 #include "diag/trace.h"
+
+// _exit()/abort() are newlib C-ABI hooks and __reset_hardware() is defined by
+// the (now C++) cortexm glue with C linkage; keep the whole unit extern "C".
+extern "C" {
 
 // ----------------------------------------------------------------------------
 
 #if !defined(DEBUG)
-extern void __attribute__((noreturn)) __reset_hardware(void);
+extern void __attribute__((noreturn)) __reset_hardware();
 #endif
 
 // ----------------------------------------------------------------------------
@@ -51,22 +54,24 @@ void _exit(int code);
 // It can be redefined in the application, if more functionality
 // is required.
 
-void __attribute__((weak)) _exit(int code __attribute__((unused))) {
+void __attribute__((weak)) _exit([[maybe_unused]] int code) {
 #if !defined(DEBUG)
-    __reset_hardware();
+  __reset_hardware();
 #endif
 
-    // TODO: write on trace
-    while (1)
-        ;
+  // TODO: write on trace
+  while (1)
+    ;
 }
 
 // ----------------------------------------------------------------------------
 
-void __attribute__((weak, noreturn)) abort(void) {
-    trace_puts("abort(), exiting...");
+void __attribute__((weak, noreturn)) abort() {
+  trace_puts("abort(), exiting...");
 
-    _exit(1);
+  _exit(1);
 }
 
 // ----------------------------------------------------------------------------
+
+}  // extern "C"
