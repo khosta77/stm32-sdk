@@ -25,7 +25,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -33,7 +33,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1228,6 +1228,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v0116" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.1.16
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v0115" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1533,6 +1544,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v0116" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.1.16
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v0115" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1831,6 +1853,23 @@ upgrade deliberately.</p>
 <li>Flash to hardware and verify the smoke-test for your scenario.</li>
 <li>Merge back once green.</li>
 </ol>
+<h2 id="new-in-v0116">New in v0.1.16<a class="headerlink" href="#new-in-v0116" title="Permanent link">&para;</a></h2>
+<p>v0.1.16 completes the C→C++ migration started in v0.1.15: the newlib glue and
+the CMSIS <code>system_*</code> / vector-table sources are now C++. <strong>No breaking changes,
+nothing to do on upgrade</strong> — symbol names, linkage and behaviour are
+byte-for-byte identical.</p>
+<ul>
+<li><strong>Nothing to change.</strong> <code>core/src/newlib/*.c</code>, <code>system_stm32f4xx.c</code> and the
+  per-family <code>vectors_*.c</code> became <code>.cpp</code>, but <code>_start</code>, <code>_sbrk</code>, <code>_exit</code>,
+  <code>SystemInit</code>, <code>Default_Handler</code>, every IRQ handler and the <code>__isr_vectors</code>
+  table keep their <code>extern "C"</code> name and linkage.</li>
+<li><strong>Weak overrides still work.</strong> Redefining <code>_sbrk</code>, <code>_write</code>, a weak IRQ
+  handler, <code>SystemInit</code> or <code>__assert_func</code> from your application (<code>.cpp</code> or
+  <code>.c</code>) overrides the SDK default exactly as before.</li>
+<li><strong>Vendor headers stay C headers.</strong> The CMSIS device headers (<code>stm32f4xx.h</code>
+  and the family headers it pulls in) remain <code>.h</code> and pristine so they stay
+  diffable against ST upstream; only the <code>.c</code> runtime sources moved to <code>.cpp</code>.</li>
+</ul>
 <h2 id="new-in-v0115">New in v0.1.15<a class="headerlink" href="#new-in-v0115" title="Permanent link">&para;</a></h2>
 <p>v0.1.15 migrates the SDK's own low-level runtime glue from C to idiomatic C++.
 <strong>No breaking changes, nothing to do on upgrade</strong> — symbol names, linkage and
@@ -2263,7 +2302,7 @@ that previously took ~58 s now complete in ~200 ms.</p>
       <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
