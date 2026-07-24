@@ -53,6 +53,41 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.1.16
+
+Focus: completing the C→C++ migration by moving the last vendor runtime
+sources — the newlib glue and the CMSIS `system_*` / vector tables — to C++,
+with no ABI or behaviour change (issues #42, #43). This closes the v0.1.x line.
+
+Highlights:
+
+- **newlib glue → C++ (#42).** `core/src/newlib/{assert,exit,sbrk,startup,
+  syscalls}.cpp` replace the former `.c` files. Every C-ABI symbol the linker
+  and libc reference — `_start`, `_sbrk`, `_exit`, `abort`, `__assert_func`,
+  `__initialize_args`, the libnosys/POSIX stubs — stays `extern "C"` with the
+  same name; the `.after_vectors` `_start`, the `always_inline` copy/zero
+  helpers, the `register char* asm("sp")` binding and the `-nostartfiles` /
+  `nano.specs` contract are preserved verbatim. `main` is declared outside the
+  `extern "C"` block (it is never mangled and must not have C language linkage).
+- **CMSIS `system_*` / vector tables → C++ (#43).** `system_stm32f4xx.cpp` and
+  the seven per-family `vectors_*.cpp` compile as C++. The vector tables,
+  `Default_Handler` and every weak `alias("Default_Handler")` IRQ handler are
+  wrapped in `extern "C"` so their names resolve unmangled; `__isr_vectors` is
+  forced back to external linkage (a `const` array would otherwise become
+  TU-local in C++) while keeping its `.isr_vector` placement. `SystemInit` /
+  `SystemCoreClockUpdate` inherit C linkage from the CMSIS header. The ST
+  register logic is untouched.
+
+Notes:
+
+- No breaking changes. Symbol names, linkage and behaviour are byte-for-byte
+  identical — verified with `nm` (no mangled C-ABI symbols) and an unchanged
+  flash size across all ten templates. The migrated sources are now formatted
+  like the rest of the SDK; only the vendor CMSIS device headers (`stm32f4xx.h`
+  and the device-header web) stay `.h` and pristine, because renaming them would
+  break ST's internal cross-includes and upstream diffability. See the
+  [upgrade notes](migration.md#new-in-v0116).
+
 ### v0.1.15
 
 Focus: migrating the SDK's own low-level C glue to idiomatic C++, with no ABI
