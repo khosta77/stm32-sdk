@@ -42,8 +42,8 @@ namespace __gnu_cxx {
 void __attribute__((noreturn)) __verbose_terminate_handler();
 
 void __verbose_terminate_handler() {
-    trace_puts(__func__);
-    abort();
+  trace_puts(__func__);
+  abort();
 }
 }  // namespace __gnu_cxx
 
@@ -53,8 +53,8 @@ extern "C" {
 void __attribute__((noreturn)) __cxa_pure_virtual();
 
 void __cxa_pure_virtual() {
-    trace_puts(__func__);
-    abort();
+  trace_puts(__func__);
+  abort();
 }
 }
 

@@ -25,20 +25,34 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
 
 #include "diag/trace.h"
 
+// The newlib assert hooks keep C linkage: __assert_func is the newlib
+// contract and assert_failed is the STM32 assert_param() hook, both called
+// from C-ABI call sites.
+extern "C" {
+
 // ----------------------------------------------------------------------------
 
-void __attribute__((noreturn)) __assert_func(const char *file, int line, const char *func,
-                                             const char *failedexpr) {
-    trace_printf("assertion \"%s\" failed: file \"%s\", line %d%s%s\n", failedexpr, file, line,
-                 func ? ", function: " : "", func ? func : "");
-    abort();
-    /* NOTREACHED */
+void __attribute__((noreturn)) __assert_func(
+    const char *file,
+    int line,
+    const char *func,
+    const char *failedexpr
+) {
+  trace_printf(
+      "assertion \"%s\" failed: file \"%s\", line %d%s%s\n",
+      failedexpr,
+      file,
+      line,
+      func ? ", function: " : "",
+      func ? func : ""
+  );
+  abort();
+  /* NOTREACHED */
 }
 
 // ----------------------------------------------------------------------------
@@ -47,8 +61,8 @@ void __attribute__((noreturn)) __assert_func(const char *file, int line, const c
 // If you need it, add the following to your application header:
 
 // #ifdef  USE_FULL_ASSERT
-// #define assert_param(expr) ((expr) ? (void)0 : assert_failed((uint8_t *)__FILE__, __LINE__))
-// void assert_failed(uint8_t* file, uint32_t line);
+// #define assert_param(expr) ((expr) ? (void)0 : assert_failed((uint8_t
+// *)__FILE__, __LINE__)) void assert_failed(uint8_t* file, uint32_t line);
 // #else
 // #define assert_param(expr) ((void)0)
 // #endif // USE_FULL_ASSERT
@@ -58,12 +72,15 @@ void __attribute__((noreturn)) __assert_func(const char *file, int line, const c
 void assert_failed(uint8_t *file, uint32_t line);
 
 // Called from the assert_param() macro, usually defined in the stm32f*_conf.h
-void __attribute__((noreturn, weak)) assert_failed(uint8_t *file, uint32_t line) {
-    trace_printf("assert_param() failed: file \"%s\", line %d\n", file, line);
-    abort();
-    /* NOTREACHED */
+void __attribute__((noreturn, weak))
+assert_failed(uint8_t *file, uint32_t line) {
+  trace_printf("assert_param() failed: file \"%s\", line %d\n", file, line);
+  abort();
+  /* NOTREACHED */
 }
 
 #endif  // defined(USE_FULL_ASSERT)
 
 // ----------------------------------------------------------------------------
+
+}  // extern "C"
