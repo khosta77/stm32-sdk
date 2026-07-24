@@ -9,14 +9,12 @@ sdk/core/include/cortexm/*
 sdk/core/include/arm/*
 sdk/core/include/diag/*
 
-# newlib runtime glue kept pristine as C (vendor; C++ migration deferred).
-# The cortexm/ and diag/ glue migrated to idiomatic C++ (issues #38-41) is
-# authored by us and formatted like the rest of the SDK, so it is not listed.
-sdk/core/src/newlib/*
-
-# STM32 device headers, system_*, vector tables (per family)
+# STM32 device headers kept pristine so they stay diffable against upstream.
+# The system_*/vectors_* runtime sources under src/cmsis (issues #42-43) and
+# the newlib glue under core/src/newlib (issue #42) migrated to C++ and are
+# authored by us now, formatted like the rest of the SDK, so they are not
+# listed here. Only vendor headers stay ignored.
 sdk/hal/*/include/cmsis/*
-sdk/hal/*/src/cmsis/*
 
 # Generated font table
 sdk/sensors/displays/ssd1306/font5x7.cppm
