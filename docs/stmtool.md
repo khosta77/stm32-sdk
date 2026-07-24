@@ -93,7 +93,7 @@ Flash the firmware binary onto the connected board.
 | Flag | Default | Description |
 |------|---------|-------------|
 | `--tool` | `stlink` | Programmer (`stlink`, `jlink`, etc., depending on what's installed) |
-| `--verify` | off | Read back and verify after writing |
+| `--verify` | off | Read back and verify after writing. `st-flash` (the `stlink` backend) always verifies every write, so this is implicit there. |
 | `--erase` | off | Mass-erase before writing |
 
 ### `stmtool sdk update`

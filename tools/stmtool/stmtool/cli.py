@@ -241,8 +241,10 @@ def flash(
     if erase:
         subprocess.run(["st-flash", "erase"], check=False)
     cmd.extend(["--reset", "write", str(bin_path), "0x08000000"])
+    # st-flash always reads back and verifies after a write; it has no --verify
+    # flag, so --verify is implicit for the stlink backend (do not append it).
     if verify:
-        cmd.append("--verify")
+        console.print(f"[dim]{t('flash_verify_implicit')}[/dim]")
     console.print(f"[bold green]{t('flashing', name=bin_path.name)}[/bold green]")
     result = subprocess.run(cmd, check=False)
     raise typer.Exit(code=result.returncode)

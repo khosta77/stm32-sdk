@@ -50,8 +50,12 @@ _STRINGS: dict[str, dict[str, str]] = {
         "ru": "Инструмент прошивки: stlink, openocd, pyocd, jlink",
     },
     "flash_verify": {
-        "en": "Verify after flash",
-        "ru": "Проверить после прошивки",
+        "en": "Verify after flash (st-link verifies by default)",
+        "ru": "Проверить после прошивки (st-link верифицирует по умолчанию)",
+    },
+    "flash_verify_implicit": {
+        "en": "st-flash verifies every write automatically; --verify is implicit.",
+        "ru": "st-flash сверяет каждую запись автоматически; --verify подразумевается.",
     },
     "flash_erase": {
         "en": "Erase flash before writing",
