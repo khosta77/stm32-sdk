@@ -1,0 +1,6 @@
+# Vendored third-party CMSIS headers (ARM Cortex-M core + ST device headers).
+# They are ~10 MB of .h and dominate GitHub's language stats, drowning out the
+# SDK's own C++ sources. Mark them as vendored so Linguist excludes them from
+# the language breakdown; they are kept pristine for upstream diffability.
+sdk/core/include/cmsis/** linguist-vendored
+sdk/hal/*/include/cmsis/** linguist-vendored
