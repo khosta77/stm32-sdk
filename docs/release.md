@@ -53,6 +53,35 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.2.1
+
+Focus: extract `stmtool` from this monorepo into its own repository,
+[`khosta77/stmtool`](https://github.com/khosta77/stmtool), so the tool is
+versioned, released, and evolved independently of the SDK (west-style
+separation). No source-visible SDK changes.
+
+Highlights:
+
+- **Standalone tool.** `tools/stmtool/` is removed from the SDK. History was
+  preserved via `git filter-repo` (blame intact). The package adopts a src-layout
+  and stays SDK-content-free — it resolves an SDK checkout at runtime through
+  `STMSDK_PATH` / the `~/.stmtool/stm32-sdk/` cache / a clone
+  (`STMTOOL_SDK_REPO`), exactly as before.
+- **Independent versioning.** `stmtool` is now `v0.N`: the major is pinned at 0,
+  the minor is auto-bumped by CI on every merge to `main` (an `autotag` workflow
+  pushes the next tag; `poetry-dynamic-versioning` reads it). No hand-edited
+  version, no coupling to SDK tags.
+- **pipx distribution.** Install with
+  `pipx install git+https://github.com/khosta77/stmtool.git`; the SDK's
+  `install.sh` now points there. The SDK `build.yml` installs the tool from the
+  new repo; the `stmtool.yml` CI workflow moved with it.
+
+Notes:
+
+- Downstream action: reinstall the tool from the new repo (see the
+  [upgrade notes](migration.md#new-in-v021)). The CLI and commands are unchanged;
+  the version command is `stmtool show-version`.
+
 ### v0.2.0
 
 Focus: a cross-cutting stabilization pass that closes the v0.1.x line — a

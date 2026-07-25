@@ -29,10 +29,10 @@ stmtool doctor
 ./install.sh
 ```
 
-Альтернативно, установка напрямую из клона репозитория:
+Альтернативно, установка `stmtool` напрямую из его репозитория:
 
 ```bash
-pip install ./tools/stmtool
+pipx install git+https://github.com/khosta77/stmtool.git
 ```
 
 ## Первый проект

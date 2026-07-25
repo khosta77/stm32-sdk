@@ -5,12 +5,17 @@ Bare-metal C++20 ecosystem for STM32 (CMSIS only).
 ## Usage
 
 ```bash
-pip install ./tools/stmtool
+pipx install git+https://github.com/khosta77/stmtool.git
 stmtool project create my-project --chip STM32F407VG
 cd my-project
 stmtool build   # always runs in the SDK Docker image; artifacts in out/
 stmtool flash
 ```
+
+Since v0.2.1 `stmtool` lives in its own repository
+(`khosta77/stmtool`), not in this tree. Any change to the tool goes there and is
+released as a `v0.N` tag; this SDK consumes it by installing from that repo. Do
+NOT re-add `tools/stmtool/` here.
 
 Since v0.1.13 all builds run inside the SDK Docker image (no `--native`);
 artifacts land in `out/`. `stmtool test` builds and runs the host unit tests
@@ -74,22 +79,15 @@ to update docs means future contributors see stale information.
   never reformat them.
 
 - pre-commit hooks are mandatory (`.pre-commit-config.yaml`): clang-format
-  on C/C++/`.cppm`, Conventional Commits on the message, `poe ci` on push
-  for `tools/stmtool`. Install once with `pre-commit install --hook-type
-  pre-commit --hook-type commit-msg`. The `Format` workflow enforces the
-  same clang-format on every push / PR to `develop`. Contributor workflow
-  lives in `CONTRIBUTING.md`.
+  on C/C++/`.cppm` and Conventional Commits on the message. Install once with
+  `pre-commit install --hook-type pre-commit --hook-type commit-msg`. The
+  `Format` workflow enforces the same clang-format on every push / PR to
+  `develop`. Contributor workflow lives in `CONTRIBUTING.md`.
 
-- `stmtool` code must pass `poetry run poe ci` before any commit: ruff,
-  flake8, black, isort, mypy (strict), bandit, pylint, pytest with at
-  least 70% coverage. Do NOT add `# noqa`, `# type: ignore`,
-  `--ignore=...`, or `disable=...` directives without explicit user
-  approval. If a linter produces a critically large number of errors,
-  stop and ask the user whether to disable the rule or fix every
-  occurrence -- never decide unilaterally.
-
-- `poetry run poe fix` runs all auto-fixers (ruff, isort, black, ruff
-  format). It is safe to run locally; results must still pass `poe ci`.
+- `stmtool` is a **separate repository** (`khosta77/stmtool`) since v0.2.1. Its
+  Python quality gate (`poe ci`: ruff/flake8/black/isort/mypy/bandit/pylint/
+  pytest) and its own `CLAUDE.md` live there — do not edit tool code in this
+  repo. Changes to the tool are made and released in that repo.
 
 - Commit messages are in English (Conventional Commits). Pull request
   descriptions targeting `develop` are in Russian. This split keeps the
@@ -115,10 +113,11 @@ To cut a release:
    docs site stay in sync. Finish with a footer linking the docs release
    page and the `vPREV...vNEW` changelog compare.
 
-The version number is derived from git tags via
-`poetry-dynamic-versioning` (the SDK side still picks the same tag) --
-no hand-edited version constants anywhere. Tagging the repo is what
-publishes a release for `stmtool` consumers.
+The SDK version number is derived from git tags via
+`poetry-dynamic-versioning` -- no hand-edited version constants anywhere.
+Tagging the repo is what publishes an SDK release. `stmtool` versions itself
+independently in its own repo (`v0.N`, CI-autotagged) and is not tied to the
+SDK tag stream anymore.
 
 ## Project templates and CLAUDE.md
 
@@ -261,7 +260,8 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
   `freertos/oled-display-test`, `freertos/w25q32-flash-test`,
   `freertos/imu-flash-oled-demo`, `freertos/signal-bus-demo`,
   `freertos/button-events-demo`).
-- `tools/stmtool/` — Python CLI tool (Typer + Rich).
+- `stmtool` — the Python CLI (Typer + Rich) is a **separate repository**
+  (`khosta77/stmtool`) since v0.2.1; not vendored here.
 - `tools/docs/` — MkDocs build dependencies.
 - `docs/` — MkDocs source (EN + RU via suffix mode).
 

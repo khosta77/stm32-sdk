@@ -12,11 +12,13 @@ pip install pre-commit
 pre-commit install --hook-type pre-commit --hook-type commit-msg
 ```
 
-This wires three gates from [`.pre-commit-config.yaml`](.pre-commit-config.yaml):
+This wires two gates from [`.pre-commit-config.yaml`](.pre-commit-config.yaml):
 
 - **clang-format** (pinned to 19.1.3) on every staged C / C++ / `.cppm` file.
 - **Conventional Commits** lint on the commit message.
-- **`poe ci`** for `stmtool` on push, only when `tools/stmtool/**` changed.
+
+`stmtool` lives in its own repository ([`khosta77/stmtool`](https://github.com/khosta77/stmtool))
+since v0.2.1; its `poe ci` gate runs there, not here.
 
 Use clang-format 19 locally so your output matches the pinned version.
 
@@ -48,9 +50,8 @@ Use clang-format 19 locally so your output matches the pinned version.
 
 - C++: `clang-format --dry-run --Werror` is clean (or the hook passed), and the
   templates still build under `-Werror`.
-- `stmtool`: `cd tools/stmtool && poetry run poe ci` is green (ruff, flake8,
-  black, isort, mypy, bandit, pylint, pytest ≥ 70% coverage). `poe fix` runs the
-  auto-fixers.
+- `stmtool` changes go to the [`khosta77/stmtool`](https://github.com/khosta77/stmtool)
+  repository, where `poe ci` is the gate — not this repo.
 
 ## Releases
 
