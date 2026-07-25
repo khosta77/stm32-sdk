@@ -27,6 +27,14 @@ public:
       RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
     } else if (&_port == GPIOE) {
       RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN;
+    } else if (&_port == GPIOF) {
+      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOFEN;
+    } else if (&_port == GPIOG) {
+      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOGEN;
+    } else if (&_port == GPIOH) {
+      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOHEN;
+    } else if (&_port == GPIOI) {
+      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOIEN;
     }
     __DSB();
 
