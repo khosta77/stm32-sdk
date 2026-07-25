@@ -155,7 +155,12 @@ public:
         reg::set(_periph.CR1, USART_CR1_TXEIE);
         xSemaphoreTake(_txSem, portMAX_DELAY);
 #else
-        while (_txBuf.full()) {
+        uint32_t guard = getTimeoutLoops();
+        while (_txBuf.full() && guard > 0) {
+          --guard;
+        }
+        if (_txBuf.full()) {
+          break;
         }
 #endif
       }
@@ -182,7 +187,12 @@ public:
         if (received > 0) {
           break;
         }
-        while (_rxBuf.empty()) {
+        uint32_t guard = getTimeoutLoops();
+        while (_rxBuf.empty() && guard > 0) {
+          --guard;
+        }
+        if (_rxBuf.empty()) {
+          break;
         }
 #endif
       }
@@ -369,7 +379,15 @@ public:
 #ifdef STM32_USE_FREERTOS
     xSemaphoreTake(_mutex, portMAX_DELAY);
 #endif
-    while (_txDma.isEnabled()) {
+    uint32_t guard = getTimeoutLoops();
+    while (_txDma.isEnabled() && guard > 0) {
+      --guard;
+    }
+    if (_txDma.isEnabled()) {
+#ifdef STM32_USE_FREERTOS
+      xSemaphoreGive(_mutex);
+#endif
+      return 0;
     }
     _txDma.clearAllFlags();
     _txDma.setMemoryAndCount(
@@ -381,11 +399,14 @@ public:
 #ifdef STM32_USE_FREERTOS
     xSemaphoreTake(_txSem, portMAX_DELAY);
 #else
-    while (!_txDma.transferComplete()) {
+    for (uint32_t tc = getTimeoutLoops(); !_txDma.transferComplete() && tc > 0;
+         --tc) {
     }
     _txDma.clearAllFlags();
 #endif
-    while (!reg::read(_periph.SR, USART_SR_TC)) {
+    for (uint32_t tcw = getTimeoutLoops();
+         !reg::read(_periph.SR, USART_SR_TC) && tcw > 0;
+         --tcw) {
     }
 
 #ifdef STM32_USE_FREERTOS
@@ -410,7 +431,12 @@ public:
         if (received > 0) {
           break;
         }
-        while (_rxBuf.empty()) {
+        uint32_t guard = getTimeoutLoops();
+        while (_rxBuf.empty() && guard > 0) {
+          --guard;
+        }
+        if (_rxBuf.empty()) {
+          break;
         }
 #endif
       }
@@ -422,7 +448,16 @@ public:
     if (data.empty() || _txDma.isEnabled()) {
       return 0;
     }
-    return write(data);
+    // Kick off the DMA transfer and return immediately; completion is observed
+    // via txFree()/the TC ISR. Unlike write(), this does not wait for transfer
+    // complete or USART TC, so it never blocks the caller.
+    _txDma.clearAllFlags();
+    _txDma.setMemoryAndCount(
+        const_cast<void *>(static_cast<const void *>(data.data())),
+        data.size()
+    );
+    _txDma.start();
+    return data.size();
   }
 
   [[nodiscard]] size_t readNonBlocking(std::span<uint8_t> data) {

@@ -5,6 +5,7 @@ module;
 export module driver.stm32f4.dma;
 
 import driver.reg;
+import driver.stm32f4.clock;
 
 export namespace driver {
 namespace stm32f4 {
@@ -115,7 +116,9 @@ public:
       size_t count
   ) {
     reg::clear(_stream->CR, DMA_SxCR_EN);
-    while (reg::read(_stream->CR, DMA_SxCR_EN)) {
+    for (uint32_t guard = getTimeoutLoops();
+         reg::read(_stream->CR, DMA_SxCR_EN) && guard > 0;
+         --guard) {
     }
     clearAllFlags();
 
@@ -169,7 +172,9 @@ public:
 
   void stop() {
     reg::clear(_stream->CR, DMA_SxCR_EN);
-    while (reg::read(_stream->CR, DMA_SxCR_EN)) {
+    for (uint32_t guard = getTimeoutLoops();
+         reg::read(_stream->CR, DMA_SxCR_EN) && guard > 0;
+         --guard) {
     }
   }
 
