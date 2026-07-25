@@ -1237,6 +1237,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v021" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v020" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1392,6 +1403,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v021" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v020" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1509,6 +1531,33 @@ the same source of truth the SDK CMake side already uses.</p>
    <a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a> picks up the new content.</li>
 </ol>
 <h2 id="release-history">Release history<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h2>
+<h3 id="v021">v0.2.1<a class="headerlink" href="#v021" title="Permanent link">&para;</a></h3>
+<p>Focus: extract <code>stmtool</code> from this monorepo into its own repository,
+<a href="https://github.com/khosta77/stmtool"><code>khosta77/stmtool</code></a>, so the tool is
+versioned, released, and evolved independently of the SDK (west-style
+separation). No source-visible SDK changes.</p>
+<p>Highlights:</p>
+<ul>
+<li><strong>Standalone tool.</strong> <code>tools/stmtool/</code> is removed from the SDK. History was
+  preserved via <code>git filter-repo</code> (blame intact). The package adopts a src-layout
+  and stays SDK-content-free — it resolves an SDK checkout at runtime through
+  <code>STMSDK_PATH</code> / the <code>~/.stmtool/stm32-sdk/</code> cache / a clone
+  (<code>STMTOOL_SDK_REPO</code>), exactly as before.</li>
+<li><strong>Independent versioning.</strong> <code>stmtool</code> is now <code>v0.N</code>: the major is pinned at 0,
+  the minor is auto-bumped by CI on every merge to <code>main</code> (an <code>autotag</code> workflow
+  pushes the next tag; <code>poetry-dynamic-versioning</code> reads it). No hand-edited
+  version, no coupling to SDK tags.</li>
+<li><strong>pipx distribution.</strong> Install with
+  <code>pipx install git+https://github.com/khosta77/stmtool.git</code>; the SDK's
+  <code>install.sh</code> now points there. The SDK <code>build.yml</code> installs the tool from the
+  new repo; the <code>stmtool.yml</code> CI workflow moved with it.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Downstream action: reinstall the tool from the new repo (see the
+  <a href="../migration/#new-in-v021">upgrade notes</a>). The CLI and commands are unchanged;
+  the version command is <code>stmtool show-version</code>.</li>
+</ul>
 <h3 id="v020">v0.2.0<a class="headerlink" href="#v020" title="Permanent link">&para;</a></h3>
 <p>Focus: a cross-cutting stabilization pass that closes the v0.1.x line — a
 driver/sensor/framework bug audit, closing accumulated debt, and unifying MMIO

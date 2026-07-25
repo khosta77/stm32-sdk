@@ -1237,6 +1237,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v021" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v020" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1403,6 +1414,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v021" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v020" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1530,6 +1552,32 @@ maintainer, пока API не стабилизируется (цель — v1.0)
    <a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a> подтянул свежий контент.</li>
 </ol>
 <h2 id="_5">История релизов<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="v021">v0.2.1<a class="headerlink" href="#v021" title="Permanent link">&para;</a></h3>
+<p>Фокус: вынос <code>stmtool</code> из монорепо в отдельный репозиторий
+<a href="https://github.com/khosta77/stmtool"><code>khosta77/stmtool</code></a>, чтобы инструмент
+версионировался, релизился и развивался независимо от SDK (west-подобное
+разделение). Видимых в исходниках SDK изменений нет.</p>
+<p>Основное:</p>
+<ul>
+<li><strong>Автономный инструмент.</strong> <code>tools/stmtool/</code> удалён из SDK. История сохранена
+  через <code>git filter-repo</code> (blame цел). Пакет переведён на src-layout и остаётся
+  без SDK-контента — SDK ищется в рантайме через <code>STMSDK_PATH</code> / кэш
+  <code>~/.stmtool/stm32-sdk/</code> / клон (<code>STMTOOL_SDK_REPO</code>), как и раньше.</li>
+<li><strong>Независимое версионирование.</strong> <code>stmtool</code> теперь <code>v0.N</code>: major запинен в 0,
+  minor авто-инкрементит CI на каждый merge в <code>main</code> (workflow <code>autotag</code> пушит
+  следующий тег; <code>poetry-dynamic-versioning</code> его читает). Без ручных правок
+  версии, без привязки к тегам SDK.</li>
+<li><strong>Дистрибуция через pipx.</strong> Установка
+  <code>pipx install git+https://github.com/khosta77/stmtool.git</code>; <code>install.sh</code> в SDK
+  теперь ссылается туда. <code>build.yml</code> SDK ставит инструмент из нового репо; CI
+  workflow <code>stmtool.yml</code> переехал вместе с ним.</li>
+</ul>
+<p>Замечания:</p>
+<ul>
+<li>Действие downstream: переустановить инструмент из нового репо (см.
+  <a href="../migration/#v021">заметки по обновлению</a>). CLI и команды не
+  изменились; команда версии — <code>stmtool show-version</code>.</li>
+</ul>
 <h3 id="v020">v0.2.0<a class="headerlink" href="#v020" title="Permanent link">&para;</a></h3>
 <p>Фокус: сквозной стабилизационный проход, закрывающий линейку v0.1.x — аудит
 багов драйверов/сенсоров/каркаса, закрытие накопленного долга и унификация
@@ -1560,7 +1608,7 @@ maintainer, пока API не стабилизируется (цель — v1.0)
 <li>Три видимых в исходниках ломающих изменения: <code>SpiDataSize::Bits16</code> больше не
   компилируется, новые пометки <code>[[nodiscard]]</code> могут задеть downstream <code>-Werror</code>,
   а <code>IImu::setAccelRange</code> / <code>setGyroRange</code> теперь возвращают <code>driver::Status</code>. См.
-  <a href="../migration/#новое-в-v020">заметки по обновлению</a>.</li>
+  <a href="../migration/#v020">заметки по обновлению</a>.</li>
 <li>Отложено: SDK-wide оптимизация размера <code>-fno-exceptions</code> / <code>-fno-rtti</code> вынесена
   отдельно — она конфликтует с <code>throw</code>-валидаторами конфигов на <code>consteval</code> и
   требует переписывания на throw-free идиому.</li>

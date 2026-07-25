@@ -724,10 +724,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stmtool-version" class="md-nav__link">
+  <a href="#stmtool-show-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        stmtool version
+        stmtool show-version
       
     </span>
   </a>
@@ -1546,10 +1546,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stmtool-version" class="md-nav__link">
+  <a href="#stmtool-show-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        stmtool version
+        stmtool show-version
       
     </span>
   </a>
@@ -1599,9 +1599,10 @@
 
 <h1 id="stmtool-reference"><code>stmtool</code> reference<a class="headerlink" href="#stmtool-reference" title="Permanent link">&para;</a></h1>
 <p><code>stmtool</code> is the Python CLI that scaffolds projects, builds firmware, and
-manages the SDK cache. It is distributed as a Python package under
-<code>tools/stmtool/</code> and installed either via <code>./install.sh</code> (recommended) or
-<code>pip install ./tools/stmtool</code>.</p>
+manages the SDK cache. Since v0.2.1 it is a standalone project in its own
+repository, <a href="https://github.com/khosta77/stmtool"><code>khosta77/stmtool</code></a>, installed
+via <code>pipx install git+https://github.com/khosta77/stmtool.git</code> (or <code>./install.sh</code>,
+which pins to the latest released tag).</p>
 <h2 id="global-options">Global options<a class="headerlink" href="#global-options" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1774,11 +1775,12 @@ module scanning needs GCC &gt;= 14).</p>
 </code></pre></div>
 <p>Print a shell-completion script for <code>bash</code>, <code>zsh</code>, or <code>fish</code>. The <code>install.sh</code>
 script installs this automatically.</p>
-<h3 id="stmtool-version"><code>stmtool version</code><a class="headerlink" href="#stmtool-version" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>stmtool<span class="w"> </span>version
+<h3 id="stmtool-show-version"><code>stmtool show-version</code><a class="headerlink" href="#stmtool-show-version" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>stmtool<span class="w"> </span>show-version
 </code></pre></div>
-<p>Print the <code>stmtool</code> version. The version is derived from git tags via
-<code>setuptools-scm</code>, so it matches the SDK release.</p>
+<p>Print the <code>stmtool</code> version. The version is <code>0.N</code> — the minor is auto-bumped by
+CI on every merge to <code>main</code> in the <code>stmtool</code> repo (<code>poetry-dynamic-versioning</code>
+reads the <code>v0.N</code> tag). It is independent of the SDK release tag.</p>
 <h2 id="sdk-resolution-order">SDK resolution order<a class="headerlink" href="#sdk-resolution-order" title="Permanent link">&para;</a></h2>
 <p>When any command needs the SDK root, <code>stmtool</code> looks in this order:</p>
 <ol>

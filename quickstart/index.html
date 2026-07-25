@@ -1499,8 +1499,8 @@ installation, clears the SDK cache, fetches the latest released tag, and sets up
 shell completion:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>./install.sh
 </code></pre></div>
-<p>Alternatively, install directly from a clone of this repo:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>./tools/stmtool
+<p>Alternatively, install <code>stmtool</code> directly from its repository:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>git+https://github.com/khosta77/stmtool.git
 </code></pre></div>
 <h2 id="create-your-first-project">Create your first project<a class="headerlink" href="#create-your-first-project" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>stmtool<span class="w"> </span>project<span class="w"> </span>create<span class="w"> </span>my-blink<span class="w"> </span>--chip<span class="w"> </span>STM32F407VG

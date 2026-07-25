@@ -724,10 +724,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stmtool-version" class="md-nav__link">
+  <a href="#stmtool-show-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        stmtool version
+        stmtool show-version
       
     </span>
   </a>
@@ -1546,10 +1546,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#stmtool-version" class="md-nav__link">
+  <a href="#stmtool-show-version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        stmtool version
+        stmtool show-version
       
     </span>
   </a>
@@ -1599,9 +1599,10 @@
 
 <h1 id="stmtool">Справочник <code>stmtool</code><a class="headerlink" href="#stmtool" title="Permanent link">&para;</a></h1>
 <p><code>stmtool</code> — Python-CLI для создания проектов, сборки прошивок и управления
-кэшем SDK. Распространяется как Python-пакет в <code>tools/stmtool/</code>,
-устанавливается через <code>./install.sh</code> (рекомендуется) или
-<code>pip install ./tools/stmtool</code>.</p>
+кэшем SDK. С v0.2.1 это самостоятельный проект в отдельном репозитории
+<a href="https://github.com/khosta77/stmtool"><code>khosta77/stmtool</code></a>, устанавливается через
+<code>pipx install git+https://github.com/khosta77/stmtool.git</code> (или <code>./install.sh</code>,
+который пинит на последний релизный тег).</p>
 <h2 id="_1">Глобальные настройки<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1773,11 +1774,12 @@ GCC 14 отмечается как ошибка (сканирование мод
 </code></pre></div>
 <p>Печатает скрипт shell-completion для <code>bash</code>, <code>zsh</code> или <code>fish</code>. <code>install.sh</code>
 устанавливает его автоматически.</p>
-<h3 id="stmtool-version"><code>stmtool version</code><a class="headerlink" href="#stmtool-version" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>stmtool<span class="w"> </span>version
+<h3 id="stmtool-show-version"><code>stmtool show-version</code><a class="headerlink" href="#stmtool-show-version" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>stmtool<span class="w"> </span>show-version
 </code></pre></div>
-<p>Печатает версию <code>stmtool</code>. Версия выводится из git-тегов через
-<code>setuptools-scm</code>, поэтому совпадает с релизом SDK.</p>
+<p>Печатает версию <code>stmtool</code>. Версия — <code>0.N</code>: minor авто-инкрементит CI на каждый
+merge в <code>main</code> репозитория <code>stmtool</code> (<code>poetry-dynamic-versioning</code> читает тег
+<code>v0.N</code>). Независима от релизного тега SDK.</p>
 <h2 id="sdk">Порядок поиска SDK<a class="headerlink" href="#sdk" title="Permanent link">&para;</a></h2>
 <p>Когда команде нужен корень SDK, <code>stmtool</code> проверяет в порядке:</p>
 <ol>
