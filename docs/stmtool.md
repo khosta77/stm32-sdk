@@ -154,7 +154,7 @@ stmtool show-version
 ```
 
 Print the `stmtool` version. The version is `0.N` — the minor is auto-bumped by
-CI on every merge to `main` in the `stmtool` repo (`poetry-dynamic-versioning`
+CI on every merge to `master` in the `stmtool` repo (`poetry-dynamic-versioning`
 reads the `v0.N` tag). It is independent of the SDK release tag.
 
 ## SDK resolution order

@@ -66,7 +66,7 @@ style = "pep440"
   без SDK-контента — SDK ищется в рантайме через `STMSDK_PATH` / кэш
   `~/.stmtool/stm32-sdk/` / клон (`STMTOOL_SDK_REPO`), как и раньше.
 - **Независимое версионирование.** `stmtool` теперь `v0.N`: major запинен в 0,
-  minor авто-инкрементит CI на каждый merge в `main` (workflow `autotag` пушит
+  minor авто-инкрементит CI на каждый merge в `master` (workflow `autotag` пушит
   следующий тег; `poetry-dynamic-versioning` его читает). Без ручных правок
   версии, без привязки к тегам SDK.
 - **Дистрибуция через pipx.** Установка

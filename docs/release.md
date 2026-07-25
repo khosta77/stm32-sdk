@@ -68,7 +68,7 @@ Highlights:
   `STMSDK_PATH` / the `~/.stmtool/stm32-sdk/` cache / a clone
   (`STMTOOL_SDK_REPO`), exactly as before.
 - **Independent versioning.** `stmtool` is now `v0.N`: the major is pinned at 0,
-  the minor is auto-bumped by CI on every merge to `main` (an `autotag` workflow
+  the minor is auto-bumped by CI on every merge to `master` (an `autotag` workflow
   pushes the next tag; `poetry-dynamic-versioning` reads it). No hand-edited
   version, no coupling to SDK tags.
 - **pipx distribution.** Install with
