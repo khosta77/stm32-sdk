@@ -24,9 +24,10 @@ Run:
 
 ```bash
 TEMPLATE="<name>"
+REPO_ROOT="$(pwd)"
 rm -rf /tmp/ci-$TEMPLATE
-STMSDK_PATH="$(pwd)" stmtool project create "/tmp/ci-$TEMPLATE" --chip STM32F407VG --template "$TEMPLATE"
-( cd "/tmp/ci-$TEMPLATE" && STMSDK_PATH="$REPO_ROOT" stmtool build --native )
+( cd /tmp && STMSDK_PATH="$REPO_ROOT" stmtool project create "ci-$TEMPLATE" --chip STM32F407VG --template "$TEMPLATE" )
+( cd "/tmp/ci-$TEMPLATE" && STMSDK_PATH="$REPO_ROOT" stmtool build )
 ```
 
 Continue past failures so you can report the full pass/fail matrix.

@@ -16,7 +16,7 @@ display driven over I2C1 with a static title and a live uptime counter.
 ## Build / flash
 
 ```bash
-stmtool build --native
+stmtool build
 stmtool flash
 stmtool sdk update          # if [sdk] version = "develop"
 ```

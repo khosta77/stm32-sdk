@@ -17,7 +17,7 @@ LED blinker on the F407VG-DISC1 onboard LEDs.
 ## Build / flash
 
 ```bash
-stmtool build --native
+stmtool build
 stmtool flash
 stmtool sdk update          # if [sdk] version = "develop"
 ```
