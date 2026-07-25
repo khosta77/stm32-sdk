@@ -41,7 +41,7 @@ public:
     return Status::Ok;
   }
 
-  size_t read(T *dst, size_t maxLen) {
+  [[nodiscard]] size_t read(T *dst, size_t maxLen) {
     size_t count = 0;
     while (count < maxLen) {
       T item;
@@ -53,7 +53,7 @@ public:
     return count;
   }
 
-  size_t write(const T *src, size_t len) {
+  [[nodiscard]] size_t write(const T *src, size_t len) {
     size_t count = 0;
     while (count < len) {
       if (push(src[count]) != Status::Ok) {
@@ -64,19 +64,19 @@ public:
     return count;
   }
 
-  size_t size() const {
+  [[nodiscard]] size_t size() const {
     auto h = _head.load(std::memory_order_acquire);
     auto t = _tail.load(std::memory_order_acquire);
     return (h - t) & MASK;
   }
 
-  size_t free_space() const { return N - 1 - size(); }
-  bool empty() const {
+  [[nodiscard]] size_t free_space() const { return N - 1 - size(); }
+  [[nodiscard]] bool empty() const {
     return _head.load(std::memory_order_acquire) ==
            _tail.load(std::memory_order_acquire);
   }
-  bool full() const { return free_space() == 0; }
-  constexpr size_t capacity() const { return N - 1; }
+  [[nodiscard]] bool full() const { return free_space() == 0; }
+  [[nodiscard]] constexpr size_t capacity() const { return N - 1; }
 };
 
 }  // namespace driver

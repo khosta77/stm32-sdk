@@ -178,27 +178,29 @@ public:
     }
   }
 
-  bool isEnabled() const { return reg::read(_stream->CR, DMA_SxCR_EN); }
+  [[nodiscard]] bool isEnabled() const {
+    return reg::read(_stream->CR, DMA_SxCR_EN);
+  }
 
-  size_t remaining() const {
+  [[nodiscard]] size_t remaining() const {
     return static_cast<size_t>(reg::get(_stream->NDTR));
   }
 
-  bool transferComplete() const {
+  [[nodiscard]] bool transferComplete() const {
     return reg::read(
         detail::flagsReg(_dma, _id.streamIndex),
         detail::tcifMask(_id.streamIndex)
     );
   }
 
-  bool halfTransfer() const {
+  [[nodiscard]] bool halfTransfer() const {
     return reg::read(
         detail::flagsReg(_dma, _id.streamIndex),
         detail::htifMask(_id.streamIndex)
     );
   }
 
-  bool transferError() const {
+  [[nodiscard]] bool transferError() const {
     return reg::read(
         detail::flagsReg(_dma, _id.streamIndex),
         detail::teifMask(_id.streamIndex)
@@ -233,9 +235,9 @@ public:
     );
   }
 
-  DmaStreamId id() const { return _id; }
+  [[nodiscard]] DmaStreamId id() const { return _id; }
 
-  static IRQn_Type getIrqn(DmaStreamId id) {
+  [[nodiscard]] static IRQn_Type getIrqn(DmaStreamId id) {
     if (id.dmaBase == DMA1_BASE) {
       switch (id.streamIndex) {
         case 0:
