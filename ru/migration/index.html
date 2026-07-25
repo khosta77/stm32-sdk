@@ -1228,6 +1228,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.2.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Новое в v0.2.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spidatasizebits16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ломающее: SpiDataSize::Bits16 теперь отклоняется на этапе компиляции
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nodiscard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ломающее: больше методов помечены [[nodiscard]]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iimu-driverstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ломающее: сеттеры диапазонов IImu возвращают driver::Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Неломающие фиксы, о которых стоит знать
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v0116" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1378,7 +1439,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#nodiscard" class="md-nav__link">
+  <a href="#nodiscard_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Все методы драйверов/сенсоров, возвращающие значение, теперь [[nodiscard]]
@@ -1455,7 +1516,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Новые доступные модули
@@ -1488,7 +1549,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Защита проекта на будущее
@@ -1544,6 +1605,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.2.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Новое в v0.2.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spidatasizebits16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ломающее: SpiDataSize::Bits16 теперь отклоняется на этапе компиляции
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nodiscard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ломающее: больше методов помечены [[nodiscard]]
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iimu-driverstatus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ломающее: сеттеры диапазонов IImu возвращают driver::Status
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Неломающие фиксы, о которых стоит знать
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v0116" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1694,7 +1816,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#nodiscard" class="md-nav__link">
+  <a href="#nodiscard_1" class="md-nav__link">
     <span class="md-ellipsis">
       
         Все методы драйверов/сенсоров, возвращающие значение, теперь [[nodiscard]]
@@ -1771,7 +1893,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
         Новые доступные модули
@@ -1804,7 +1926,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Защита проекта на будущее
@@ -1853,6 +1975,51 @@
 <li>Прошейте на железо и убедитесь, что ваш smoke-test проходит.</li>
 <li>Сливайте, когда всё зелёное.</li>
 </ol>
+<h2 id="v020">Новое в v0.2.0<a class="headerlink" href="#v020" title="Permanent link">&para;</a></h2>
+<p>v0.2.0 — сквозной стабилизационный релиз: аудит багов драйверов/сенсоров/каркаса,
+закрытие накопленного долга и перевод всей периферии на хелперы <code>reg::</code>.
+Большинство изменений внутренние, но три <strong>видны в исходниках</strong> downstream-проектов.</p>
+<h3 id="spidatasizebits16">Ломающее: <code>SpiDataSize::Bits16</code> теперь отклоняется на этапе компиляции<a class="headerlink" href="#spidatasizebits16" title="Permanent link">&para;</a></h3>
+<p>Драйвер SPI STM32F4 всегда гонял регистр данных по одному байту, поэтому
+<code>SpiDataSize::Bits16</code> давал битый фрейминг. <code>spi({...})</code> теперь отвергает его с
+ошибкой компиляции. Если вы передавали <code>Bits16</code>, переключитесь на <code>Bits8</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">Spi</span><span class="w"> </span><span class="n">g_spi</span><span class="p">{</span><span class="o">*</span><span class="n">SPI2</span><span class="p">,</span><span class="w"> </span><span class="n">spi</span><span class="p">({.</span><span class="n">clockHz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10000000</span><span class="p">,</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">                      </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiMode</span><span class="o">::</span><span class="n">Mode0</span><span class="p">,</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">                      </span><span class="p">.</span><span class="n">lsbFirst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">                      </span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiDataSize</span><span class="o">::</span><span class="n">Bits8</span><span class="p">})};</span><span class="w">  </span><span class="c1">// было Bits16</span>
+</code></pre></div>
+<h3 id="nodiscard">Ломающее: больше методов помечены <code>[[nodiscard]]</code><a class="headerlink" href="#nodiscard" title="Permanent link">&para;</a></h3>
+<p>Каждый возвращающий значение метод драйверов/RTOS/утилит теперь несёт
+<code>[[nodiscard]]</code> (<code>CircularBuffer::{read,write,size,free_space,empty,full,
+capacity}</code>, <code>reg::{read,get}</code>, статус-геттеры <code>DmaStream</code>, методы
+<code>rtos::{Mutex,BinarySemaphore,Queue,Task}</code>, <code>clock::get*</code>). Под <code>-Werror</code> SDK
+игнорирование такого возврата теперь не компилируется. Используйте значение или
+пометьте отбрасывание явно:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">uart</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">);</span><span class="w">  </span><span class="c1">// fire-and-forget теперь явный</span>
+</code></pre></div>
+<h3 id="iimu-driverstatus">Ломающее: сеттеры диапазонов <code>IImu</code> возвращают <code>driver::Status</code><a class="headerlink" href="#iimu-driverstatus" title="Permanent link">&para;</a></h3>
+<p><code>setAccelRange</code> / <code>setGyroRange</code> сменили тип с <code>void</code> на <code>driver::Status</code>, чтобы
+NACK на шине во время <code>init()</code> больше не проглатывался. Концепт <code>sensor::IImu</code>
+обновлён соответственно. Собственные реализации IMU должны обновить сигнатуры
+обоих методов; <code>static_assert(IImu&lt;...&gt;)</code> в вашем драйвере это проверит на этапе
+компиляции.</p>
+<h3 id="_2">Неломающие фиксы, о которых стоит знать<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Клок GPIO</strong> теперь включается для портов F–I (раньше только A–E), так что
+  выводы этих портов работают на корпусах 100/144/176 пинов.</li>
+<li><strong><code>postFromISR</code></strong> теперь делает yield на разбуженную более приоритетную задачу
+  вместо ожидания до тика — меньше задержка ISR→задача для executor и шины сигналов.</li>
+<li><strong>Busy-wait периферии</strong> (включение DMA, DMA-передача/TC UART) теперь ограничены
+  и возвращают <code>Status::Timeout</code> вместо вечного спина на зависшей периферии.</li>
+<li><strong>UART DMA <code>writeNonBlocking</code></strong> теперь действительно возвращается сразу, а не
+  блокирует на всю передачу.</li>
+<li>Весь MMIO в драйверах идёт через <code>driver::reg::*</code>; поведение побайтово идентично.</li>
+</ul>
+<blockquote>
+<p>Известный пробел: <code>system.work_queue</code> и <code>system.signal_bus</code> всё ещё тянут CMSIS
+/ FreeRTOS, поэтому пока не покрыты host-тестами. Вынос портируемого шима
+critical-section запланирован на будущий релиз.</p>
+</blockquote>
 <h2 id="v0116">Новое в v0.1.16<a class="headerlink" href="#v0116" title="Permanent link">&para;</a></h2>
 <p>v0.1.16 завершает миграцию C→C++, начатую в v0.1.15: newlib-glue и CMSIS
 <code>system_*</code> / исходники таблиц векторов теперь на C++. <strong>Ломающих изменений нет,
@@ -1940,8 +2107,8 @@ C++. <strong>Ломающих изменений нет, при обновлен
   <code>.pre-commit-config.yaml</code> (clang-format запинен на 19.1.3 + Conventional
   Commits + <code>poe ci</code>). Чтобы включить те же проверки в своём проекте:</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>pre-commit<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span>pre-commit
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>pre-commit<span class="w"> </span>install<span class="w"> </span>--hook-type<span class="w"> </span>pre-commit<span class="w"> </span>--hook-type<span class="w"> </span>commit-msg
 </code></pre></div>
 <p>Используйте clang-format 19 под запиненную версию; более старые мажоры могут
   верстать иначе.</p>
@@ -1966,41 +2133,41 @@ C++. <strong>Ломающих изменений нет, при обновлен
    рядом с <code>import driver.stm32f4.i2c;</code>.</li>
 </ol>
 <p>Было:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">i2c</span><span class="p">;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">spi</span><span class="p">;</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">I2c</span><span class="w"> </span><span class="n">g_i2c1</span><span class="p">{</span><span class="o">*</span><span class="n">I2C1</span><span class="p">,</span><span class="w"> </span><span class="p">{.</span><span class="n">clockSpeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">fastMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">}};</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="n">Spi</span><span class="w"> </span><span class="n">g_spi1</span><span class="p">{</span><span class="o">*</span><span class="n">SPI1</span><span class="p">,</span><span class="w"> </span><span class="p">{.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="p">...}};</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">Uart</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">{</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="o">*</span><span class="n">USART2</span><span class="p">,</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="n">USART2_IRQn</span><span class="p">,</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="p">{.</span><span class="n">baudrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">115200</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">dataBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">stopBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">parity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Parity</span><span class="o">::</span><span class="n">None</span><span class="p">}</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">};</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">i2c</span><span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">spi</span><span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">I2c</span><span class="w"> </span><span class="n">g_i2c1</span><span class="p">{</span><span class="o">*</span><span class="n">I2C1</span><span class="p">,</span><span class="w"> </span><span class="p">{.</span><span class="n">clockSpeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">fastMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">}};</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="n">Spi</span><span class="w"> </span><span class="n">g_spi1</span><span class="p">{</span><span class="o">*</span><span class="n">SPI1</span><span class="p">,</span><span class="w"> </span><span class="p">{.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="p">...}};</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">Uart</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">{</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="o">*</span><span class="n">USART2</span><span class="p">,</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="n">USART2_IRQn</span><span class="p">,</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="p">{.</span><span class="n">baudrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">115200</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">dataBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">stopBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">parity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Parity</span><span class="o">::</span><span class="n">None</span><span class="p">}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">};</span>
 </code></pre></div>
 <p>Стало:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">i2c</span><span class="p">;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">spi</span><span class="p">;</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">i2c</span><span class="p">;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">spi</span><span class="p">;</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">I2c</span><span class="w"> </span><span class="n">g_i2c1</span><span class="p">{</span><span class="o">*</span><span class="n">I2C1</span><span class="p">,</span><span class="w"> </span><span class="n">i2c</span><span class="p">({.</span><span class="n">clockSpeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">fastMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">})};</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">Spi</span><span class="w"> </span><span class="n">g_spi1</span><span class="p">{</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="o">*</span><span class="n">SPI1</span><span class="p">,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span><span class="n">spi</span><span class="p">({.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiMode</span><span class="o">::</span><span class="n">Mode0</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiDataSize</span><span class="o">::</span><span class="n">Bits8</span><span class="p">,</span><span class="w"> </span><span class="p">...})</span>
-<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">};</span>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">Uart</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">{</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="w">    </span><span class="o">*</span><span class="n">USART2</span><span class="p">,</span>
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a><span class="w">    </span><span class="n">USART2_IRQn</span><span class="p">,</span>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="w">    </span><span class="n">uart</span><span class="p">(</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="w">        </span><span class="p">{.</span><span class="n">baudrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">115200</span><span class="p">,</span>
-<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a><span class="w">         </span><span class="p">.</span><span class="n">dataBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataBits</span><span class="o">::</span><span class="n">Eight</span><span class="p">,</span>
-<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a><span class="w">         </span><span class="p">.</span><span class="n">stopBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StopBits</span><span class="o">::</span><span class="n">One</span><span class="p">,</span>
-<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="w">         </span><span class="p">.</span><span class="n">parity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Parity</span><span class="o">::</span><span class="n">None</span><span class="p">}</span>
-<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a><span class="w">    </span><span class="p">)</span>
-<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a><span class="p">};</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">i2c</span><span class="p">;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">spi</span><span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">i2c</span><span class="p">;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">spi</span><span class="p">;</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">uart</span><span class="p">;</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="n">I2c</span><span class="w"> </span><span class="n">g_i2c1</span><span class="p">{</span><span class="o">*</span><span class="n">I2C1</span><span class="p">,</span><span class="w"> </span><span class="n">i2c</span><span class="p">({.</span><span class="n">clockSpeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">fastMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">})};</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="n">Spi</span><span class="w"> </span><span class="n">g_spi1</span><span class="p">{</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">    </span><span class="o">*</span><span class="n">SPI1</span><span class="p">,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="n">spi</span><span class="p">({.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiMode</span><span class="o">::</span><span class="n">Mode0</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiDataSize</span><span class="o">::</span><span class="n">Bits8</span><span class="p">,</span><span class="w"> </span><span class="p">...})</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="p">};</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="n">Uart</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">{</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="o">*</span><span class="n">USART2</span><span class="p">,</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="n">USART2_IRQn</span><span class="p">,</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="n">uart</span><span class="p">(</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">        </span><span class="p">{.</span><span class="n">baudrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">115200</span><span class="p">,</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">         </span><span class="p">.</span><span class="n">dataBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataBits</span><span class="o">::</span><span class="n">Eight</span><span class="p">,</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">         </span><span class="p">.</span><span class="n">stopBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StopBits</span><span class="o">::</span><span class="n">One</span><span class="p">,</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">         </span><span class="p">.</span><span class="n">parity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Parity</span><span class="o">::</span><span class="n">None</span><span class="p">}</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span><span class="p">)</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="p">};</span>
 </code></pre></div>
 <p>Соответствие полей для перехода на enum:</p>
 <ul>
@@ -2099,11 +2266,11 @@ SDK — переход на компоненты не навязывается. 
   компилируется. Берите конкретный тип или делайте функцию/класс ограниченным
   шаблоном:</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1">// было</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="kt">void</span><span class="w"> </span><span class="nf">useBus</span><span class="p">(</span><span class="n">driver</span><span class="o">::</span><span class="n">II2c</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bus</span><span class="p">);</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="c1">// стало — ограниченный параметр шаблона (стиль, принятый в SDK)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">driver</span><span class="o">::</span><span class="n">II2c</span><span class="w"> </span><span class="n">I2cDriver</span><span class="o">&gt;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="kt">void</span><span class="w"> </span><span class="n">useBus</span><span class="p">(</span><span class="n">I2cDriver</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bus</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// было</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="kt">void</span><span class="w"> </span><span class="nf">useBus</span><span class="p">(</span><span class="n">driver</span><span class="o">::</span><span class="n">II2c</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bus</span><span class="p">);</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">// стало — ограниченный параметр шаблона (стиль, принятый в SDK)</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="n">driver</span><span class="o">::</span><span class="n">II2c</span><span class="w"> </span><span class="n">I2cDriver</span><span class="o">&gt;</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="kt">void</span><span class="w"> </span><span class="n">useBus</span><span class="p">(</span><span class="n">I2cDriver</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bus</span><span class="p">);</span>
 </code></pre></div>
 <ul>
 <li><strong>Сенсоры теперь шаблоны класса по типу шины.</strong> Создание не меняется
@@ -2111,36 +2278,36 @@ SDK — переход на компоненты не навязывается. 
   выводит <code>Mpu6050&lt;I2c&gt;</code>. Но «голый» тип назвать уже нельзя — например,
   <code>sensor::Mpu6050 *</code> ill-formed. Используйте <code>decltype(&amp;g)</code>:</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1">// было</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="k">auto</span><span class="w"> </span><span class="o">*</span><span class="n">mpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sensor</span><span class="o">::</span><span class="n">Mpu6050</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="c1">// стало</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">auto</span><span class="w"> </span><span class="o">*</span><span class="n">mpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="o">&amp;</span><span class="n">g_mpu</span><span class="p">)</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// было</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="k">auto</span><span class="w"> </span><span class="o">*</span><span class="n">mpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">sensor</span><span class="o">::</span><span class="n">Mpu6050</span><span class="w"> </span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">// стало</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="k">auto</span><span class="w"> </span><span class="o">*</span><span class="n">mpu</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="o">&amp;</span><span class="n">g_mpu</span><span class="p">)</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
 </code></pre></div>
 <ul>
 <li><strong>Константы устройства <code>W25q32</code> переехали в <code>sensor::W25q32Spec</code>.</strong> Поскольку
   <code>W25q32</code> теперь шаблон, <code>sensor::W25q32::SECTOR_SIZE</code> требовал бы шаблонных
   аргументов. Константы лежат в нешаблонном <code>sensor::W25q32Spec</code>:</li>
 </ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1">// было</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">sensor</span><span class="o">::</span><span class="n">W25q32</span><span class="o">::</span><span class="n">JEDEC_W25Q32JV</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="c1">// стало</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="n">sensor</span><span class="o">::</span><span class="n">W25q32Spec</span><span class="o">::</span><span class="n">JEDEC_W25Q32JV</span><span class="w">       </span><span class="c1">// также CAPACITY, SECTOR_SIZE, PAGE_SIZE</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// было</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">sensor</span><span class="o">::</span><span class="n">W25q32</span><span class="o">::</span><span class="n">JEDEC_W25Q32JV</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="c1">// стало</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">sensor</span><span class="o">::</span><span class="n">W25q32Spec</span><span class="o">::</span><span class="n">JEDEC_W25Q32JV</span><span class="w">       </span><span class="c1">// также CAPACITY, SECTOR_SIZE, PAGE_SIZE</span>
 </code></pre></div>
 <ul>
 <li><strong><code>NullGpioPin</code> теперь обычный <code>struct</code></strong> (больше не наследует виртуальную
   базу). Использование не меняется.</li>
 </ul>
-<h3 id="nodiscard">Все методы драйверов/сенсоров, возвращающие значение, теперь <code>[[nodiscard]]</code><a class="headerlink" href="#nodiscard" title="Permanent link">&para;</a></h3>
+<h3 id="nodiscard_1">Все методы драйверов/сенсоров, возвращающие значение, теперь <code>[[nodiscard]]</code><a class="headerlink" href="#nodiscard_1" title="Permanent link">&para;</a></h3>
 <p>Раньше <code>[[nodiscard]]</code> нёс только тип <code>Status</code>. Теперь помечены и сами методы,
 включая возвращающие счётчик или геометрию (<code>Uart::write</code>/<code>read</code> → <code>size_t</code>,
 <code>Flash::sectorSize</code>/<code>sectorCount</code>, <code>Display::width</code>/<code>height</code>,
 <code>IExternalFlash::capacity</code>/<code>jedecId</code>, …). Под <code>-Werror</code> проигнорированный
 результат — ошибка сборки. Типичный случай — fire-and-forget запись в UART;
 сбрасывайте результат явно:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1">// было</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">g_uart2</span><span class="p">.</span><span class="n">write</span><span class="p">({</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="c1">// стало</span>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">.</span><span class="n">write</span><span class="p">({</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1">// было</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">g_uart2</span><span class="p">.</span><span class="n">write</span><span class="p">({</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="c1">// стало</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">.</span><span class="n">write</span><span class="p">({</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
 </code></pre></div>
 <h3 id="driverstatus-nodiscard"><code>driver::Status</code> теперь <code>[[nodiscard]]</code><a class="headerlink" href="#driverstatus-nodiscard" title="Permanent link">&para;</a></h3>
 <p><code>Status</code> (и новый <code>Result&lt;T&gt;</code>) помечены атрибутом <code>[[nodiscard]]</code>. Под
@@ -2148,14 +2315,14 @@ SDK — переход на компоненты не навязывается. 
 возврат <code>Status</code>, больше не компилируется. Это может всплыть в downstream-коде,
 вызывавшем <code>write</code> / <code>read</code> / <code>eraseSector</code> / <code>init</code> и сбрасывавшем результат.</p>
 <p>Поправьте каждое место одним из двух способов:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1">// 1. Обработать ошибку (предпочтительно):</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">g_flash</span><span class="p">.</span><span class="n">eraseSector</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="c1">// лог / повтор / halt</span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="c1">// 2. Явно сбросить, когда ошибка действительно неважна</span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="c1">//    (например, потеря байта в полном ISR-кольце):</span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="c1">// 1. Обработать ошибку (предпочтительно):</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">g_flash</span><span class="p">.</span><span class="n">eraseSector</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="c1">// лог / повтор / halt</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="p">}</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="c1">// 2. Явно сбросить, когда ошибка действительно неважна</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="c1">//    (например, потеря байта в полном ISR-кольце):</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span>
 </code></pre></div>
 <p><code>Result&lt;T&gt;</code>, <code>DRV_TRY</code> и <code>DRV_TRY_ASSIGN</code> — новые аддитивные API, они не ломают
 существующий код. См. <a href="../modules/drivers/">драйверы</a>.</p>
@@ -2165,28 +2332,28 @@ SDK — переход на компоненты не навязывается. 
 обычный aggregate + свободный <code>consteval gpio()</code>-валидатор. Новая форма
 обязательна во всех call-сайтах.</p>
 <p><strong>Было (v0.1.2):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">GpioPin</span><span class="w"> </span><span class="n">led</span><span class="p">{</span>
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="o">*</span><span class="n">GPIOD</span><span class="p">,</span>
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="n">GpioConfig</span><span class="p">{</span>
-<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">        </span><span class="mi">12</span><span class="p">,</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">        </span><span class="n">PinMode</span><span class="o">::</span><span class="n">Output</span><span class="p">,</span>
-<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">        </span><span class="n">PullMode</span><span class="o">::</span><span class="n">None</span><span class="p">,</span>
-<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">        </span><span class="n">OutputSpeed</span><span class="o">::</span><span class="n">Low</span><span class="p">,</span>
-<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">        </span><span class="n">OutputType</span><span class="o">::</span><span class="n">PushPull</span>
-<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">};</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">GpioPin</span><span class="w"> </span><span class="n">led</span><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span><span class="o">*</span><span class="n">GPIOD</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="n">GpioConfig</span><span class="p">{</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">        </span><span class="mi">12</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">        </span><span class="n">PinMode</span><span class="o">::</span><span class="n">Output</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">        </span><span class="n">PullMode</span><span class="o">::</span><span class="n">None</span><span class="p">,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">        </span><span class="n">OutputSpeed</span><span class="o">::</span><span class="n">Low</span><span class="p">,</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">        </span><span class="n">OutputType</span><span class="o">::</span><span class="n">PushPull</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="p">};</span>
 </code></pre></div>
 <p><strong>Стало (latest):</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">GpioPin</span><span class="w"> </span><span class="n">led</span><span class="p">{</span>
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="o">*</span><span class="n">GPIOD</span><span class="p">,</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="n">gpio</span><span class="p">(</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">        </span><span class="p">{.</span><span class="n">pin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">         </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PinMode</span><span class="o">::</span><span class="n">Output</span><span class="p">,</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">         </span><span class="p">.</span><span class="n">pull</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PullMode</span><span class="o">::</span><span class="n">None</span><span class="p">,</span>
-<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">         </span><span class="p">.</span><span class="n">speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OutputSpeed</span><span class="o">::</span><span class="n">Low</span><span class="p">,</span>
-<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">         </span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OutputType</span><span class="o">::</span><span class="n">PushPull</span><span class="p">}</span>
-<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="p">)</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="p">};</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">GpioPin</span><span class="w"> </span><span class="n">led</span><span class="p">{</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span><span class="o">*</span><span class="n">GPIOD</span><span class="p">,</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="n">gpio</span><span class="p">(</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">        </span><span class="p">{.</span><span class="n">pin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">         </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PinMode</span><span class="o">::</span><span class="n">Output</span><span class="p">,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">         </span><span class="p">.</span><span class="n">pull</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PullMode</span><span class="o">::</span><span class="n">None</span><span class="p">,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">         </span><span class="p">.</span><span class="n">speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OutputSpeed</span><span class="o">::</span><span class="n">Low</span><span class="p">,</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">         </span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OutputType</span><span class="o">::</span><span class="n">PushPull</span><span class="p">}</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">    </span><span class="p">)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">};</span>
 </code></pre></div>
 <p>Trailing comma после последнего designated-инициализатора удерживает
 clang-format от схлопывания конфига обратно в одну строку.</p>
@@ -2195,20 +2362,20 @@ clang-format от схлопывания конфига обратно в одн
 <code>GpioPin</code> владеет одним сконфигурированным пином; то, что раньше было
 методами уровня порта, теперь у отдельных пинов.</p>
 <p><strong>Было:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">Gpio</span><span class="w"> </span><span class="n">g_porta</span><span class="p">{</span><span class="o">*</span><span class="n">GPIOA</span><span class="p">};</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">g_porta</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">Gpio</span><span class="w"> </span><span class="n">g_porta</span><span class="p">{</span><span class="o">*</span><span class="n">GPIOA</span><span class="p">};</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">g_porta</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
 </code></pre></div>
 <p><strong>Стало:</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">GpioPin</span><span class="w"> </span><span class="n">g_pa5</span><span class="p">{</span><span class="o">*</span><span class="n">GPIOA</span><span class="p">,</span><span class="w"> </span><span class="n">gpio</span><span class="p">({.</span><span class="n">pin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PinMode</span><span class="o">::</span><span class="n">Output</span><span class="p">,</span><span class="w"> </span><span class="p">...})};</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">g_pa5</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">GpioPin</span><span class="w"> </span><span class="n">g_pa5</span><span class="p">{</span><span class="o">*</span><span class="n">GPIOA</span><span class="p">,</span><span class="w"> </span><span class="n">gpio</span><span class="p">({.</span><span class="n">pin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PinMode</span><span class="o">::</span><span class="n">Output</span><span class="p">,</span><span class="w"> </span><span class="p">...})};</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="n">g_pa5</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
 </code></pre></div>
 <h3 id="uart-template-backward-compatible"><code>Uart&lt;&gt;</code> получил третий template-параметр (backward compatible)<a class="headerlink" href="#uart-template-backward-compatible" title="Permanent link">&para;</a></h3>
 <p><code>Uart&lt;RxBufSize, TxBufSize, Mode&gt;</code>, где <code>Mode</code> по умолчанию
 <code>UartMode::Interrupt</code>. Существующий код <code>Uart&lt;256, 256&gt;</code> продолжает работать
 без правок. DMA TX — opt-in:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">Uart</span><span class="o">&lt;</span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="n">UartMode</span><span class="o">::</span><span class="n">Dma</span><span class="o">&gt;</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">{...};</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">Uart</span><span class="o">&lt;</span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="n">UartMode</span><span class="o">::</span><span class="n">Dma</span><span class="o">&gt;</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">{...};</span>
 </code></pre></div>
-<h2 id="_2">Новые доступные модули<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_3">Новые доступные модули<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <p>После апгрейда становятся доступны (без дополнительной настройки):</p>
 <ul>
 <li><code>driver.stm32f4.dma</code> — <code>DmaStream</code> RAII-обёртка + таблица <code>dmaMap</code>.</li>
@@ -2238,7 +2405,7 @@ designated-инициализатора, чтобы детерминирован
 Правок в коде не требуется — фикс прозрачен.</p>
 <p><code>I2c::probe()</code> теперь гонит <code>ADDR</code> против <code>AF</code> для быстрого детектирования
 NACK. Сканирование шины, занимавшее ~58 с, теперь укладывается в ~200 мс.</p>
-<h2 id="_3">Защита проекта на будущее<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h2 id="_4">Защита проекта на будущее<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Фиксируйте <code>[sdk] version</code> на тег в <code>main</code>/<code>master</code>; <code>develop</code> используйте
   только на экспериментальных ветках.</li>

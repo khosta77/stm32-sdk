@@ -845,6 +845,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#circularbuffer-drivercircular_buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CircularBuffer — driver.circular_buffer
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1543,6 +1554,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#circularbuffer-drivercircular_buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CircularBuffer — driver.circular_buffer
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1801,9 +1823,15 @@ drops from ~11 ms to under 50 µs.</p>
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">};</span>
 </code></pre></div>
 <p><code>spi({...})</code> is a <code>consteval</code> validator: it throws at compile time on
-<code>clockHz == 0</code> or an unset <code>mode</code>/<code>dataSize</code> (<code>SpiMode::None</code> /
-<code>SpiDataSize::None</code>). <code>SpiConfig</code>, <code>SpiMode</code> (<code>Mode0..Mode3</code>, CPOL/CPHA) and
-<code>SpiDataSize</code> (<code>Bits8</code>/<code>Bits16</code>) live in <code>driver.spi</code>.</p>
+<code>clockHz == 0</code>, an unset <code>mode</code>/<code>dataSize</code> (<code>SpiMode::None</code> /
+<code>SpiDataSize::None</code>), or <code>SpiDataSize::Bits16</code>. <code>SpiConfig</code>, <code>SpiMode</code>
+(<code>Mode0..Mode3</code>, CPOL/CPHA) and <code>SpiDataSize</code> live in <code>driver.spi</code>.</p>
+<blockquote>
+<p>Only <code>SpiDataSize::Bits8</code> is supported. The driver drives the data register
+one byte at a time, so a 16-bit frame size would corrupt framing; since v0.2.0
+<code>spi({...})</code> rejects <code>Bits16</code> at compile time. The enum value is reserved for a
+future 16-bit path.</p>
+</blockquote>
 <p><code>Spi</code> selects <code>PCLK1</code> for SPI2/SPI3 (APB1) and <code>PCLK2</code> for SPI1/SPI4/SPI5/SPI6
 (APB2) when computing the BR divisor.</p>
 <p>DMA support for SPI is not yet implemented; the stream/channel mapping is
@@ -1939,6 +1967,26 @@ defer work out of the ISR, have the callback call
 <code>executor.postFromISR(workItem)</code> — the ISR priority (6 here) must be numerically
 ≥ <code>configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY</code> (5 on F4) for that to be legal.
 See the <code>button-events-demo</code> template.</p>
+<h2 id="circularbuffer-drivercircular_buffer">CircularBuffer — <code>driver.circular_buffer</code><a class="headerlink" href="#circularbuffer-drivercircular_buffer" title="Permanent link">&para;</a></h2>
+<p>A fixed-capacity, single-producer/single-consumer ring buffer used internally by
+<code>Uart&lt;&gt;</code> for its RX/TX FIFOs. It is CMSIS-free and lock-free (two
+<code>std::atomic&lt;size_t&gt;</code> indices with acquire/release ordering), so it is safe
+across an ISR/task boundary and is host-tested.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">circular_buffer</span><span class="p">;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">CircularBuffer</span><span class="p">;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">CircularBuffer</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fifo</span><span class="p">;</span><span class="w">  </span><span class="c1">// N must be a power of two</span>
+</code></pre></div>
+<ul>
+<li><code>N</code> must be a power of two (enforced by <code>static_assert</code>). One slot is reserved
+  to distinguish full from empty, so the usable capacity is <code>N - 1</code>.</li>
+<li><code>push(item)</code> / <code>pop(item)</code> move a single element and return <code>Status::Ok</code>, or
+  <code>Status::Busy</code> when the buffer is full / empty respectively.</li>
+<li><code>write(src, len)</code> / <code>read(dst, maxLen)</code> move a block and return the count
+  actually transferred (bounded by free space / available data).</li>
+<li><code>size()</code>, <code>free_space()</code>, <code>empty()</code>, <code>full()</code>, <code>capacity()</code> query the state.
+  All are <code>[[nodiscard]]</code>.</li>
+</ul>
 
 
 

@@ -1237,6 +1237,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v0116" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1381,6 +1392,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v0116" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1487,6 +1509,40 @@ the same source of truth the SDK CMake side already uses.</p>
    <a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a> picks up the new content.</li>
 </ol>
 <h2 id="release-history">Release history<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h2>
+<h3 id="v020">v0.2.0<a class="headerlink" href="#v020" title="Permanent link">&para;</a></h3>
+<p>Focus: a cross-cutting stabilization pass that closes the v0.1.x line — a
+driver/sensor/framework bug audit, closing accumulated debt, and unifying MMIO
+access. Opens the v0.2.x series (issue #74).</p>
+<p>Highlights:</p>
+<ul>
+<li><strong>Correctness fixes.</strong> GPIO clock enable now covers ports F–I (was A–E only);
+  <code>SingleThreadExecutor::postFromISR</code> yields to a woken higher-priority task
+  instead of waiting a tick; <code>Mpu6050::init</code> no longer swallows the accel/gyro
+  range-write status; DMA/UART busy-waits are bounded and return
+  <code>Status::Timeout</code>; UART DMA <code>writeNonBlocking</code> is genuinely non-blocking;
+  <code>SpiDataSize::Bits16</code> (never implemented) is rejected at compile time; an I2C
+  <code>BTF</code> timeout is reported instead of a false <code>Ok</code>.</li>
+<li><strong>MMIO unification.</strong> Every register access in the GPIO/I2C/SPI/flash/clock
+  drivers now goes through <code>driver::reg::*</code> — no raw <code>|=</code> / <code>=</code> on <code>volatile</code>
+  registers remain. Behaviour is byte-identical.</li>
+<li><strong><code>[[nodiscard]]</code> everywhere.</strong> All value-returning driver/RTOS/util methods
+  are now <code>[[nodiscard]]</code>, so ignored statuses fail the build under <code>-Werror</code>.</li>
+<li><strong>Host-test coverage.</strong> New <code>ctest</code> executables for <code>CircularBuffer</code>, <code>W25q32</code>
+  and <code>Ssd1306</code> logic on the mock buses (7 host tests total).</li>
+<li><strong>Template &amp; tooling cleanup.</strong> The <code>bare-metal/blink</code> template now uses the
+  <code>GpioPin</code> driver instead of raw MMIO; the removed <code>--native</code> build flag is
+  gone from every template <code>CLAUDE.md</code> and the repo build skills.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>Three source-visible breaking changes: <code>SpiDataSize::Bits16</code> now fails to
+  compile, the new <code>[[nodiscard]]</code> markers can trip a downstream <code>-Werror</code>, and
+  <code>IImu::setAccelRange</code> / <code>setGyroRange</code> now return <code>driver::Status</code>. See the
+  <a href="../migration/#new-in-v020">upgrade notes</a>.</li>
+<li>Deferred: the SDK-wide <code>-fno-exceptions</code> / <code>-fno-rtti</code> size optimization is
+  tracked separately — it conflicts with the <code>throw</code>-based <code>consteval</code> config
+  validators and needs a throw-free rewrite first.</li>
+</ul>
 <h3 id="v0116">v0.1.16<a class="headerlink" href="#v0116" title="Permanent link">&para;</a></h3>
 <p>Focus: completing the C→C++ migration by moving the last vendor runtime
 sources — the newlib glue and the CMSIS <code>system_*</code> / vector tables — to C++,

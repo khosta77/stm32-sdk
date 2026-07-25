@@ -845,6 +845,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#circularbuffer-drivercircular_buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CircularBuffer — driver.circular_buffer
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1543,6 +1554,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#circularbuffer-drivercircular_buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CircularBuffer — driver.circular_buffer
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1802,9 +1824,15 @@ FreeRTOS, <code>__disable_irq</code> иначе) вокруг окон BTF → S
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">};</span>
 </code></pre></div>
 <p><code>spi({...})</code> — <code>consteval</code>-валидатор: бросает на этапе компиляции при
-<code>clockHz == 0</code> или незаданных <code>mode</code>/<code>dataSize</code> (<code>SpiMode::None</code> /
-<code>SpiDataSize::None</code>). <code>SpiConfig</code>, <code>SpiMode</code> (<code>Mode0..Mode3</code>, CPOL/CPHA) и
-<code>SpiDataSize</code> (<code>Bits8</code>/<code>Bits16</code>) живут в <code>driver.spi</code>.</p>
+<code>clockHz == 0</code>, незаданных <code>mode</code>/<code>dataSize</code> (<code>SpiMode::None</code> /
+<code>SpiDataSize::None</code>) или <code>SpiDataSize::Bits16</code>. <code>SpiConfig</code>, <code>SpiMode</code>
+(<code>Mode0..Mode3</code>, CPOL/CPHA) и <code>SpiDataSize</code> живут в <code>driver.spi</code>.</p>
+<blockquote>
+<p>Поддерживается только <code>SpiDataSize::Bits8</code>. Драйвер гонит регистр данных по
+одному байту, поэтому 16-битный размер фрейма испортил бы фрейминг; с v0.2.0
+<code>spi({...})</code> отклоняет <code>Bits16</code> на этапе компиляции. Значение enum
+зарезервировано под будущий 16-битный путь.</p>
+</blockquote>
 <p><code>Spi</code> выбирает <code>PCLK1</code> для SPI2/SPI3 (APB1) и <code>PCLK2</code> для SPI1/SPI4/SPI5/SPI6
 (APB2) при расчёте BR-делителя.</p>
 <p>DMA для SPI пока не реализован; mapping stream/channel зарезервирован в
@@ -1939,6 +1967,27 @@ FreeRTOS, <code>__disable_irq</code> иначе) вокруг окон BTF → S
 приоритет ISR (здесь 6) должен быть численно ≥
 <code>configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY</code> (5 у F4), иначе вызов недопустим.
 См. шаблон <code>button-events-demo</code>.</p>
+<h2 id="circularbuffer-drivercircular_buffer">CircularBuffer — <code>driver.circular_buffer</code><a class="headerlink" href="#circularbuffer-drivercircular_buffer" title="Permanent link">&para;</a></h2>
+<p>Кольцевой буфер фиксированной ёмкости с одним производителем и одним
+потребителем (SPSC), используемый внутри <code>Uart&lt;&gt;</code> для RX/TX FIFO. Он CMSIS-free
+и lock-free (два индекса <code>std::atomic&lt;size_t&gt;</code> с acquire/release-упорядочиванием),
+поэтому безопасен через границу ISR/задача и покрыт host-тестами.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">circular_buffer</span><span class="p">;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">CircularBuffer</span><span class="p">;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">CircularBuffer</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fifo</span><span class="p">;</span><span class="w">  </span><span class="c1">// N должно быть степенью двойки</span>
+</code></pre></div>
+<ul>
+<li><code>N</code> должно быть степенью двойки (проверяется <code>static_assert</code>). Один слот
+  зарезервирован для различения полного и пустого, поэтому полезная ёмкость —
+  <code>N - 1</code>.</li>
+<li><code>push(item)</code> / <code>pop(item)</code> переносят один элемент и возвращают <code>Status::Ok</code>
+  либо <code>Status::Busy</code>, когда буфер полон / пуст соответственно.</li>
+<li><code>write(src, len)</code> / <code>read(dst, maxLen)</code> переносят блок и возвращают реально
+  перенесённое число (ограничено свободным местом / доступными данными).</li>
+<li><code>size()</code>, <code>free_space()</code>, <code>empty()</code>, <code>full()</code>, <code>capacity()</code> запрашивают
+  состояние. Все — <code>[[nodiscard]]</code>.</li>
+</ul>
 
 
 

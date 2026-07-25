@@ -1237,6 +1237,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v0116" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1392,6 +1403,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v0116" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1508,6 +1530,41 @@ maintainer, пока API не стабилизируется (цель — v1.0)
    <a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a> подтянул свежий контент.</li>
 </ol>
 <h2 id="_5">История релизов<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="v020">v0.2.0<a class="headerlink" href="#v020" title="Permanent link">&para;</a></h3>
+<p>Фокус: сквозной стабилизационный проход, закрывающий линейку v0.1.x — аудит
+багов драйверов/сенсоров/каркаса, закрытие накопленного долга и унификация
+доступа к MMIO. Открывает серию v0.2.x (issue #74).</p>
+<p>Основное:</p>
+<ul>
+<li><strong>Фиксы корректности.</strong> Включение клока GPIO теперь охватывает порты F–I (было
+  только A–E); <code>SingleThreadExecutor::postFromISR</code> делает yield на разбуженную
+  более приоритетную задачу вместо ожидания тика; <code>Mpu6050::init</code> больше не
+  проглатывает статус записи диапазонов accel/gyro; busy-wait DMA/UART ограничены
+  и возвращают <code>Status::Timeout</code>; UART DMA <code>writeNonBlocking</code> действительно
+  неблокирующий; <code>SpiDataSize::Bits16</code> (никогда не реализованный) отклоняется на
+  этапе компиляции; таймаут I2C <code>BTF</code> рапортуется вместо ложного <code>Ok</code>.</li>
+<li><strong>Унификация MMIO.</strong> Каждый доступ к регистрам в драйверах GPIO/I2C/SPI/flash/
+  clock идёт через <code>driver::reg::*</code> — сырых <code>|=</code> / <code>=</code> по <code>volatile</code>-регистрам не
+  осталось. Поведение побайтово идентично.</li>
+<li><strong><code>[[nodiscard]]</code> повсюду.</strong> Все возвращающие значение методы драйверов/RTOS/
+  утилит теперь <code>[[nodiscard]]</code>, так что игнорирование статусов роняет сборку под
+  <code>-Werror</code>.</li>
+<li><strong>Покрытие host-тестами.</strong> Новые <code>ctest</code>-исполняемые для логики <code>CircularBuffer</code>,
+  <code>W25q32</code> и <code>Ssd1306</code> на мок-шинах (всего 7 host-тестов).</li>
+<li><strong>Чистка шаблонов и инструментов.</strong> Шаблон <code>bare-metal/blink</code> теперь использует
+  драйвер <code>GpioPin</code> вместо сырого MMIO; удалённый флаг сборки <code>--native</code> убран из
+  всех <code>CLAUDE.md</code> шаблонов и build-скиллов репозитория.</li>
+</ul>
+<p>Замечания:</p>
+<ul>
+<li>Три видимых в исходниках ломающих изменения: <code>SpiDataSize::Bits16</code> больше не
+  компилируется, новые пометки <code>[[nodiscard]]</code> могут задеть downstream <code>-Werror</code>,
+  а <code>IImu::setAccelRange</code> / <code>setGyroRange</code> теперь возвращают <code>driver::Status</code>. См.
+  <a href="../migration/#новое-в-v020">заметки по обновлению</a>.</li>
+<li>Отложено: SDK-wide оптимизация размера <code>-fno-exceptions</code> / <code>-fno-rtti</code> вынесена
+  отдельно — она конфликтует с <code>throw</code>-валидаторами конфигов на <code>consteval</code> и
+  требует переписывания на throw-free идиому.</li>
+</ul>
 <h3 id="v0116">v0.1.16<a class="headerlink" href="#v0116" title="Permanent link">&para;</a></h3>
 <p>Фокус: завершение миграции C→C++ — на C++ переезжают последние вендорные
 рантайм-исходники: newlib-glue и CMSIS <code>system_*</code> / таблицы векторов, без
