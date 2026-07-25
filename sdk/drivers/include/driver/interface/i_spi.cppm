@@ -20,6 +20,10 @@ enum class SpiMode : uint8_t {
 enum class SpiDataSize : uint8_t {
   None = 0xFF,
   Bits8 = 8,
+  // Bits16 is reserved but not yet implemented: the STM32F4 driver drives DR
+  // one byte at a time over span<uint8_t>, so a 16-bit frame size would corrupt
+  // framing. spi() rejects it at compile time until the driver gains a 16-bit
+  // path. See issue tracker.
   Bits16 = 16
 };
 
@@ -38,7 +42,11 @@ consteval SpiConfig spi(SpiConfig c) {
     throw "SpiConfig: mode must be set (Mode0..Mode3)";
   }
   if (c.dataSize == SpiDataSize::None) {
-    throw "SpiConfig: dataSize must be set (Bits8 or Bits16)";
+    throw "SpiConfig: dataSize must be set (currently only Bits8)";
+  }
+  if (c.dataSize == SpiDataSize::Bits16) {
+    throw "SpiConfig: dataSize Bits16 is not supported yet (driver is 8-bit "
+          "PIO); use SpiDataSize::Bits8";
   }
   return c;
 }

@@ -98,9 +98,8 @@ public:
     if (_cfg.lsbFirst) {
       cr1 |= SPI_CR1_LSBFIRST;
     }
-    if (_cfg.dataSize == SpiDataSize::Bits16) {
-      cr1 |= SPI_CR1_DFF;
-    }
+    // Data size is fixed at 8 bits: SpiConfig rejects Bits16 at compile time
+    // (the transfer path drives DR one byte at a time). DFF is left cleared.
 
     reg::write(_periph.CR1, cr1);
     reg::set(_periph.CR1, SPI_CR1_SPE);
