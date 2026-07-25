@@ -1,9 +1,10 @@
 # Справочник `stmtool`
 
 `stmtool` — Python-CLI для создания проектов, сборки прошивок и управления
-кэшем SDK. Распространяется как Python-пакет в `tools/stmtool/`,
-устанавливается через `./install.sh` (рекомендуется) или
-`pip install ./tools/stmtool`.
+кэшем SDK. С v0.2.1 это самостоятельный проект в отдельном репозитории
+[`khosta77/stmtool`](https://github.com/khosta77/stmtool), устанавливается через
+`pipx install git+https://github.com/khosta77/stmtool.git` (или `./install.sh`,
+который пинит на последний релизный тег).
 
 ## Глобальные настройки
 
@@ -145,14 +146,15 @@ stmtool completion <shell>
 Печатает скрипт shell-completion для `bash`, `zsh` или `fish`. `install.sh`
 устанавливает его автоматически.
 
-### `stmtool version`
+### `stmtool show-version`
 
 ```bash
-stmtool version
+stmtool show-version
 ```
 
-Печатает версию `stmtool`. Версия выводится из git-тегов через
-`setuptools-scm`, поэтому совпадает с релизом SDK.
+Печатает версию `stmtool`. Версия — `0.N`: minor авто-инкрементит CI на каждый
+merge в `main` репозитория `stmtool` (`poetry-dynamic-versioning` читает тег
+`v0.N`). Независима от релизного тега SDK.
 
 ## Порядок поиска SDK
 

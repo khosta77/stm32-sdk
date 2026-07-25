@@ -30,10 +30,10 @@ shell completion:
 ./install.sh
 ```
 
-Alternatively, install directly from a clone of this repo:
+Alternatively, install `stmtool` directly from its repository:
 
 ```bash
-pip install ./tools/stmtool
+pipx install git+https://github.com/khosta77/stmtool.git
 ```
 
 ## Create your first project

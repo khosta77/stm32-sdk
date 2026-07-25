@@ -14,6 +14,28 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.2.1
+
+v0.2.1 moves `stmtool` out of the SDK monorepo into its own repository,
+[`khosta77/stmtool`](https://github.com/khosta77/stmtool). There are **no
+source-visible SDK changes** — only how you install and update the tool.
+
+### Action: reinstall `stmtool` from its new repository
+
+`pip install ./tools/stmtool` no longer works (the directory is gone). Reinstall
+from the standalone repo:
+
+```bash
+pipx uninstall stmtool 2>/dev/null || true
+pipx install git+https://github.com/khosta77/stmtool.git
+```
+
+`./install.sh` in the SDK still works and now points at the new repository. The
+CLI, commands, and `STMSDK_PATH` / `STMTOOL_DOCKER_IMAGE` behavior are unchanged;
+the tool resolves this SDK checkout exactly as before. `stmtool` now versions
+itself as `v0.N` independently of the SDK release tags. The version command is
+`stmtool show-version`.
+
 ## New in v0.2.0
 
 v0.2.0 is a cross-cutting stabilization release: a driver/sensor/framework bug

@@ -1,9 +1,10 @@
 # `stmtool` reference
 
 `stmtool` is the Python CLI that scaffolds projects, builds firmware, and
-manages the SDK cache. It is distributed as a Python package under
-`tools/stmtool/` and installed either via `./install.sh` (recommended) or
-`pip install ./tools/stmtool`.
+manages the SDK cache. Since v0.2.1 it is a standalone project in its own
+repository, [`khosta77/stmtool`](https://github.com/khosta77/stmtool), installed
+via `pipx install git+https://github.com/khosta77/stmtool.git` (or `./install.sh`,
+which pins to the latest released tag).
 
 ## Global options
 
@@ -146,14 +147,15 @@ stmtool completion <shell>
 Print a shell-completion script for `bash`, `zsh`, or `fish`. The `install.sh`
 script installs this automatically.
 
-### `stmtool version`
+### `stmtool show-version`
 
 ```bash
-stmtool version
+stmtool show-version
 ```
 
-Print the `stmtool` version. The version is derived from git tags via
-`setuptools-scm`, so it matches the SDK release.
+Print the `stmtool` version. The version is `0.N` — the minor is auto-bumped by
+CI on every merge to `main` in the `stmtool` repo (`poetry-dynamic-versioning`
+reads the `v0.N` tag). It is independent of the SDK release tag.
 
 ## SDK resolution order
 
