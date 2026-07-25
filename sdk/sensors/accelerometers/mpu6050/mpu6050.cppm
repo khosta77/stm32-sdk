@@ -90,8 +90,15 @@ public:
       return st;
     }
 
-    setAccelRange(_cfg.accelRange);
-    setGyroRange(_cfg.gyroRange);
+    st = setAccelRange(_cfg.accelRange);
+    if (st != driver::Status::Ok) {
+      return st;
+    }
+
+    st = setGyroRange(_cfg.gyroRange);
+    if (st != driver::Status::Ok) {
+      return st;
+    }
 
     uint8_t whoami = 0;
     st = readRegs(Regs::WHO_AM_I, &whoami, 1);
@@ -137,7 +144,7 @@ public:
                             : driver::Status::HardwareError;
   }
 
-  void setAccelRange(uint8_t g) {
+  driver::Status setAccelRange(uint8_t g) {
     uint8_t val;
     switch (g) {
       case 4:
@@ -157,10 +164,10 @@ public:
         _accelScale = 16384.0f;
         break;
     }
-    (void) writeReg(Regs::ACCEL_CONFIG, val);
+    return writeReg(Regs::ACCEL_CONFIG, val);
   }
 
-  void setGyroRange(uint16_t dps) {
+  driver::Status setGyroRange(uint16_t dps) {
     uint8_t val;
     switch (dps) {
       case 500:
@@ -180,7 +187,7 @@ public:
         _gyroScale = 131.0f;
         break;
     }
-    (void) writeReg(Regs::GYRO_CONFIG, val);
+    return writeReg(Regs::GYRO_CONFIG, val);
   }
 };
 

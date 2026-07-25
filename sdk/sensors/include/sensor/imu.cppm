@@ -26,8 +26,8 @@ concept IImu = requires(T sensor, ImuData &out, uint8_t g, uint16_t dps) {
   { sensor.init() } -> std::same_as<driver::Status>;
   { sensor.read(out) } -> std::same_as<driver::Status>;
   { sensor.selfTest() } -> std::same_as<driver::Status>;
-  { sensor.setAccelRange(g) } -> std::same_as<void>;
-  { sensor.setGyroRange(dps) } -> std::same_as<void>;
+  { sensor.setAccelRange(g) } -> std::same_as<driver::Status>;
+  { sensor.setGyroRange(dps) } -> std::same_as<driver::Status>;
 };
 
 }  // namespace sensor
