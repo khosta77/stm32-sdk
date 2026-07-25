@@ -18,7 +18,7 @@ a `system::Channel`, and a reactive **Consumer** handles them on a shared
 ## Build / flash
 
 ```bash
-stmtool build --native
+stmtool build
 stmtool flash
 stmtool sdk update          # if [sdk] version = "develop"
 ```

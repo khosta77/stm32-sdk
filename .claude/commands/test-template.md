@@ -9,11 +9,12 @@ in template.toml (e.g. `i2c-scan`, `freertos-blink`, `mpu6050-uart`).
 
 ```bash
 TEMPLATE="$ARGUMENTS"
+REPO_ROOT="$(pwd)"
 rm -rf /tmp/test-$TEMPLATE
-STMSDK_PATH="$(pwd)" stmtool project create "/tmp/test-$TEMPLATE" --chip STM32F407VG --template "$TEMPLATE"
+( cd /tmp && STMSDK_PATH="$REPO_ROOT" stmtool project create "test-$TEMPLATE" --chip STM32F407VG --template "$TEMPLATE" )
 cd "/tmp/test-$TEMPLATE"
-STMSDK_PATH="$REPO_ROOT" stmtool build --native
-arm-none-eabi-size build/*.elf
+STMSDK_PATH="$REPO_ROOT" stmtool build
+arm-none-eabi-size out/*.elf
 ```
 
 Report whether the build succeeded and the final flash/RAM size from

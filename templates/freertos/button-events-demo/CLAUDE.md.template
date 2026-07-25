@@ -22,7 +22,7 @@ a third component owns its own **deferred-start** FreeRTOS task.
 ## Build / flash
 
 ```bash
-stmtool build --native
+stmtool build
 stmtool flash
 stmtool sdk update          # if [sdk] version = "develop"
 ```
