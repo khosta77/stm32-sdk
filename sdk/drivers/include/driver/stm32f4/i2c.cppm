@@ -254,8 +254,8 @@ public:
           }
           _periph.DR = byte;
         }
-        if (result == Status::Ok) {
-          waitFlag(_periph.SR1, I2C_SR1_BTF, true);
+        if (result == Status::Ok && !waitFlag(_periph.SR1, I2C_SR1_BTF, true)) {
+          result = Status::Timeout;
         }
         generateStop();
       } else {
@@ -304,8 +304,9 @@ public:
             }
             _periph.DR = byte;
           }
-          if (result == Status::Ok) {
-            waitFlag(_periph.SR1, I2C_SR1_BTF, true);
+          if (result == Status::Ok &&
+              !waitFlag(_periph.SR1, I2C_SR1_BTF, true)) {
+            result = Status::Timeout;
           }
         } else {
           result = Status::Timeout;
