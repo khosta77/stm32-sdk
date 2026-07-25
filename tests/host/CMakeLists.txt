@@ -22,13 +22,19 @@ target_sources(sdk_portable PUBLIC
   FILE_SET modules TYPE CXX_MODULES BASE_DIRS ${SDK} FILES
     ${SDK}/drivers/include/driver/types.cppm
     ${SDK}/drivers/include/driver/log.cppm
+    ${SDK}/drivers/include/driver/circular_buffer.cppm
     ${SDK}/drivers/include/driver/interface/i_i2c.cppm
     ${SDK}/drivers/include/driver/interface/i_spi.cppm
     ${SDK}/drivers/include/driver/interface/i_uart.cppm
     ${SDK}/drivers/include/driver/interface/i_gpio.cppm
     ${SDK}/drivers/include/driver/interface/i_flash.cppm
     ${SDK}/sensors/include/sensor/imu.cppm
+    ${SDK}/sensors/include/sensor/display.cppm
+    ${SDK}/sensors/include/sensor/external_flash.cppm
     ${SDK}/sensors/accelerometers/mpu6050/mpu6050.cppm
+    ${SDK}/sensors/displays/ssd1306/font5x7.cppm
+    ${SDK}/sensors/displays/ssd1306/ssd1306.cppm
+    ${SDK}/sensors/storage/w25q32/w25q32.cppm
     ${SDK}/testing/mock/mock_bus.cppm
 )
 target_compile_features(sdk_portable PUBLIC cxx_std_20)
@@ -49,3 +55,6 @@ add_host_test(test_result)
 add_host_test(test_mock)
 add_host_test(test_sensor_mock)
 add_host_test(test_log)
+add_host_test(test_circular_buffer)
+add_host_test(test_w25q32)
+add_host_test(test_ssd1306)
