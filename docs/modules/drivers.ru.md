@@ -277,9 +277,14 @@ Spi g_spi2{
 ```
 
 `spi({...})` — `consteval`-валидатор: бросает на этапе компиляции при
-`clockHz == 0` или незаданных `mode`/`dataSize` (`SpiMode::None` /
-`SpiDataSize::None`). `SpiConfig`, `SpiMode` (`Mode0..Mode3`, CPOL/CPHA) и
-`SpiDataSize` (`Bits8`/`Bits16`) живут в `driver.spi`.
+`clockHz == 0`, незаданных `mode`/`dataSize` (`SpiMode::None` /
+`SpiDataSize::None`) или `SpiDataSize::Bits16`. `SpiConfig`, `SpiMode`
+(`Mode0..Mode3`, CPOL/CPHA) и `SpiDataSize` живут в `driver.spi`.
+
+> Поддерживается только `SpiDataSize::Bits8`. Драйвер гонит регистр данных по
+> одному байту, поэтому 16-битный размер фрейма испортил бы фрейминг; с v0.2.0
+> `spi({...})` отклоняет `Bits16` на этапе компиляции. Значение enum
+> зарезервировано под будущий 16-битный путь.
 
 `Spi` выбирает `PCLK1` для SPI2/SPI3 (APB1) и `PCLK2` для SPI1/SPI4/SPI5/SPI6
 (APB2) при расчёте BR-делителя.
@@ -388,3 +393,27 @@ extern "C" void EXTI0_IRQHandler() {
 приоритет ISR (здесь 6) должен быть численно ≥
 `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 у F4), иначе вызов недопустим.
 См. шаблон `button-events-demo`.
+
+## CircularBuffer — `driver.circular_buffer`
+
+Кольцевой буфер фиксированной ёмкости с одним производителем и одним
+потребителем (SPSC), используемый внутри `Uart<>` для RX/TX FIFO. Он CMSIS-free
+и lock-free (два индекса `std::atomic<size_t>` с acquire/release-упорядочиванием),
+поэтому безопасен через границу ISR/задача и покрыт host-тестами.
+
+```cpp
+import driver.circular_buffer;
+using driver::CircularBuffer;
+
+CircularBuffer<uint8_t, 256> fifo;  // N должно быть степенью двойки
+```
+
+- `N` должно быть степенью двойки (проверяется `static_assert`). Один слот
+  зарезервирован для различения полного и пустого, поэтому полезная ёмкость —
+  `N - 1`.
+- `push(item)` / `pop(item)` переносят один элемент и возвращают `Status::Ok`
+  либо `Status::Busy`, когда буфер полон / пуст соответственно.
+- `write(src, len)` / `read(dst, maxLen)` переносят блок и возвращают реально
+  перенесённое число (ограничено свободным местом / доступными данными).
+- `size()`, `free_space()`, `empty()`, `full()`, `capacity()` запрашивают
+  состояние. Все — `[[nodiscard]]`.

@@ -14,6 +14,63 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.2.0
+
+v0.2.0 is a cross-cutting stabilization release: a driver/sensor/framework bug
+audit, closing accumulated debt, and routing every peripheral through the
+`reg::` helpers. Most changes are internal, but three are **source-visible** for
+downstream projects.
+
+### Breaking: `SpiDataSize::Bits16` is now rejected at compile time
+
+The STM32F4 SPI driver only ever drove the data register one byte at a time, so
+`SpiDataSize::Bits16` produced corrupt framing. `spi({...})` now rejects it with
+a compile-time error. If you passed `Bits16`, switch to `Bits8`:
+
+```cpp
+Spi g_spi{*SPI2, spi({.clockHz = 10000000,
+                      .mode = SpiMode::Mode0,
+                      .lsbFirst = false,
+                      .dataSize = SpiDataSize::Bits8})};  // was Bits16
+```
+
+### Breaking: more methods are `[[nodiscard]]`
+
+Every value-returning driver/RTOS/util method now carries `[[nodiscard]]`
+(`CircularBuffer::{read,write,size,free_space,empty,full,capacity}`,
+`reg::{read,get}`, the `DmaStream` status getters, `rtos::{Mutex,BinarySemaphore,
+Queue,Task}` methods, `clock::get*`). Under the SDK's `-Werror`, ignoring one of
+these returns now fails to compile. Consume the value or mark the discard
+explicit:
+
+```cpp
+(void) uart.write(data);  // fire-and-forget is now explicit
+```
+
+### Breaking: `IImu` range setters return `driver::Status`
+
+`setAccelRange` / `setGyroRange` changed from `void` to `driver::Status` so a
+bus NACK during `init()` is no longer swallowed. The `sensor::IImu` concept was
+updated to match. Custom IMU implementations must update both method signatures;
+the `static_assert(IImu<...>)` in your driver enforces it at compile time.
+
+### Non-breaking fixes worth knowing
+
+- **GPIO clock** is now enabled for ports F–I (previously only A–E), so pins on
+  those ports work on 100/144/176-pin parts.
+- **`postFromISR`** now yields to a woken higher-priority task instead of waiting
+  up to a tick — lower ISR-to-task latency for the executor and signal bus.
+- **Peripheral busy-waits** (DMA enable, UART DMA transfer/TC) are now bounded
+  and return `Status::Timeout` instead of spinning forever on a stuck peripheral.
+- **UART DMA `writeNonBlocking`** now actually returns immediately instead of
+  blocking for the whole transfer.
+- All MMIO in the drivers now goes through `driver::reg::*`; behaviour is
+  byte-identical.
+
+> Known gap: `system.work_queue` and `system.signal_bus` still pull in CMSIS /
+> FreeRTOS, so they are not yet covered by host tests. Extracting a portable
+> critical-section shim is tracked for a later release.
+
 ## New in v0.1.16
 
 v0.1.16 completes the C→C++ migration started in v0.1.15: the newlib glue and

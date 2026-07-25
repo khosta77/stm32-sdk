@@ -252,8 +252,10 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
   `MockUart`/`MockGpioPin`/`MockFlash` satisfying the driver concepts.
 - `tests/host/` — standalone CMake tree (v0.1.13) built with the image's host
   `g++`: compiles the CMSIS-free portable modules + `testing.mock` into `ctest`
-  executables (`test_result`/`test_mock`/`test_sensor_mock`). Run via
-  `stmtool test`; a `host-tests` CI job runs the same.
+  executables (`test_result`/`test_mock`/`test_sensor_mock`/`test_log`/
+  `test_circular_buffer`/`test_w25q32`/`test_ssd1306`). Run via `stmtool test`;
+  a `host-tests` CI job runs the same. `system.work_queue`/`system.signal_bus`
+  still pull CMSIS/FreeRTOS and are not host-portable yet.
 - `templates/` — 10 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
   `bare-metal/unit-test-demo`, `freertos/blink`, `freertos/mpu6050-uart`,
   `freertos/oled-display-test`, `freertos/w25q32-flash-test`,

@@ -53,6 +53,42 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.2.0
+
+Focus: a cross-cutting stabilization pass that closes the v0.1.x line — a
+driver/sensor/framework bug audit, closing accumulated debt, and unifying MMIO
+access. Opens the v0.2.x series (issue #74).
+
+Highlights:
+
+- **Correctness fixes.** GPIO clock enable now covers ports F–I (was A–E only);
+  `SingleThreadExecutor::postFromISR` yields to a woken higher-priority task
+  instead of waiting a tick; `Mpu6050::init` no longer swallows the accel/gyro
+  range-write status; DMA/UART busy-waits are bounded and return
+  `Status::Timeout`; UART DMA `writeNonBlocking` is genuinely non-blocking;
+  `SpiDataSize::Bits16` (never implemented) is rejected at compile time; an I2C
+  `BTF` timeout is reported instead of a false `Ok`.
+- **MMIO unification.** Every register access in the GPIO/I2C/SPI/flash/clock
+  drivers now goes through `driver::reg::*` — no raw `|=` / `=` on `volatile`
+  registers remain. Behaviour is byte-identical.
+- **`[[nodiscard]]` everywhere.** All value-returning driver/RTOS/util methods
+  are now `[[nodiscard]]`, so ignored statuses fail the build under `-Werror`.
+- **Host-test coverage.** New `ctest` executables for `CircularBuffer`, `W25q32`
+  and `Ssd1306` logic on the mock buses (7 host tests total).
+- **Template & tooling cleanup.** The `bare-metal/blink` template now uses the
+  `GpioPin` driver instead of raw MMIO; the removed `--native` build flag is
+  gone from every template `CLAUDE.md` and the repo build skills.
+
+Notes:
+
+- Three source-visible breaking changes: `SpiDataSize::Bits16` now fails to
+  compile, the new `[[nodiscard]]` markers can trip a downstream `-Werror`, and
+  `IImu::setAccelRange` / `setGyroRange` now return `driver::Status`. See the
+  [upgrade notes](migration.md#new-in-v020).
+- Deferred: the SDK-wide `-fno-exceptions` / `-fno-rtti` size optimization is
+  tracked separately — it conflicts with the `throw`-based `consteval` config
+  validators and needs a throw-free rewrite first.
+
 ### v0.1.16
 
 Focus: completing the C→C++ migration by moving the last vendor runtime
