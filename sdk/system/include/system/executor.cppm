@@ -45,8 +45,10 @@ public:
   }
 
   void postFromISR(WorkItem &item) {
+    BaseType_t higherPriorityTaskWoken = pdFALSE;
     _wq.scheduleAt(item, xTaskGetTickCountFromISR(), false);
-    (void) _wake.giveFromISR();
+    (void) _wake.giveFromISR(&higherPriorityTaskWoken);
+    portYIELD_FROM_ISR(higherPriorityTaskWoken);
   }
 
   void cancel(WorkItem &item) { _wq.cancel(item); }
