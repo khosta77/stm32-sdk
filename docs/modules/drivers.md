@@ -276,9 +276,14 @@ Spi g_spi2{
 ```
 
 `spi({...})` is a `consteval` validator: it throws at compile time on
-`clockHz == 0` or an unset `mode`/`dataSize` (`SpiMode::None` /
-`SpiDataSize::None`). `SpiConfig`, `SpiMode` (`Mode0..Mode3`, CPOL/CPHA) and
-`SpiDataSize` (`Bits8`/`Bits16`) live in `driver.spi`.
+`clockHz == 0`, an unset `mode`/`dataSize` (`SpiMode::None` /
+`SpiDataSize::None`), or `SpiDataSize::Bits16`. `SpiConfig`, `SpiMode`
+(`Mode0..Mode3`, CPOL/CPHA) and `SpiDataSize` live in `driver.spi`.
+
+> Only `SpiDataSize::Bits8` is supported. The driver drives the data register
+> one byte at a time, so a 16-bit frame size would corrupt framing; since v0.2.0
+> `spi({...})` rejects `Bits16` at compile time. The enum value is reserved for a
+> future 16-bit path.
 
 `Spi` selects `PCLK1` for SPI2/SPI3 (APB1) and `PCLK2` for SPI1/SPI4/SPI5/SPI6
 (APB2) when computing the BR divisor.
@@ -388,3 +393,26 @@ defer work out of the ISR, have the callback call
 `executor.postFromISR(workItem)` — the ISR priority (6 here) must be numerically
 ≥ `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 on F4) for that to be legal.
 See the `button-events-demo` template.
+
+## CircularBuffer — `driver.circular_buffer`
+
+A fixed-capacity, single-producer/single-consumer ring buffer used internally by
+`Uart<>` for its RX/TX FIFOs. It is CMSIS-free and lock-free (two
+`std::atomic<size_t>` indices with acquire/release ordering), so it is safe
+across an ISR/task boundary and is host-tested.
+
+```cpp
+import driver.circular_buffer;
+using driver::CircularBuffer;
+
+CircularBuffer<uint8_t, 256> fifo;  // N must be a power of two
+```
+
+- `N` must be a power of two (enforced by `static_assert`). One slot is reserved
+  to distinguish full from empty, so the usable capacity is `N - 1`.
+- `push(item)` / `pop(item)` move a single element and return `Status::Ok`, or
+  `Status::Busy` when the buffer is full / empty respectively.
+- `write(src, len)` / `read(dst, maxLen)` move a block and return the count
+  actually transferred (bounded by free space / available data).
+- `size()`, `free_space()`, `empty()`, `full()`, `capacity()` query the state.
+  All are `[[nodiscard]]`.
