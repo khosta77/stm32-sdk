@@ -29,20 +29,20 @@ public:
   Mutex(const Mutex &) = delete;
   Mutex &operator=(const Mutex &) = delete;
 
-  bool lock(TickType_t timeout = portMAX_DELAY) ACQUIRE() {
+  [[nodiscard]] bool lock(TickType_t timeout = portMAX_DELAY) ACQUIRE() {
     return xSemaphoreTake(_handle, timeout) == pdTRUE;
   }
 
   void unlock() RELEASE() { xSemaphoreGive(_handle); }
 
-  SemaphoreHandle_t handle() const { return _handle; }
+  [[nodiscard]] SemaphoreHandle_t handle() const { return _handle; }
 };
 
 class SCOPED_CAPABILITY LockGuard {
   Mutex &_mtx;
 
 public:
-  explicit LockGuard(Mutex &m) ACQUIRE(m) : _mtx(m) { _mtx.lock(); }
+  explicit LockGuard(Mutex &m) ACQUIRE(m) : _mtx(m) { (void) _mtx.lock(); }
   ~LockGuard() RELEASE() { _mtx.unlock(); }
   LockGuard(const LockGuard &) = delete;
   LockGuard &operator=(const LockGuard &) = delete;
@@ -65,7 +65,7 @@ public:
   BinarySemaphore(const BinarySemaphore &) = delete;
   BinarySemaphore &operator=(const BinarySemaphore &) = delete;
 
-  bool take(TickType_t timeout = portMAX_DELAY) {
+  [[nodiscard]] bool take(TickType_t timeout = portMAX_DELAY) {
     return xSemaphoreTake(_handle, timeout) == pdTRUE;
   }
 
@@ -79,7 +79,7 @@ public:
     return xSemaphoreGiveFromISR(_handle, pxHigherPriorityTaskWoken) == pdTRUE;
   }
 
-  SemaphoreHandle_t handle() const { return _handle; }
+  [[nodiscard]] SemaphoreHandle_t handle() const { return _handle; }
 };
 
 template <typename T, size_t N>
@@ -98,7 +98,7 @@ public:
   Queue(const Queue &) = delete;
   Queue &operator=(const Queue &) = delete;
 
-  bool send(const T &item, TickType_t timeout = portMAX_DELAY) {
+  [[nodiscard]] bool send(const T &item, TickType_t timeout = portMAX_DELAY) {
     return xQueueSend(_handle, &item, timeout) == pdTRUE;
   }
 
@@ -112,13 +112,15 @@ public:
            pdTRUE;
   }
 
-  bool receive(T &item, TickType_t timeout = portMAX_DELAY) {
+  [[nodiscard]] bool receive(T &item, TickType_t timeout = portMAX_DELAY) {
     return xQueueReceive(_handle, &item, timeout) == pdTRUE;
   }
 
-  UBaseType_t size() const { return uxQueueMessagesWaiting(_handle); }
-  bool empty() const { return size() == 0; }
-  QueueHandle_t handle() const { return _handle; }
+  [[nodiscard]] UBaseType_t size() const {
+    return uxQueueMessagesWaiting(_handle);
+  }
+  [[nodiscard]] bool empty() const { return size() == 0; }
+  [[nodiscard]] QueueHandle_t handle() const { return _handle; }
 };
 
 class Task {
@@ -138,7 +140,7 @@ public:
     configASSERT(_handle);
   }
 
-  bool create(
+  [[nodiscard]] bool create(
       const char *name,
       uint16_t stackDepth,
       UBaseType_t priority,
@@ -153,7 +155,7 @@ public:
     return _handle != nullptr;
   }
 
-  bool created() const { return _handle != nullptr; }
+  [[nodiscard]] bool created() const { return _handle != nullptr; }
 
   ~Task() {
     if (_handle) {
@@ -179,7 +181,7 @@ public:
     return *this;
   }
 
-  TaskHandle_t handle() const { return _handle; }
+  [[nodiscard]] TaskHandle_t handle() const { return _handle; }
 
   static void delay(TickType_t ticks) { vTaskDelay(ticks); }
   static void delayUntil(TickType_t *prev, TickType_t increment) {

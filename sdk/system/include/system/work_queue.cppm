@@ -134,7 +134,7 @@ public:
     detail::leaveCritical(saved);
   }
 
-  size_t runDue(uint32_t now) {
+  [[nodiscard]] size_t runDue(uint32_t now) {
     size_t ran = 0;
     for (;;) {
       const uint32_t saved = detail::enterCritical();
@@ -162,7 +162,7 @@ public:
     return ran;
   }
 
-  size_t runOnce() {
+  [[nodiscard]] size_t runOnce() {
     size_t ran = 0;
     for (;;) {
       const uint32_t saved = detail::enterCritical();

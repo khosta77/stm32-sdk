@@ -63,7 +63,7 @@ public:
   CachedSensor(const CachedSensor &) = delete;
   CachedSensor &operator=(const CachedSensor &) = delete;
 
-  DataType get() const {
+  [[nodiscard]] DataType get() const {
     DataType copy;
     xSemaphoreTake(_mutex, portMAX_DELAY);
     copy = _cached;
