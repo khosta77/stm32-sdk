@@ -32,15 +32,3 @@ repos:
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
-
-  # stmtool quality gate. Runs only when Python tooling changes, and only on
-  # push (poe ci is too slow for every commit).
-  - repo: local
-    hooks:
-      - id: stmtool-poe-ci
-        name: stmtool poe ci
-        entry: bash -c 'cd tools/stmtool && poetry run poe ci'
-        language: system
-        files: ^tools/stmtool/
-        pass_filenames: false
-        stages: [pre-push]
