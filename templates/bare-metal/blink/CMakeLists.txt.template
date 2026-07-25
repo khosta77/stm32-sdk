@@ -11,6 +11,7 @@ endif()
 project(@PROJECT_NAME@ LANGUAGES C CXX)
 
 set(STM32_CHIP "@STM32_CHIP@" CACHE STRING "Target STM32 chip")
+set(STM32_USE_DRIVERS ON CACHE BOOL "Enable drivers")
 include(${STM32_SDK}/cmake/stm32_sdk.cmake)
 
 add_executable(${PROJECT_NAME}.elf
@@ -24,6 +25,7 @@ target_compile_options(${PROJECT_NAME}.elf PRIVATE
 target_link_libraries(${PROJECT_NAME}.elf PRIVATE
     stm32_core
     stm32_hal
+    stm32_drivers
     stm32_link
 )
 
