@@ -23,8 +23,8 @@ class InternalFlash {
 
   void unlock() {
     if (reg::read(FLASH->CR, FLASH_CR_LOCK)) {
-      FLASH->KEYR = FLASH_KEY1;
-      FLASH->KEYR = FLASH_KEY2;
+      reg::write(FLASH->KEYR, FLASH_KEY1);
+      reg::write(FLASH->KEYR, FLASH_KEY2);
     }
   }
 

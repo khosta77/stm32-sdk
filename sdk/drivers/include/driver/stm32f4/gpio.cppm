@@ -18,23 +18,23 @@ public:
   GpioPin(GPIO_TypeDef &port, const GpioConfig &cfg)
       : _port(port), _pin(cfg.pin) {
     if (&_port == GPIOA) {
-      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOAEN;
+      reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOAEN);
     } else if (&_port == GPIOB) {
-      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
+      reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOBEN);
     } else if (&_port == GPIOC) {
-      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOCEN;
+      reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOCEN);
     } else if (&_port == GPIOD) {
-      RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
+      reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIODEN);
     } else if (&_port == GPIOE) {
-      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOEEN;
+      reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOEEN);
     } else if (&_port == GPIOF) {
-      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOFEN;
+      reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOFEN);
     } else if (&_port == GPIOG) {
-      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOGEN;
+      reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOGEN);
     } else if (&_port == GPIOH) {
-      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOHEN;
+      reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOHEN);
     } else if (&_port == GPIOI) {
-      RCC->AHB1ENR |= RCC_AHB1ENR_GPIOIEN;
+      reg::set(RCC->AHB1ENR, RCC_AHB1ENR_GPIOIEN);
     }
     __DSB();
 
@@ -72,15 +72,15 @@ public:
     }
   }
 
-  void set() { _port.BSRR = (1U << _pin); }
+  void set() { reg::write(_port.BSRR, 1U << _pin); }
 
-  void reset() { _port.BSRR = (1U << (_pin + 16U)); }
+  void reset() { reg::write(_port.BSRR, 1U << (_pin + 16U)); }
 
   void toggle() {
     if (reg::read(_port.ODR, 1U << _pin)) {
-      _port.BSRR = (1U << (_pin + 16U));
+      reg::write(_port.BSRR, 1U << (_pin + 16U));
     } else {
-      _port.BSRR = (1U << _pin);
+      reg::write(_port.BSRR, 1U << _pin);
     }
   }
 

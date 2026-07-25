@@ -134,12 +134,12 @@ public:
         result = Status::Timeout;
         break;
       }
-      _periph.DR = txData[i];
+      reg::write(_periph.DR, txData[i]);
       if (!waitRxne()) {
         result = Status::Timeout;
         break;
       }
-      uint8_t rx = static_cast<uint8_t>(_periph.DR);
+      uint8_t rx = static_cast<uint8_t>(reg::get(_periph.DR));
       if (i < rxData.size()) {
         rxData[i] = rx;
       }
@@ -159,13 +159,12 @@ public:
         result = Status::Timeout;
         break;
       }
-      _periph.DR = data[i];
+      reg::write(_periph.DR, data[i]);
       if (!waitRxne()) {
         result = Status::Timeout;
         break;
       }
-      volatile uint8_t discard = static_cast<uint8_t>(_periph.DR);
-      (void) discard;
+      (void) static_cast<uint8_t>(reg::get(_periph.DR));
     }
     waitNotBusy();
 
@@ -182,12 +181,12 @@ public:
         result = Status::Timeout;
         break;
       }
-      _periph.DR = 0xFF;
+      reg::write(_periph.DR, 0xFF);
       if (!waitRxne()) {
         result = Status::Timeout;
         break;
       }
-      data[i] = static_cast<uint8_t>(_periph.DR);
+      data[i] = static_cast<uint8_t>(reg::get(_periph.DR));
     }
     waitNotBusy();
 
