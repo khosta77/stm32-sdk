@@ -153,7 +153,7 @@ stmtool show-version
 ```
 
 Печатает версию `stmtool`. Версия — `0.N`: minor авто-инкрементит CI на каждый
-merge в `main` репозитория `stmtool` (`poetry-dynamic-versioning` читает тег
+merge в `master` репозитория `stmtool` (`poetry-dynamic-versioning` читает тег
 `v0.N`). Независима от релизного тега SDK.
 
 ## Порядок поиска SDK
