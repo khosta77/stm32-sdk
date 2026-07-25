@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="https://github.com/khosta77/stm32-sdk.git"
-TOOL_PATH="tools/stmtool"
+REPO="https://github.com/khosta77/stmtool.git"
 
 echo "=== stmtool installer ==="
 
@@ -42,7 +41,7 @@ fi
 echo "Clearing SDK cache..."
 rm -rf "$HOME/.stmtool/stm32-sdk"
 
-LATEST_TAG=$(git ls-remote --tags --sort=-v:refname "$REPO" "v*" | head -1 | sed 's|.*refs/tags/||')
+LATEST_TAG=$(git ls-remote --tags --sort=-v:refname "$REPO" "v*" | grep -v '\^{}' | head -1 | sed 's|.*refs/tags/||')
 
 if [ -z "$LATEST_TAG" ]; then
     echo "Error: no release tags found in $REPO"
@@ -51,7 +50,7 @@ fi
 
 echo "Latest release: $LATEST_TAG"
 
-SPEC="stmtool @ git+${REPO}@${LATEST_TAG}#subdirectory=${TOOL_PATH}"
+SPEC="stmtool @ git+${REPO}@${LATEST_TAG}"
 
 echo "Installing stmtool ($LATEST_TAG)..."
 pipx install "$SPEC"
@@ -86,6 +85,6 @@ fi
 
 echo ""
 echo "stmtool installed:"
-stmtool version
+stmtool show-version
 echo ""
 echo "Run 'stmtool doctor' to check your environment."
