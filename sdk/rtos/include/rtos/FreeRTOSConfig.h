@@ -30,8 +30,7 @@ extern uint32_t SystemCoreClock;
 #define configCPU_CLOCK_HZ (SystemCoreClock)
 #define configTICK_RATE_HZ ((TickType_t) CONFIG_FREERTOS_TICK_RATE_HZ)
 #define configMAX_PRIORITIES CONFIG_FREERTOS_MAX_PRIORITIES
-#define configMINIMAL_STACK_SIZE \
-  ((uint16_t) CONFIG_FREERTOS_MINIMAL_STACK_SIZE)
+#define configMINIMAL_STACK_SIZE ((uint16_t) CONFIG_FREERTOS_MINIMAL_STACK_SIZE)
 #define configMAX_TASK_NAME_LEN 16
 #define configUSE_16_BIT_TICKS 0
 #define configIDLE_SHOULD_YIELD 1
