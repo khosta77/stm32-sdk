@@ -20,6 +20,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-15 100 \
     && rm -rf /var/lib/apt/lists/*
 
+# kconfiglib powers the .config -> config.cmake/stm32_autoconf.h generation
+# (sdk/scripts/kconfig/genconfig.py, #63). Ubuntu 24.04 is PEP 668
+# externally-managed, hence --break-system-packages for this single pure
+# Python package.
+RUN pip3 install --no-cache-dir --break-system-packages kconfiglib==14.1.0
+
 # Download the ARM toolchain matching the image's host architecture, so the
 # image is multi-arch: on amd64 (CI) the x86_64 build, on arm64 (Apple Silicon)
 # the aarch64 build -- the latter runs natively instead of crashing under

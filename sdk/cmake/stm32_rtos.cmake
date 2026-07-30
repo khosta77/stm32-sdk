@@ -52,6 +52,9 @@ target_include_directories(stm32_rtos PUBLIC
     ${_FREERTOS_PORT_DIR}
     ${_STM32_SDK_DIR}/rtos/include
     ${_STM32_SDK_DIR}/rtos/include/rtos
+    # FreeRTOSConfig.h reads the FreeRTOS tunables from the generated
+    # stm32_autoconf.h (Kconfig, #63).
+    ${STM32_GENERATED_DIR}
 )
 
 target_include_directories(stm32_rtos PRIVATE
