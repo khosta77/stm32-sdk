@@ -18,6 +18,11 @@ Since v0.2.1 `stmtool` lives in its own repository
 released as a `v0.N` tag; this SDK consumes it by installing from that repo. Do
 NOT re-add `tools/stmtool/` here.
 
+Coupled SDK+tool changes use the **companion-branch convention**: the same
+branch name in both repositories. `build.yml` installs stmtool from the
+branch matching the SDK branch under test and falls back to `master`, so a
+paired PR is green before the tool side merges; merge the stmtool PR first.
+
 Since v0.1.13 all builds run inside the SDK Docker image (no `--native`);
 artifacts land in `out/`. `stmtool test` builds and runs the host unit tests
 (`tests/host` on the mock buses) in the image. The image pins the ARM toolchain

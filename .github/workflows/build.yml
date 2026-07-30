@@ -63,8 +63,16 @@ jobs:
         with:
           python-version: '3.13'
 
+      # Companion-branch convention: coupled SDK+tool changes use the SAME
+      # branch name in both repositories. CI prefers the matching stmtool
+      # branch and falls back to master, so a paired PR is green before the
+      # tool side merges (and self-heals to master after its branch is
+      # deleted).
       - name: Install stmtool
-        run: pip install "git+https://github.com/khosta77/stmtool.git"
+        run: |
+          REF="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          pip install "git+https://github.com/khosta77/stmtool.git@${REF}" \
+            || pip install "git+https://github.com/khosta77/stmtool.git"
 
       - name: Create project
         run: |
@@ -110,8 +118,12 @@ jobs:
         with:
           python-version: '3.13'
 
+      # Same companion-branch convention as the build job above.
       - name: Install stmtool
-        run: pip install "git+https://github.com/khosta77/stmtool.git"
+        run: |
+          REF="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          pip install "git+https://github.com/khosta77/stmtool.git@${REF}" \
+            || pip install "git+https://github.com/khosta77/stmtool.git"
 
       - name: Host unit tests
         run: stmtool test
