@@ -1,0 +1,85 @@
+menu "FreeRTOS"
+
+config STM32_USE_FREERTOS
+	bool "FreeRTOS kernel"
+	default n
+	help
+	  FreeRTOS-Kernel (heap_4) plus the RAII wrappers in rtos.hpp. The
+	  kernel version is pinned in the SDK Docker image and
+	  sdk/cmake/stm32_rtos.cmake, not here: it is build infrastructure,
+	  not firmware content.
+
+if STM32_USE_FREERTOS
+
+config FREERTOS_TOTAL_HEAP_SIZE
+	int "Kernel heap size (bytes, heap_4)"
+	default 16384
+	range 4096 131072
+	help
+	  configTOTAL_HEAP_SIZE. All tasks, queues and semaphores created
+	  dynamically live here. F407 has 128K SRAM1 + 64K CCM; the linker
+	  reports the margin at the end of every build.
+
+config FREERTOS_TICK_RATE_HZ
+	int "Tick rate, Hz"
+	default 1000
+	range 10 10000
+	help
+	  configTICK_RATE_HZ. The SDK concurrency layer (executor timers,
+	  debounce) counts in ticks, so lowering this coarsens Timer
+	  resolution accordingly.
+
+config FREERTOS_MAX_PRIORITIES
+	int "Number of task priorities"
+	default 5
+	range 3 32
+	help
+	  configMAX_PRIORITIES. Valid task priorities are
+	  0..FREERTOS_MAX_PRIORITIES-1. SDK demos and templates create tasks
+	  at priority 2 and the software-timer task defaults to priority 2 --
+	  keep the ceiling above those.
+
+config FREERTOS_MINIMAL_STACK_SIZE
+	int "Idle task stack, words"
+	default 128
+	range 64 4096
+	help
+	  configMINIMAL_STACK_SIZE (32-bit words, not bytes). Also the static
+	  idle-task allocation in sdk/rtos/src/freertos_hooks.cpp.
+
+config FREERTOS_TIMER_TASK_PRIORITY
+	int "Software-timer task priority"
+	default 2
+	range 1 31
+	help
+	  configTIMER_TASK_PRIORITY. Must be strictly below
+	  FREERTOS_MAX_PRIORITIES; genconfig enforces the cross-check at
+	  configure time.
+
+config FREERTOS_TIMER_QUEUE_LENGTH
+	int "Software-timer command queue length"
+	default 10
+	range 1 64
+	help
+	  configTIMER_QUEUE_LENGTH.
+
+config FREERTOS_TIMER_TASK_STACK_DEPTH
+	int "Software-timer task stack, words"
+	default 256
+	range 64 4096
+	help
+	  configTIMER_TASK_STACK_DEPTH. Historic default is twice the idle
+	  stack (2 x 128).
+
+config FREERTOS_CHECK_FOR_STACK_OVERFLOW
+	int "Stack overflow checking (0/1/2)"
+	default 2
+	range 0 2
+	help
+	  configCHECK_FOR_STACK_OVERFLOW. 0 disables, 1 checks the stack
+	  pointer on context switch, 2 additionally pattern-checks the stack
+	  tail (slower, catches more).
+
+endif
+
+endmenu

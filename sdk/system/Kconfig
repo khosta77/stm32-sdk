@@ -1,0 +1,13 @@
+menu "System framework"
+
+config STM32_USE_SYSTEM
+	bool "Component framework"
+	default n
+	depends on STM32_USE_DRIVERS
+	help
+	  Zero-vtable component framework: Component concept + bootstrap
+	  phases, WorkQueue, and (under FreeRTOS) SingleThreadExecutor, Timer
+	  and the signal-bus Channel. Requires the driver library; the
+	  executor/timer/channel parts additionally need STM32_USE_FREERTOS.
+
+endmenu

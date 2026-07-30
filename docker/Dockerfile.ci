@@ -11,10 +11,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && apt-get update && apt-get install -y --no-install-recommends \
         cmake make ninja-build wget xz-utils ca-certificates git \
+        python3 python3-pip \
         gcc-15 g++-15 \
     && update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-15 100 \
     && update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-15 100 \
     && rm -rf /var/lib/apt/lists/*
+
+# kconfiglib powers the .config -> config.cmake/stm32_autoconf.h generation
+# (sdk/scripts/kconfig/genconfig.py, #63). Keep the pin in sync with
+# Dockerfile.build. PEP 668 (Ubuntu 24.04) requires --break-system-packages.
+RUN pip3 install --no-cache-dir --break-system-packages kconfiglib==14.1.0
 
 # Match the ARM toolchain to the image's host architecture (multi-arch: x86_64
 # on amd64, aarch64 on arm64). Download from the Arm CDN blob directly (the

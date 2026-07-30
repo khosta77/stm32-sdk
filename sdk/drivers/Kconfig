@@ -1,0 +1,85 @@
+menu "Drivers"
+
+config STM32_USE_DRIVERS
+	bool "Peripheral driver library"
+	default n
+	help
+	  C++20-module driver layer (GPIO, I2C, SPI, UART, DMA, EXTI, flash,
+	  clock) plus the driver.log facility. Required by sensors, storage
+	  and the system component framework.
+
+if STM32_USE_DRIVERS
+
+choice
+	prompt "Log level ceiling (compile-time)"
+	default STM32_LOG_LEVEL_INFO
+	help
+	  LOG_* calls above the ceiling compile to ((void)0) and their format
+	  strings never reach flash. Runtime filtering below the ceiling is
+	  still available via driver::log::setLevel.
+
+config STM32_LOG_LEVEL_NONE
+	bool "NONE"
+
+config STM32_LOG_LEVEL_ERROR
+	bool "ERROR"
+
+config STM32_LOG_LEVEL_WARN
+	bool "WARN"
+
+config STM32_LOG_LEVEL_INFO
+	bool "INFO"
+
+config STM32_LOG_LEVEL_DEBUG
+	bool "DEBUG"
+
+config STM32_LOG_LEVEL_TRACE
+	bool "TRACE"
+
+endchoice
+
+config STM32_LOG_LEVEL_NUM
+	int
+	default 0 if STM32_LOG_LEVEL_NONE
+	default 1 if STM32_LOG_LEVEL_ERROR
+	default 2 if STM32_LOG_LEVEL_WARN
+	default 3 if STM32_LOG_LEVEL_INFO
+	default 4 if STM32_LOG_LEVEL_DEBUG
+	default 5 if STM32_LOG_LEVEL_TRACE
+
+choice
+	prompt "Log backend"
+	default STM32_LOG_BACKEND_SEL_NONE
+	help
+	  Names the sink the build intends to install (both backend modules
+	  always compile; templates cost nothing until instantiated). The app
+	  picks the matching backend type via the STM32_LOG_BACKEND define.
+
+config STM32_LOG_BACKEND_SEL_NONE
+	bool "none"
+
+config STM32_LOG_BACKEND_SEL_ITM
+	bool "itm (SWO trace)"
+
+config STM32_LOG_BACKEND_SEL_UART
+	bool "uart"
+
+endchoice
+
+config STM32_LOG_BACKEND_NUM
+	int
+	default 0 if STM32_LOG_BACKEND_SEL_NONE
+	default 1 if STM32_LOG_BACKEND_SEL_ITM
+	default 2 if STM32_LOG_BACKEND_SEL_UART
+
+config STM32_USE_STORAGE
+	bool "Flash storage library"
+	default n
+	help
+	  Internal-flash storage layer (STM32_USE_STORAGE). Partition tables
+	  in the Zephyr spirit arrive with #62 as consteval-validated
+	  constexpr tables on top of this gate.
+
+endif
+
+endmenu

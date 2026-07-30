@@ -1,0 +1,12 @@
+menu "Sensors"
+
+config STM32_USE_SENSORS
+	bool "Sensor library"
+	default n
+	depends on STM32_USE_DRIVERS
+	help
+	  Sensor concepts (IImu/IDisplay/IExternalFlash) and implementations
+	  (MPU6050, SSD1306, W25Q32) as templates over the driver bus
+	  concepts. Requires the driver library.
+
+endmenu

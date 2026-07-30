@@ -1,0 +1,12 @@
+menu "Testing"
+
+config STM32_USE_TESTING
+	bool "On-device unit-test helpers"
+	default n
+	help
+	  Header-only ASSERT_*/EXPECT_* + TestRunner (testing/unit_test.hpp),
+	  no exceptions or heap. The programmable mock buses (testing.mock)
+	  are a source module the consumer adds to its own CXX_MODULES file
+	  set and are not gated here.
+
+endmenu

@@ -87,8 +87,12 @@ function(stm32f4_get_chip_info CHIP)
             "Supported: F401, F405, F407, F411, F412, F429, F439, F446")
     endif()
 
-    set(STM32_FLOAT_ABI "hard" CACHE STRING "Float ABI: hard, soft, or softfp")
-    set_property(CACHE STM32_FLOAT_ABI PROPERTY STRINGS hard soft softfp)
+    # Float ABI is a Kconfig choice since #63 (kconfig.cmake sets the
+    # variable before family resolution); the fallback covers standalone
+    # consumers of this file such as tests.
+    if(NOT DEFINED STM32_FLOAT_ABI)
+        set(STM32_FLOAT_ABI "hard")
+    endif()
 
     if(STM32_FLOAT_ABI STREQUAL "hard")
         set(ARCH_FLAGS "-mcpu=cortex-m4;-mthumb;-mfloat-abi=hard;-mfpu=fpv4-sp-d16")

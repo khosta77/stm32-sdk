@@ -22,6 +22,12 @@ if(NOT DEFINED STM32_CHIP)
     message(FATAL_ERROR "STM32_CHIP is not defined. Set -DSTM32_CHIP=STM32F407VG (or similar)")
 endif()
 
+# Firmware content is configured exclusively through the project .config
+# (Kconfig, #63): subsystem gates, log level/backend, HSE, float ABI and the
+# FreeRTOS tunables all arrive from kconfig.cmake. Must run before family
+# resolution -- the float ABI feeds STM32_ARCH_FLAGS.
+include(${CMAKE_CURRENT_LIST_DIR}/kconfig.cmake)
+
 include(${CMAKE_CURRENT_LIST_DIR}/stm32_families.cmake)
 stm32_resolve_family(${STM32_CHIP})
 
@@ -134,13 +140,9 @@ target_link_options(stm32_link INTERFACE
     -Wl,--print-memory-usage
 )
 
-option(STM32_USE_FREERTOS "Enable FreeRTOS RTOS support" OFF)
-option(STM32_USE_DRIVERS "Enable peripheral driver library" OFF)
-option(STM32_USE_SENSORS "Enable sensor library" OFF)
-option(STM32_USE_STORAGE "Enable flash storage library" OFF)
-option(STM32_USE_SYSTEM "Enable system component framework" OFF)
-option(STM32_USE_TESTING "Enable on-device unit-test helpers" OFF)
-
+# Subsystem gates come from .config (kconfig.cmake); the SENSORS/STORAGE/
+# SYSTEM -> DRIVERS dependencies are enforced by `depends on` in the Kconfig
+# tree, so an inconsistent combination cannot reach this point.
 if(STM32_USE_FREERTOS)
     include(${CMAKE_CURRENT_LIST_DIR}/stm32_rtos.cmake)
 endif()
@@ -150,23 +152,14 @@ if(STM32_USE_DRIVERS)
 endif()
 
 if(STM32_USE_SENSORS)
-    if(NOT STM32_USE_DRIVERS)
-        message(FATAL_ERROR "STM32_USE_SENSORS requires STM32_USE_DRIVERS=ON")
-    endif()
     include(${CMAKE_CURRENT_LIST_DIR}/stm32_sensors.cmake)
 endif()
 
 if(STM32_USE_STORAGE)
-    if(NOT STM32_USE_DRIVERS)
-        message(FATAL_ERROR "STM32_USE_STORAGE requires STM32_USE_DRIVERS=ON")
-    endif()
     include(${CMAKE_CURRENT_LIST_DIR}/stm32_storage.cmake)
 endif()
 
 if(STM32_USE_SYSTEM)
-    if(NOT STM32_USE_DRIVERS)
-        message(FATAL_ERROR "STM32_USE_SYSTEM requires STM32_USE_DRIVERS=ON")
-    endif()
     include(${CMAKE_CURRENT_LIST_DIR}/stm32_system.cmake)
 endif()
 

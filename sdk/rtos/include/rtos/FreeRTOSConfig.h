@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#include "stm32_autoconf.h"
+
 extern uint32_t SystemCoreClock;
 
 #define vPortSVCHandler SVC_Handler
@@ -26,9 +28,10 @@ extern uint32_t SystemCoreClock;
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 #define configUSE_TICKLESS_IDLE 0
 #define configCPU_CLOCK_HZ (SystemCoreClock)
-#define configTICK_RATE_HZ ((TickType_t) 1000)
-#define configMAX_PRIORITIES 5
-#define configMINIMAL_STACK_SIZE ((uint16_t) 128)
+#define configTICK_RATE_HZ ((TickType_t) CONFIG_FREERTOS_TICK_RATE_HZ)
+#define configMAX_PRIORITIES CONFIG_FREERTOS_MAX_PRIORITIES
+#define configMINIMAL_STACK_SIZE \
+  ((uint16_t) CONFIG_FREERTOS_MINIMAL_STACK_SIZE)
 #define configMAX_TASK_NAME_LEN 16
 #define configUSE_16_BIT_TICKS 0
 #define configIDLE_SHOULD_YIELD 1
@@ -42,11 +45,11 @@ extern uint32_t SystemCoreClock;
 #define configSUPPORT_STATIC_ALLOCATION 1
 #define configSUPPORT_DYNAMIC_ALLOCATION 1
 #define configAPPLICATION_ALLOCATED_HEAP 0
-#define configTOTAL_HEAP_SIZE ((size_t) (16 * 1024))
+#define configTOTAL_HEAP_SIZE ((size_t) CONFIG_FREERTOS_TOTAL_HEAP_SIZE)
 
 #define configUSE_IDLE_HOOK 0
 #define configUSE_TICK_HOOK 0
-#define configCHECK_FOR_STACK_OVERFLOW 2
+#define configCHECK_FOR_STACK_OVERFLOW CONFIG_FREERTOS_CHECK_FOR_STACK_OVERFLOW
 #define configUSE_MALLOC_FAILED_HOOK 1
 
 #define configGENERATE_RUN_TIME_STATS 0
@@ -56,9 +59,9 @@ extern uint32_t SystemCoreClock;
 #define configUSE_CO_ROUTINES 0
 
 #define configUSE_TIMERS 1
-#define configTIMER_TASK_PRIORITY 2
-#define configTIMER_QUEUE_LENGTH 10
-#define configTIMER_TASK_STACK_DEPTH (configMINIMAL_STACK_SIZE * 2)
+#define configTIMER_TASK_PRIORITY CONFIG_FREERTOS_TIMER_TASK_PRIORITY
+#define configTIMER_QUEUE_LENGTH CONFIG_FREERTOS_TIMER_QUEUE_LENGTH
+#define configTIMER_TASK_STACK_DEPTH CONFIG_FREERTOS_TIMER_TASK_STACK_DEPTH
 
 #define configASSERT(x)                       \
   do {                                        \
