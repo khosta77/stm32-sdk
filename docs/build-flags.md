@@ -18,24 +18,20 @@ on, while `system.executor` and `system.signal_bus` (which need the FreeRTOS
 wrappers) are compiled only when `STM32_USE_FREERTOS` is also on — the queue core
 stays usable in bare-metal builds.
 
-## Logging flags (v0.1.14)
+## Configuration is Kconfig (v0.2.2)
 
-The [logging facility](modules/logging.md) ships with `stm32_drivers` and is
-tuned by two cache variables, both mapped to compile definitions on the driver
-target:
+The subsystem gates (`STM32_USE_*`), the [logging](modules/logging.md) level
+and backend, the HSE frequency, the float ABI and the FreeRTOS tunables are
+all configured through the project `.config` file — see
+[Configuration](configuration.md). Passing them as `-D` cache variables was
+removed in v0.2.2; the values below arrive from the generated
+`out/generated/config.cmake`.
 
-- `STM32_LOG_LEVEL` (`NONE`/`ERROR`/`WARN`/`INFO`/`DEBUG`/`TRACE`, default
-  `INFO`) — the compile-time ceiling. `LOG_*` above it expand to `((void)0)`, so
-  their format strings never reach flash. Set `NONE` in a release build to strip
-  logging entirely.
-- `STM32_LOG_BACKEND` (`none`/`itm`/`uart`, default `none`) — names the intended
-  sink. Both backend modules always compile, so this does not gate availability;
-  it exposes the `STM32_LOG_BACKEND` define (with `STM32_LOG_BACKEND_NONE`/`_ITM`/
-  `_UART`) so app code can pick the matching backend type generically.
-
-```bash
-cmake -B out -DSTM32_LOG_LEVEL=DEBUG -DSTM32_LOG_BACKEND=itm ...
-```
+The log level choice is still mapped to compile definitions on the driver
+target: `LOG_*` above the ceiling expand to `((void)0)` (format strings never
+reach flash), and the intended sink is exposed as the `STM32_LOG_BACKEND`
+define (with `STM32_LOG_BACKEND_NONE`/`_ITM`/`_UART`) so app code can pick
+the matching backend type generically.
 
 ## Build environment (Docker, offline)
 

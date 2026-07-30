@@ -1,13 +1,19 @@
 # FreeRTOS helpers
 
-FreeRTOS is optional: enable with `-DSTM32_USE_FREERTOS=ON` (the default for
-all templates under `templates/freertos/`). When enabled, the SDK provides
-RAII wrappers in `sdk/rtos/include/rtos/rtos.hpp`.
+FreeRTOS is optional: enable `STM32_USE_FREERTOS` in the project `.config`
+(the `defconfig` of every template under `templates/freertos/` already sets
+it). When enabled, the SDK provides RAII wrappers in
+`sdk/rtos/include/rtos/rtos.hpp`.
 
 ## Configuration
 
-- Heap implementation: `heap_4`, 16 KB by default.
-- `configMINIMAL_STACK_SIZE`: 128 words.
+- Heap implementation: `heap_4`, 16 KB by default — since v0.2.2 the size is
+  the Kconfig symbol `FREERTOS_TOTAL_HEAP_SIZE` (default `16384`).
+- `configMINIMAL_STACK_SIZE`: 128 words — since v0.2.2 the Kconfig symbol
+  `FREERTOS_MINIMAL_STACK_SIZE` (default `128`).
+- Tick rate, priority count and the timer-task parameters are Kconfig symbols
+  too (`FREERTOS_*`); the defaults reproduce the historic values, see
+  [Configuration](../configuration.md).
 - `SysTick` is used by FreeRTOS — do not also use `SysTick_Handler` directly.
 
 ## `rtos::Task`
@@ -52,8 +58,8 @@ sem.takeFromIsr(&hpw);           // from ISR
 
 Don't call FreeRTOS API **before** `vTaskStartScheduler()` — operations on
 mutexes / semaphores hang otherwise. This caught us during the `i2c-scan`
-template development; the template was moved to `bare-metal/` (`STM32_USE_FREERTOS=OFF`)
-to avoid the issue.
+template development; the template was moved to `bare-metal/`
+(`STM32_USE_FREERTOS` disabled in its `.config`) to avoid the issue.
 
 ## Global object lifetime
 

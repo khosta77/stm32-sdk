@@ -8,6 +8,7 @@ Bare-metal C++20 ecosystem for STM32 (CMSIS only).
 pipx install git+https://github.com/khosta77/stmtool.git
 stmtool project create my-project --chip STM32F407VG
 cd my-project
+stmtool config  # Kconfig menuconfig TUI, edits .config
 stmtool build   # always runs in the SDK Docker image; artifacts in out/
 stmtool flash
 ```
@@ -36,6 +37,32 @@ artifacts land in `out/`. `stmtool test` builds and runs the host unit tests
   before a single `reg::write` are allowed.
 - Config structs without default values — every field is specified explicitly.
 - Global peripheral objects (no static-local, no pointers).
+
+## Configuration (Kconfig, since v0.2.2)
+
+The project-local `.config` is the **single source of truth** for firmware
+content (hard cut — the old `set(STM32_USE_*)`/`-D` path was removed):
+
+- Tree: `sdk/Kconfig` + per-subsystem fragments (`sdk/rtos/Kconfig`,
+  `sdk/drivers/Kconfig`, ...). Codegen: `sdk/cmake/kconfig.cmake` runs
+  `sdk/scripts/kconfig/genconfig.py` (kconfiglib, baked into both Docker
+  images) → `out/generated/config.cmake` + `out/generated/stm32_autoconf.h`
+  (read by `FreeRTOSConfig.h`) + `out/generated/Kconfig.chip`.
+- `stmproject.toml` keeps only workspace concerns: `[sdk] version`,
+  `[target] chip`, `[flash] tool` (west model — chip/SDK ref must exist
+  before the tree can be parsed). `[project]`/`[build]`/`[serial]` are gone.
+- Templates ship a `defconfig` (gate set only); `stmtool project create`
+  copies it into the project as `.config`. No `set(STM32_CHIP)`/
+  `set(STM32_USE_*)` in template CMakeLists.
+- A new peripheral driver MUST bring its options in its subsystem Kconfig
+  fragment: `depends on STM32_USE_DRIVERS`, a `help` text and a safe default
+  on every symbol; invariants via `range`/`depends on`, strict inequalities
+  via `_cross_checks` in `genconfig.py`. genconfig is strict: any rejected
+  `.config` assignment fails the configure step.
+- FreeRTOS tunables (`FREERTOS_*`: heap, tick, priorities, stacks) are
+  Kconfig symbols; defaults reproduce the historic hardcoded values.
+  `FREERTOS_TIMER_TASK_PRIORITY` must stay strictly below
+  `FREERTOS_MAX_PRIORITIES`; demos create tasks at priority 2.
 
 ## Documentation maintenance (must follow)
 

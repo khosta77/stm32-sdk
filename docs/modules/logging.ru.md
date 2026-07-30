@@ -75,16 +75,15 @@ int main() {
 
 ## Выбор compile-time уровня
 
-Задаётся через CMake-переменную `STM32_LOG_LEVEL` (одно из `NONE`, `ERROR`,
-`WARN`, `INFO`, `DEBUG`, `TRACE`; по умолчанию `INFO`):
+С v0.2.2 уровень — это Kconfig-choice в проектном `.config`
+(`STM32_LOG_LEVEL_NONE` … `STM32_LOG_LEVEL_TRACE`, по умолчанию `INFO`) —
+правится через `stmtool config`, см. [Конфигурацию](../configuration.ru.md).
+Старая cache-переменная `-DSTM32_LOG_LEVEL=...` удалена.
 
-```bash
-cmake -B out -DSTM32_LOG_LEVEL=DEBUG ...
-```
-
-Она отображается в `-DSTM32_LOG_LEVEL=<0..5>`; при отсутствии define хедер берёт
-`INFO`. Релизная сборка с `NONE` (или любым уровнем ниже ваших вызовов
-`LOG_DEBUG`/`LOG_TRACE`) вырезает эти операторы целиком.
+Choice по-прежнему отображается в compile-define `STM32_LOG_LEVEL=<0..5>` на
+цели драйверов; при отсутствии define хедер берёт `INFO`. Релизная сборка,
+выбравшая `NONE` (или любой уровень ниже ваших вызовов
+`LOG_DEBUG`/`LOG_TRACE`), вырезает эти операторы целиком.
 
 ## Backend'ы
 
@@ -101,15 +100,12 @@ Backend — это sink, thunk `void(*)(void* ctx, const char* data, size_t len)
   линии, что и вывод приложения. Обобщён по шине в краткой constrained-форме;
   CTAD выводит параметр из конструктора (`UartBackend g_sink{g_uart}`).
 
-Предполагаемый backend называется на этапе сборки через `STM32_LOG_BACKEND`
-(`none` / `itm` / `uart`, по умолчанию `none`):
-
-```bash
-cmake -B out -DSTM32_LOG_BACKEND=itm ...
-```
+Предполагаемый backend называется в `.config` через Kconfig-choice
+`STM32_LOG_BACKEND_SEL_NONE` / `_ITM` / `_UART` (по умолчанию `NONE`) — там
+же, где и уровень, см. [Конфигурацию](../configuration.ru.md).
 
 Оба backend-модуля компилируются всегда (шаблон и inline-CMSIS ничего не стоят до
-инстанцирования), поэтому флаг не ограничивает доступность — он задаёт define
+инстанцирования), поэтому choice не ограничивает доступность — он задаёт define
 `STM32_LOG_BACKEND` (с символьными значениями `STM32_LOG_BACKEND_NONE` / `_ITM` /
 `_UART`), позволяя коду приложения выбрать подходящий тип обобщённо:
 

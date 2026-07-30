@@ -53,6 +53,44 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.2.2
+
+Focus: **Kconfig** as the single source of truth for firmware configuration
+(#63) — the quality-of-life foundation before the peripheral wave. **Breaking**:
+the old configuration path is removed (hard cut).
+
+Highlights:
+
+- **Kconfig tree.** `sdk/Kconfig` + per-subsystem fragments: the six
+  `STM32_USE_*` gates (dependencies expressed with `depends on` instead of
+  CMake `FATAL_ERROR`s), log level/backend choices, `STM32_HSE_VALUE`, the
+  float-ABI choice, and — for the first time configurable — the FreeRTOS
+  tunables (heap, tick rate, priorities, stacks) with the historic values as
+  defaults. `FreeRTOSConfig.h` reads them from the generated
+  `stm32_autoconf.h`.
+- **Strict generation.** `sdk/cmake/kconfig.cmake` runs
+  `sdk/scripts/kconfig/genconfig.py` (kconfiglib, baked into the Docker
+  images) at configure time. A hand-edited `.config` cannot drift silently:
+  unknown symbols, out-of-range values and gates with unsatisfied
+  dependencies fail the build with a precise message.
+- **Thin projects.** Templates ship a `defconfig`; `stmtool project create`
+  copies it as `.config`. Template `CMakeLists.txt` lost the
+  `set(STM32_CHIP)`/`set(STM32_USE_*)` block; `stmproject.toml` lost its dead
+  `[project]`/`[build]`/`[serial]` sections and is now a pure workspace
+  manifest (SDK ref, chip, flash tool).
+- **`stmtool config`.** New command: a curses menuconfig TUI over the SDK
+  tree (raspi-config style), which doubles as the migration path — opening a
+  project without `.config` starts from the defaults. `project create` now
+  also validates the template's `families` against the chip.
+
+Notes:
+
+- **Breaking:** every project must create a `.config` when bumping the SDK —
+  see the [upgrade notes](migration.md#new-in-v022). A default `.config`
+  produces binary-identical firmware.
+- Project versioning (the removed `[project] version` key) returns properly
+  with #90: git tag → generated `version.hpp`.
+
 ### v0.2.1
 
 Focus: extract `stmtool` from this monorepo into its own repository,

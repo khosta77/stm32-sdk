@@ -47,8 +47,9 @@ cd my-blink
 ```
 my-blink/
   src/main.cpp        # код приложения
-  CMakeLists.txt      # конфигурация сборки
+  CMakeLists.txt      # конфигурация сборки (только исходники + библиотеки)
   stmproject.toml     # выбор чипа и привязка к версии SDK
+  .config             # конфигурация прошивки (Kconfig), из defconfig шаблона
   .gitignore
 ```
 
@@ -71,6 +72,20 @@ stmtool project create imu --chip STM32F407VG --template mpu6050-uart
 stmtool project create imu --chip STM32F407VG \
   --template mpu6050-uart --with-claude
 ```
+
+## Конфигурация (опционально)
+
+Содержимое прошивки — гейты подсистем, логирование, тюнаблы FreeRTOS —
+живёт в проектном файле `.config` (Kconfig). `defconfig` шаблона уже даёт
+рабочий `.config`, так что этот шаг опционален. Чтобы что-то поменять,
+откройте menuconfig-TUI:
+
+```bash
+stmtool config
+```
+
+Коммитьте `.config` в git — это часть проекта. Полный список опций — в
+[Конфигурации](configuration.ru.md).
 
 ## Сборка
 
