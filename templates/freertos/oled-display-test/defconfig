@@ -1,0 +1,6 @@
+# freertos/oled-display-test -- copied into the generated project as .config by
+# `stmtool project create`. Edit with `stmtool config` (menuconfig);
+# unset options take their Kconfig defaults.
+CONFIG_STM32_USE_FREERTOS=y
+CONFIG_STM32_USE_DRIVERS=y
+CONFIG_STM32_USE_SENSORS=y
