@@ -312,6 +312,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../../build-flags/" class="md-tabs__link">
         
   
@@ -558,6 +577,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../build-flags/" class="md-nav__link">
         
   
@@ -603,10 +649,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -624,8 +670,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -956,10 +1002,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -977,8 +1023,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1101,10 +1147,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1122,8 +1168,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1529,13 +1575,14 @@ captureless-указатель на функцию, никогда <code>std::fu
 (<code>E</code>/<code>W</code>/<code>I</code>/<code>D</code>/<code>T</code>). Форматирование сделано вручную (без <code>printf</code>/<code>snprintf</code>),
 поэтому работает под <code>nano.specs</code> и не тянет форматирование float.</p>
 <h2 id="compile-time">Выбор compile-time уровня<a class="headerlink" href="#compile-time" title="Permanent link">&para;</a></h2>
-<p>Задаётся через CMake-переменную <code>STM32_LOG_LEVEL</code> (одно из <code>NONE</code>, <code>ERROR</code>,
-<code>WARN</code>, <code>INFO</code>, <code>DEBUG</code>, <code>TRACE</code>; по умолчанию <code>INFO</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_LEVEL<span class="o">=</span>DEBUG<span class="w"> </span>...
-</code></pre></div>
-<p>Она отображается в <code>-DSTM32_LOG_LEVEL=&lt;0..5&gt;</code>; при отсутствии define хедер берёт
-<code>INFO</code>. Релизная сборка с <code>NONE</code> (или любым уровнем ниже ваших вызовов
-<code>LOG_DEBUG</code>/<code>LOG_TRACE</code>) вырезает эти операторы целиком.</p>
+<p>С v0.2.2 уровень — это Kconfig-choice в проектном <code>.config</code>
+(<code>STM32_LOG_LEVEL_NONE</code> … <code>STM32_LOG_LEVEL_TRACE</code>, по умолчанию <code>INFO</code>) —
+правится через <code>stmtool config</code>, см. <a href="../../configuration/">Конфигурацию</a>.
+Старая cache-переменная <code>-DSTM32_LOG_LEVEL=...</code> удалена.</p>
+<p>Choice по-прежнему отображается в compile-define <code>STM32_LOG_LEVEL=&lt;0..5&gt;</code> на
+цели драйверов; при отсутствии define хедер берёт <code>INFO</code>. Релизная сборка,
+выбравшая <code>NONE</code> (или любой уровень ниже ваших вызовов
+<code>LOG_DEBUG</code>/<code>LOG_TRACE</code>), вырезает эти операторы целиком.</p>
 <h2 id="backend">Backend'ы<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h2>
 <p>Backend — это sink, thunk <code>void(*)(void* ctx, const char* data, size_t len)</code>,
 устанавливаемый через <code>driver::log::setSink</code>. SDK поставляет два, оба с методом
@@ -1550,27 +1597,26 @@ captureless-указатель на функцию, никогда <code>std::fu
   линии, что и вывод приложения. Обобщён по шине в краткой constrained-форме;
   CTAD выводит параметр из конструктора (<code>UartBackend g_sink{g_uart}</code>).</li>
 </ul>
-<p>Предполагаемый backend называется на этапе сборки через <code>STM32_LOG_BACKEND</code>
-(<code>none</code> / <code>itm</code> / <code>uart</code>, по умолчанию <code>none</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_BACKEND<span class="o">=</span>itm<span class="w"> </span>...
-</code></pre></div>
+<p>Предполагаемый backend называется в <code>.config</code> через Kconfig-choice
+<code>STM32_LOG_BACKEND_SEL_NONE</code> / <code>_ITM</code> / <code>_UART</code> (по умолчанию <code>NONE</code>) — там
+же, где и уровень, см. <a href="../../configuration/">Конфигурацию</a>.</p>
 <p>Оба backend-модуля компилируются всегда (шаблон и inline-CMSIS ничего не стоят до
-инстанцирования), поэтому флаг не ограничивает доступность — он задаёт define
+инстанцирования), поэтому choice не ограничивает доступность — он задаёт define
 <code>STM32_LOG_BACKEND</code> (с символьными значениями <code>STM32_LOG_BACKEND_NONE</code> / <code>_ITM</code> /
 <code>_UART</code>), позволяя коду приложения выбрать подходящий тип обобщённо:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">#if STM32_LOG_BACKEND == STM32_LOG_BACKEND_ITM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">ItmBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="cp">#else</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">UartBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">{</span><span class="n">g_uart</span><span class="p">};</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="cp">#endif</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">#if STM32_LOG_BACKEND == STM32_LOG_BACKEND_ITM</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">ItmBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="cp">#else</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">UartBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">{</span><span class="n">g_uart</span><span class="p">};</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="cp">#endif</span>
 </code></pre></div>
 <h2 id="backend_1">Свой backend<a class="headerlink" href="#backend_1" title="Permanent link">&para;</a></h2>
 <p>Подойдёт любая функция с сигнатурой sink. Устанавливается напрямую:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">mySink</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="cm">/*ctx*/</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">len</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">semihostPut</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">}</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">setSink</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mySink</span><span class="p">,</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">mySink</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="cm">/*ctx*/</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">len</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">semihostPut</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">}</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">setSink</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mySink</span><span class="p">,</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
 </code></pre></div>
 <p><code>ctx</code> передаётся обратно как есть, поэтому backend с состоянием может протащить
 через него <code>this</code> — ровно так <code>UartBackend</code> достаёт свой захваченный

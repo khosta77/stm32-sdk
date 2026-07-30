@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/build-flags/">
       
       
-        <link rel="prev" href="../stmtool/">
+        <link rel="prev" href="../configuration/">
       
       
         <link rel="next" href="../modules/drivers/">
@@ -310,6 +310,25 @@
   
   
   
+  
+    <li class="md-tabs__item">
+      <a href="../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
     
   
   
@@ -555,6 +574,33 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -618,10 +664,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#logging-flags-v0114" class="md-nav__link">
+  <a href="#configuration-is-kconfig-v022" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Logging flags (v0.1.14)
+        Configuration is Kconfig (v0.2.2)
       
     </span>
   </a>
@@ -713,10 +759,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -734,8 +780,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -942,10 +988,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -963,8 +1009,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1087,10 +1133,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1108,8 +1154,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1319,10 +1365,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#logging-flags-v0114" class="md-nav__link">
+  <a href="#configuration-is-kconfig-v022" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Logging flags (v0.1.14)
+        Configuration is Kconfig (v0.2.2)
       
     </span>
   </a>
@@ -1425,22 +1471,18 @@ path — no sources, no link dependencies). See <a href="../modules/testing/">Te
 on, while <code>system.executor</code> and <code>system.signal_bus</code> (which need the FreeRTOS
 wrappers) are compiled only when <code>STM32_USE_FREERTOS</code> is also on — the queue core
 stays usable in bare-metal builds.</p>
-<h2 id="logging-flags-v0114">Logging flags (v0.1.14)<a class="headerlink" href="#logging-flags-v0114" title="Permanent link">&para;</a></h2>
-<p>The <a href="../modules/logging/">logging facility</a> ships with <code>stm32_drivers</code> and is
-tuned by two cache variables, both mapped to compile definitions on the driver
-target:</p>
-<ul>
-<li><code>STM32_LOG_LEVEL</code> (<code>NONE</code>/<code>ERROR</code>/<code>WARN</code>/<code>INFO</code>/<code>DEBUG</code>/<code>TRACE</code>, default
-  <code>INFO</code>) — the compile-time ceiling. <code>LOG_*</code> above it expand to <code>((void)0)</code>, so
-  their format strings never reach flash. Set <code>NONE</code> in a release build to strip
-  logging entirely.</li>
-<li><code>STM32_LOG_BACKEND</code> (<code>none</code>/<code>itm</code>/<code>uart</code>, default <code>none</code>) — names the intended
-  sink. Both backend modules always compile, so this does not gate availability;
-  it exposes the <code>STM32_LOG_BACKEND</code> define (with <code>STM32_LOG_BACKEND_NONE</code>/<code>_ITM</code>/
-  <code>_UART</code>) so app code can pick the matching backend type generically.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_LEVEL<span class="o">=</span>DEBUG<span class="w"> </span>-DSTM32_LOG_BACKEND<span class="o">=</span>itm<span class="w"> </span>...
-</code></pre></div>
+<h2 id="configuration-is-kconfig-v022">Configuration is Kconfig (v0.2.2)<a class="headerlink" href="#configuration-is-kconfig-v022" title="Permanent link">&para;</a></h2>
+<p>The subsystem gates (<code>STM32_USE_*</code>), the <a href="../modules/logging/">logging</a> level
+and backend, the HSE frequency, the float ABI and the FreeRTOS tunables are
+all configured through the project <code>.config</code> file — see
+<a href="../configuration/">Configuration</a>. Passing them as <code>-D</code> cache variables was
+removed in v0.2.2; the values below arrive from the generated
+<code>out/generated/config.cmake</code>.</p>
+<p>The log level choice is still mapped to compile definitions on the driver
+target: <code>LOG_*</code> above the ceiling expand to <code>((void)0)</code> (format strings never
+reach flash), and the intended sink is exposed as the <code>STM32_LOG_BACKEND</code>
+define (with <code>STM32_LOG_BACKEND_NONE</code>/<code>_ITM</code>/<code>_UART</code>) so app code can pick
+the matching backend type generically.</p>
 <h2 id="build-environment-docker-offline">Build environment (Docker, offline)<a class="headerlink" href="#build-environment-docker-offline" title="Permanent link">&para;</a></h2>
 <p>Since v0.1.13 all builds run inside the SDK Docker image
 (<code>ghcr.io/khosta77/stm32-sdk-build:latest</code>) — <code>stmtool build</code> has no
@@ -1453,22 +1495,22 @@ longer re-clone the kernel per project and work offline. Outside Docker,
 <code>stm32_rtos.cmake</code> still honours that variable (or environment variable) for a
 pre-provisioned checkout, falling back to a shallow <code>FetchContent</code> clone.</p>
 <h2 id="active-flags-v014">Active flags (v0.1.4)<a class="headerlink" href="#active-flags-v014" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">target_compile_options</span><span class="p">(</span><span class="s">stm32_core</span><span class="w"> </span><span class="s">INTERFACE</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_ARCH_FLAGS</span><span class="o">}</span><span class="w">      </span><span class="c"># -mcpu, -mfpu, -mfloat-abi from the chip family</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s">-Os</span><span class="w">                      </span><span class="c"># size-optimised by default; -O0 is opt-in via CMAKE_BUILD_TYPE</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="s">-ffreestanding</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="s">-ffunction-sections</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="s">-fdata-sections</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="s">-fsigned-char</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="s">-fno-move-loop-invariants</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="s">-Wall</span><span class="w">                    </span><span class="c"># standard set</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="s">-Wextra</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="s">-Wpedantic</span><span class="w">               </span><span class="c"># ISO conformance</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="s">-Wshadow</span><span class="w">                 </span><span class="c"># catches accidental local override of outer scope</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="s">-Werror</span><span class="w">                  </span><span class="c"># warnings ARE errors — see policy below</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:C</span><span class="o">&gt;</span><span class="s">:-std=gnu11&gt;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:CXX</span><span class="o">&gt;</span><span class="s">:-std=gnu++20&gt;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">target_compile_options</span><span class="p">(</span><span class="s">stm32_core</span><span class="w"> </span><span class="s">INTERFACE</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_ARCH_FLAGS</span><span class="o">}</span><span class="w">      </span><span class="c"># -mcpu, -mfpu, -mfloat-abi from the chip family</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="s">-Os</span><span class="w">                      </span><span class="c"># size-optimised by default; -O0 is opt-in via CMAKE_BUILD_TYPE</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="s">-ffreestanding</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="s">-ffunction-sections</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="s">-fdata-sections</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="s">-fsigned-char</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="s">-fno-move-loop-invariants</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="s">-Wall</span><span class="w">                    </span><span class="c"># standard set</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="s">-Wextra</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="s">-Wpedantic</span><span class="w">               </span><span class="c"># ISO conformance</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="s">-Wshadow</span><span class="w">                 </span><span class="c"># catches accidental local override of outer scope</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="s">-Werror</span><span class="w">                  </span><span class="c"># warnings ARE errors — see policy below</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:C</span><span class="o">&gt;</span><span class="s">:-std=gnu11&gt;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:CXX</span><span class="o">&gt;</span><span class="s">:-std=gnu++20&gt;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">)</span>
 </code></pre></div>
 <p><code>-Wconversion</code> is intentionally NOT enabled — on hand-written embedded
 code that mixes 8/16/32-bit register fields, it produces a wall of
@@ -1487,10 +1529,10 @@ projects generated via <code>stmtool project create</code>.</p>
    Use <code>set_source_files_properties</code> next to the file in question, not
    a global <code>-Wno-*</code>. Example from the SDK:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_HAL_DIR</span><span class="o">}</span><span class="s">/src/cmsis/</span><span class="o">${</span><span class="nv">STM32_VECTORS_FILE</span><span class="o">}</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span><span class="w"> </span><span class="s2">&quot;-Wno-pedantic&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_HAL_DIR</span><span class="o">}</span><span class="s">/src/cmsis/</span><span class="o">${</span><span class="nv">STM32_VECTORS_FILE</span><span class="o">}</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span><span class="w"> </span><span class="s2">&quot;-Wno-pedantic&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">)</span>
 </code></pre></div>
 <p>This keeps the warning visible everywhere else and isolates the
    exemption to a single, named file.</p>
@@ -1503,7 +1545,7 @@ with <code>-Werror</code>, this turns any ignored error return into a build fail
 the compiler enforces that every <code>Status</code> is checked. When a discard is
 genuinely intended (e.g. dropping a byte in a full ISR ring buffer), make it
 explicit with <code>(void)</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// ISR: drop byte if RX buffer is full</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// ISR: drop byte if RX buffer is full</span>
 </code></pre></div>
 <p>This is a deliberate compile-time policy, not a warning to suppress. See
 <a href="../modules/drivers/#error-handling-drivertypes-v015">drivers</a> for <code>Result&lt;T&gt;</code>
@@ -1512,11 +1554,11 @@ and the <code>DRV_TRY</code> helpers.</p>
 <p><code>sdk/core/src/newlib/cxx.cpp</code> is the C++ runtime support translation
 unit. It must be compiled with GCC 11-era C++ to match newlib's ABI
 expectations. The SDK enforces this with a per-file override:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">_STM32_SDK_DIR</span><span class="o">}</span><span class="s">/core/src/newlib/cxx.cpp</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="s2">&quot;-std=gnu++11;-fabi-version=0;-fno-exceptions;-fno-rtti;-fno-use-cxa-atexit;-fno-threadsafe-statics&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">_STM32_SDK_DIR</span><span class="o">}</span><span class="s">/core/src/newlib/cxx.cpp</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="s2">&quot;-std=gnu++11;-fabi-version=0;-fno-exceptions;-fno-rtti;-fno-use-cxa-atexit;-fno-threadsafe-statics&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
 </code></pre></div>
 <p>Everything else, including templates' <code>main.cpp</code>, compiles with C++20
 (<code>gnu++20</code>).</p>

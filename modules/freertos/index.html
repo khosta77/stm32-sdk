@@ -312,6 +312,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../../build-flags/" class="md-tabs__link">
         
   
@@ -558,6 +577,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../build-flags/" class="md-nav__link">
         
   
@@ -603,10 +649,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -624,8 +670,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -934,10 +980,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -955,8 +1001,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1079,10 +1125,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1100,8 +1146,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1391,13 +1437,19 @@
 
 
 <h1 id="freertos-helpers">FreeRTOS helpers<a class="headerlink" href="#freertos-helpers" title="Permanent link">&para;</a></h1>
-<p>FreeRTOS is optional: enable with <code>-DSTM32_USE_FREERTOS=ON</code> (the default for
-all templates under <code>templates/freertos/</code>). When enabled, the SDK provides
-RAII wrappers in <code>sdk/rtos/include/rtos/rtos.hpp</code>.</p>
+<p>FreeRTOS is optional: enable <code>STM32_USE_FREERTOS</code> in the project <code>.config</code>
+(the <code>defconfig</code> of every template under <code>templates/freertos/</code> already sets
+it). When enabled, the SDK provides RAII wrappers in
+<code>sdk/rtos/include/rtos/rtos.hpp</code>.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Heap implementation: <code>heap_4</code>, 16 KB by default.</li>
-<li><code>configMINIMAL_STACK_SIZE</code>: 128 words.</li>
+<li>Heap implementation: <code>heap_4</code>, 16 KB by default — since v0.2.2 the size is
+  the Kconfig symbol <code>FREERTOS_TOTAL_HEAP_SIZE</code> (default <code>16384</code>).</li>
+<li><code>configMINIMAL_STACK_SIZE</code>: 128 words — since v0.2.2 the Kconfig symbol
+  <code>FREERTOS_MINIMAL_STACK_SIZE</code> (default <code>128</code>).</li>
+<li>Tick rate, priority count and the timer-task parameters are Kconfig symbols
+  too (<code>FREERTOS_*</code>); the defaults reproduce the historic values, see
+  <a href="../../configuration/">Configuration</a>.</li>
 <li><code>SysTick</code> is used by FreeRTOS — do not also use <code>SysTick_Handler</code> directly.</li>
 </ul>
 <h2 id="rtostask"><code>rtos::Task</code><a class="headerlink" href="#rtostask" title="Permanent link">&para;</a></h2>
@@ -1434,8 +1486,8 @@ the typical pattern is a function-static or namespace-scope object after
 </code></pre></div>
 <p>Don't call FreeRTOS API <strong>before</strong> <code>vTaskStartScheduler()</code> — operations on
 mutexes / semaphores hang otherwise. This caught us during the <code>i2c-scan</code>
-template development; the template was moved to <code>bare-metal/</code> (<code>STM32_USE_FREERTOS=OFF</code>)
-to avoid the issue.</p>
+template development; the template was moved to <code>bare-metal/</code>
+(<code>STM32_USE_FREERTOS</code> disabled in its <code>.config</code>) to avoid the issue.</p>
 <h2 id="global-object-lifetime">Global object lifetime<a class="headerlink" href="#global-object-lifetime" title="Permanent link">&para;</a></h2>
 <p>The pattern across templates:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">__initialize_hardware</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>

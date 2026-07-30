@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/build-flags/">
       
       
-        <link rel="prev" href="../stmtool/">
+        <link rel="prev" href="../configuration/">
       
       
         <link rel="next" href="../modules/drivers/">
@@ -310,6 +310,25 @@
   
   
   
+  
+    <li class="md-tabs__item">
+      <a href="../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
     
   
   
@@ -555,6 +574,33 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -618,10 +664,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v0114" class="md-nav__link">
+  <a href="#kconfig-v022" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Флаги логирования (v0.1.14)
+        Конфигурация — это Kconfig (v0.2.2)
       
     </span>
   </a>
@@ -713,10 +759,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -734,8 +780,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -942,10 +988,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -963,8 +1009,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1087,10 +1133,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1108,8 +1154,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1319,10 +1365,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#v0114" class="md-nav__link">
+  <a href="#kconfig-v022" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Флаги логирования (v0.1.14)
+        Конфигурация — это Kconfig (v0.2.2)
       
     </span>
   </a>
@@ -1426,22 +1472,18 @@
 <code>STM32_USE_SYSTEM</code>, а <code>system.executor</code> и <code>system.signal_bus</code> (которым нужны
 обёртки FreeRTOS) — только когда дополнительно включён <code>STM32_USE_FREERTOS</code>;
 ядро очереди остаётся пригодным для bare-metal-сборок.</p>
-<h2 id="v0114">Флаги логирования (v0.1.14)<a class="headerlink" href="#v0114" title="Permanent link">&para;</a></h2>
-<p><a href="../modules/logging/">Логгер</a> поставляется вместе с <code>stm32_drivers</code> и настраивается
-двумя cache-переменными, отображаемыми в compile-define на цели драйверов:</p>
-<ul>
-<li><code>STM32_LOG_LEVEL</code> (<code>NONE</code>/<code>ERROR</code>/<code>WARN</code>/<code>INFO</code>/<code>DEBUG</code>/<code>TRACE</code>, по умолчанию
-  <code>INFO</code>) — потолок на этапе компиляции. <code>LOG_*</code> выше него раскрываются в
-  <code>((void)0)</code>, поэтому их строки-форматы не попадают во flash. Поставьте <code>NONE</code> в
-  релизной сборке, чтобы вырезать логирование целиком.</li>
-<li><code>STM32_LOG_BACKEND</code> (<code>none</code>/<code>itm</code>/<code>uart</code>, по умолчанию <code>none</code>) — называет
-  предполагаемый sink. Оба backend-модуля компилируются всегда, поэтому флаг не
-  ограничивает доступность; он задаёт define <code>STM32_LOG_BACKEND</code> (со значениями
-  <code>STM32_LOG_BACKEND_NONE</code>/<code>_ITM</code>/<code>_UART</code>), чтобы код приложения выбрал
-  подходящий тип backend'а обобщённо.</li>
-</ul>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_LEVEL<span class="o">=</span>DEBUG<span class="w"> </span>-DSTM32_LOG_BACKEND<span class="o">=</span>itm<span class="w"> </span>...
-</code></pre></div>
+<h2 id="kconfig-v022">Конфигурация — это Kconfig (v0.2.2)<a class="headerlink" href="#kconfig-v022" title="Permanent link">&para;</a></h2>
+<p>Гейты подсистем (<code>STM32_USE_*</code>), уровень и backend
+<a href="../modules/logging/">логирования</a>, частота HSE, float ABI и тюнаблы FreeRTOS —
+всё это настраивается через проектный файл <code>.config</code>, см.
+<a href="../configuration/">Конфигурацию</a>. Передача их как <code>-D</code> cache-переменных
+удалена в v0.2.2; значения ниже приходят из генерируемого
+<code>out/generated/config.cmake</code>.</p>
+<p>Choice уровня логирования по-прежнему отображается в compile-define на цели
+драйверов: <code>LOG_*</code> выше потолка раскрываются в <code>((void)0)</code> (строки-форматы не
+попадают во flash), а предполагаемый sink выставляется как define
+<code>STM32_LOG_BACKEND</code> (со значениями <code>STM32_LOG_BACKEND_NONE</code>/<code>_ITM</code>/<code>_UART</code>),
+чтобы код приложения выбрал подходящий тип backend'а обобщённо.</p>
 <h2 id="docker">Окружение сборки (Docker, офлайн)<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h2>
 <p>Начиная с v0.1.13 любая сборка идёт внутри Docker-образа SDK
 (<code>ghcr.io/khosta77/stm32-sdk-build:latest</code>) — у <code>stmtool build</code> нет пути через
@@ -1454,22 +1496,22 @@
 <code>stm32_rtos.cmake</code> по-прежнему уважает эту переменную (в том числе из окружения)
 для заранее подготовленного чекаута, откатываясь к shallow-клону <code>FetchContent</code>.</p>
 <h2 id="v014">Активные флаги (v0.1.4)<a class="headerlink" href="#v014" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">target_compile_options</span><span class="p">(</span><span class="s">stm32_core</span><span class="w"> </span><span class="s">INTERFACE</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_ARCH_FLAGS</span><span class="o">}</span><span class="w">      </span><span class="c"># -mcpu, -mfpu, -mfloat-abi от семейства чипа</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s">-Os</span><span class="w">                      </span><span class="c"># по умолчанию размер; -O0 через CMAKE_BUILD_TYPE</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="s">-ffreestanding</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="s">-ffunction-sections</span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="s">-fdata-sections</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="s">-fsigned-char</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="s">-fno-move-loop-invariants</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="s">-Wall</span><span class="w">                    </span><span class="c"># стандартный набор</span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="s">-Wextra</span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="s">-Wpedantic</span><span class="w">               </span><span class="c"># соответствие ISO</span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">    </span><span class="s">-Wshadow</span><span class="w">                 </span><span class="c"># ловит скрытие имени из внешней области</span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="s">-Werror</span><span class="w">                  </span><span class="c"># предупреждения = ошибки — см. политику ниже</span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:C</span><span class="o">&gt;</span><span class="s">:-std=gnu11&gt;</span>
-<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:CXX</span><span class="o">&gt;</span><span class="s">:-std=gnu++20&gt;</span>
-<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">target_compile_options</span><span class="p">(</span><span class="s">stm32_core</span><span class="w"> </span><span class="s">INTERFACE</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_ARCH_FLAGS</span><span class="o">}</span><span class="w">      </span><span class="c"># -mcpu, -mfpu, -mfloat-abi от семейства чипа</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="s">-Os</span><span class="w">                      </span><span class="c"># по умолчанию размер; -O0 через CMAKE_BUILD_TYPE</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="s">-ffreestanding</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="s">-ffunction-sections</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="s">-fdata-sections</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="s">-fsigned-char</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="s">-fno-move-loop-invariants</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="s">-Wall</span><span class="w">                    </span><span class="c"># стандартный набор</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="s">-Wextra</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="s">-Wpedantic</span><span class="w">               </span><span class="c"># соответствие ISO</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="s">-Wshadow</span><span class="w">                 </span><span class="c"># ловит скрытие имени из внешней области</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="s">-Werror</span><span class="w">                  </span><span class="c"># предупреждения = ошибки — см. политику ниже</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:C</span><span class="o">&gt;</span><span class="s">:-std=gnu11&gt;</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="o">$&lt;</span><span class="nv">$&lt;COMPILE_LANGUAGE:CXX</span><span class="o">&gt;</span><span class="s">:-std=gnu++20&gt;</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="p">)</span>
 </code></pre></div>
 <p><code>-Wconversion</code> сознательно не включён — на рукописном embedded-коде, где
 смешиваются 8/16/32-битные регистровые поля, он выдаёт стену шума без
@@ -1489,10 +1531,10 @@
    FreeRTOS). Используйте <code>set_source_files_properties</code> рядом с этим
    конкретным файлом, не глобальный <code>-Wno-*</code>. Пример из SDK:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_HAL_DIR</span><span class="o">}</span><span class="s">/src/cmsis/</span><span class="o">${</span><span class="nv">STM32_VECTORS_FILE</span><span class="o">}</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span><span class="w"> </span><span class="s2">&quot;-Wno-pedantic&quot;</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_HAL_DIR</span><span class="o">}</span><span class="s">/src/cmsis/</span><span class="o">${</span><span class="nv">STM32_VECTORS_FILE</span><span class="o">}</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span><span class="w"> </span><span class="s2">&quot;-Wno-pedantic&quot;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">)</span>
 </code></pre></div>
 <p>Так предупреждение остаётся видимым везде, кроме одного
    поимённого файла.</p>
@@ -1505,7 +1547,7 @@ vendor-SDK, который триггерит предупреждения — �
 сборки — компилятор гарантирует, что каждый <code>Status</code> проверен. Когда сброс
 действительно намеренный (например, потеря байта в полном ISR-кольце), его
 делают явным через <code>(void)</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// ISR: сброс байта при полном RX-буфере</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// ISR: сброс байта при полном RX-буфере</span>
 </code></pre></div>
 <p>Это осознанная политика на этапе компиляции, а не предупреждение, которое
 надо подавлять. См. <a href="../modules/drivers/">драйверы</a> про <code>Result&lt;T&gt;</code> и
@@ -1514,11 +1556,11 @@ vendor-SDK, который триггерит предупреждения — �
 <p>Файл <code>sdk/core/src/newlib/cxx.cpp</code> — это translation unit для C++
 runtime support. Он обязан компилироваться с C++ образца GCC 11, чтобы
 сохранялся ABI-контракт с newlib. SDK задаёт это per-file override'ом:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">_STM32_SDK_DIR</span><span class="o">}</span><span class="s">/core/src/newlib/cxx.cpp</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="s2">&quot;-std=gnu++11;-fabi-version=0;-fno-exceptions;-fno-rtti;-fno-use-cxa-atexit;-fno-threadsafe-statics&quot;</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">_STM32_SDK_DIR</span><span class="o">}</span><span class="s">/core/src/newlib/cxx.cpp</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="s2">&quot;-std=gnu++11;-fabi-version=0;-fno-exceptions;-fno-rtti;-fno-use-cxa-atexit;-fno-threadsafe-statics&quot;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
 </code></pre></div>
 <p>Всё остальное, включая <code>main.cpp</code> шаблонов, компилируется в C++20
 (<code>gnu++20</code>).</p>

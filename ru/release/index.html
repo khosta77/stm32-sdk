@@ -312,6 +312,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../build-flags/" class="md-tabs__link">
         
   
@@ -558,6 +577,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../build-flags/" class="md-nav__link">
         
   
@@ -600,10 +646,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
             
   
   
@@ -621,8 +667,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -829,10 +875,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -850,8 +896,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -974,10 +1020,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -995,8 +1041,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1237,6 +1283,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v022" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v021" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1414,6 +1471,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v022" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v021" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1552,6 +1620,42 @@ maintainer, пока API не стабилизируется (цель — v1.0)
    <a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a> подтянул свежий контент.</li>
 </ol>
 <h2 id="_5">История релизов<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="v022">v0.2.2<a class="headerlink" href="#v022" title="Permanent link">&para;</a></h3>
+<p>Фокус: <strong>Kconfig</strong> как единственный источник правды о конфигурации прошивки
+(#63) — quality-of-life фундамент перед волной периферии. <strong>Ломающее</strong>:
+старый путь конфигурации удалён (жёсткий срез).</p>
+<p>Основное:</p>
+<ul>
+<li><strong>Дерево Kconfig.</strong> <code>sdk/Kconfig</code> + фрагменты по подсистемам: шесть гейтов
+  <code>STM32_USE_*</code> (зависимости выражены через <code>depends on</code> вместо
+  <code>FATAL_ERROR</code> в CMake), choices уровня/backend'а логов, <code>STM32_HSE_VALUE</code>,
+  choice float ABI и — впервые настраиваемые — тюнаблы FreeRTOS (heap,
+  частота тика, приоритеты, стеки) с историческими значениями в качестве
+  дефолтов. <code>FreeRTOSConfig.h</code> читает их из генерируемого
+  <code>stm32_autoconf.h</code>.</li>
+<li><strong>Строгая генерация.</strong> <code>sdk/cmake/kconfig.cmake</code> запускает
+  <code>sdk/scripts/kconfig/genconfig.py</code> (kconfiglib, вшит в Docker-образы) на
+  этапе конфигурации. Правленный руками <code>.config</code> не может разъехаться
+  молча: неизвестные символы, значения вне диапазона и гейты с
+  неудовлетворёнными зависимостями роняют сборку с точным сообщением.</li>
+<li><strong>Тонкие проекты.</strong> Шаблоны поставляют <code>defconfig</code>; <code>stmtool project
+  create</code> копирует его как <code>.config</code>. Шаблонные <code>CMakeLists.txt</code> лишились
+  блока <code>set(STM32_CHIP)</code>/<code>set(STM32_USE_*)</code>; <code>stmproject.toml</code> потерял
+  мёртвые секции <code>[project]</code>/<code>[build]</code>/<code>[serial]</code> и стал чистым манифестом
+  workspace (реф SDK, чип, инструмент прошивки).</li>
+<li><strong><code>stmtool config</code>.</strong> Новая команда: curses-TUI menuconfig над деревом SDK
+  (в стиле raspi-config), которая заодно служит путём миграции — открытие
+  проекта без <code>.config</code> стартует с дефолтов. <code>project create</code> теперь также
+  сверяет <code>families</code> шаблона с чипом.</li>
+</ul>
+<p>Замечания:</p>
+<ul>
+<li><strong>Ломающее:</strong> при обновлении SDK каждый проект должен создать <code>.config</code> —
+  см. <a href="../migration/#v022">заметки по апгрейду</a>. Дефолтный <code>.config</code> даёт
+  бинарно идентичную прошивку.</li>
+<li>Версионирование проекта (удалённый ключ <code>[project] version</code>) полноценно
+  вернётся с #90: git-тег → генерируемый <code>version.hpp</code>.</li>
+</ul>
 <h3 id="v021">v0.2.1<a class="headerlink" href="#v021" title="Permanent link">&para;</a></h3>
 <p>Фокус: вынос <code>stmtool</code> из монорепо в отдельный репозиторий
 <a href="https://github.com/khosta77/stmtool"><code>khosta77/stmtool</code></a>, чтобы инструмент

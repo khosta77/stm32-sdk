@@ -312,6 +312,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../../build-flags/" class="md-tabs__link">
         
   
@@ -558,6 +577,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../build-flags/" class="md-nav__link">
         
   
@@ -603,10 +649,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -624,8 +670,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -934,10 +980,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -955,8 +1001,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1079,10 +1125,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1100,8 +1146,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1391,13 +1437,19 @@
 
 
 <h1 id="freertos-">FreeRTOS-обёртки<a class="headerlink" href="#freertos-" title="Permanent link">&para;</a></h1>
-<p>FreeRTOS подключается опционально: <code>-DSTM32_USE_FREERTOS=ON</code> (по умолчанию для
-шаблонов в <code>templates/freertos/</code>). С FreeRTOS SDK предоставляет RAII-обёртки
+<p>FreeRTOS подключается опционально: включите <code>STM32_USE_FREERTOS</code> в проектном
+<code>.config</code> (в <code>defconfig</code> каждого шаблона из <code>templates/freertos/</code> он уже
+включён). С FreeRTOS SDK предоставляет RAII-обёртки
 в <code>sdk/rtos/include/rtos/rtos.hpp</code>.</p>
 <h2 id="_1">Конфигурация<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Heap: <code>heap_4</code>, 16 КБ по умолчанию.</li>
-<li><code>configMINIMAL_STACK_SIZE</code>: 128 слов.</li>
+<li>Heap: <code>heap_4</code>, 16 КБ по умолчанию — с v0.2.2 размер задаёт Kconfig-символ
+  <code>FREERTOS_TOTAL_HEAP_SIZE</code> (по умолчанию <code>16384</code>).</li>
+<li><code>configMINIMAL_STACK_SIZE</code>: 128 слов — с v0.2.2 Kconfig-символ
+  <code>FREERTOS_MINIMAL_STACK_SIZE</code> (по умолчанию <code>128</code>).</li>
+<li>Частота тика, число приоритетов и параметры таймерной задачи — тоже
+  Kconfig-символы (<code>FREERTOS_*</code>); дефолты воспроизводят исторические
+  значения, см. <a href="../../configuration/">Конфигурацию</a>.</li>
 <li><code>SysTick</code> использует FreeRTOS — не определяйте <code>SysTick_Handler</code> отдельно.</li>
 </ul>
 <h2 id="rtostask"><code>rtos::Task</code><a class="headerlink" href="#rtostask" title="Permanent link">&para;</a></h2>
@@ -1434,8 +1486,8 @@
 </code></pre></div>
 <p>Не вызывайте FreeRTOS API <strong>до</strong> <code>vTaskStartScheduler()</code> — операции с
 мьютексами / семафорами иначе зависают. Мы наступили на это при разработке
-шаблона <code>i2c-scan</code>; шаблон был перенесён в <code>bare-metal/</code> (<code>STM32_USE_FREERTOS=OFF</code>),
-чтобы обойти проблему.</p>
+шаблона <code>i2c-scan</code>; шаблон был перенесён в <code>bare-metal/</code>
+(<code>STM32_USE_FREERTOS</code> выключен в его <code>.config</code>), чтобы обойти проблему.</p>
 <h2 id="lifetime">Lifetime глобальных объектов<a class="headerlink" href="#lifetime" title="Permanent link">&para;</a></h2>
 <p>Общий паттерн в шаблонах:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">__initialize_hardware</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>

@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="ru" class="no-js">
+<html lang="en" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -10,35 +10,35 @@
       
       
       
-        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/quickstart/">
+        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/configuration/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../stmtool/">
       
       
-        <link rel="next" href="../stmtool/">
+        <link rel="next" href="../build-flags/">
       
       
         
-          <link rel="alternate" href="../../quickstart/" hreflang="en">
+          <link rel="alternate" href="./" hreflang="en">
         
-          <link rel="alternate" href="./" hreflang="ru">
+          <link rel="alternate" href="../ru/configuration/" hreflang="ru">
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Quick start - stm32-sdk</title>
+        <title>Configuration - stm32-sdk</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -57,7 +57,7 @@
       
     
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,8 +82,8 @@
     <div data-md-component="skip">
       
         
-        <a href="#_1" class="md-skip">
-          Перейти к содержанию
+        <a href="#configuration-kconfig" class="md-skip">
+          Skip to content
         </a>
       
     </div>
@@ -95,8 +95,8 @@
       
 
 <header class="md-header" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
-    <a href="../" title="stm32-sdk" class="md-header__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="stm32-sdk" class="md-header__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Quick start
+              Configuration
             
           </span>
         </div>
@@ -156,20 +156,20 @@
       <div class="md-header__option">
   <div class="md-select">
     
-    <button class="md-header__button md-icon" aria-label="Выберите язык">
+    <button class="md-header__button md-icon" aria-label="Select language">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m12.87 15.07-2.54-2.51.03-.03A17.5 17.5 0 0 0 14.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2zm-2.62 7 1.62-4.33L19.12 17z"/></svg>
     </button>
     <div class="md-select__inner">
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../quickstart/" hreflang="en" class="md-select__link">
+            <a href="./" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
         
           <li class="md-select__item">
-            <a href="./" hreflang="ru" class="md-select__link">
+            <a href="../ru/configuration/" hreflang="ru" class="md-select__link">
               Русский
             </a>
           </li>
@@ -190,16 +190,16 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="Поиск">
+      <nav class="md-search__options" aria-label="Search">
         
-        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
@@ -212,7 +212,7 @@
       <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Инициализация поиска
+            Initializing search
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -224,7 +224,7 @@
     
     
       <div class="md-header__source">
-        <a href="https://github.com/khosta77/stm32-sdk" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+        <a href="https://github.com/khosta77/stm32-sdk" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -245,7 +245,7 @@
         
           
             
-<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-grid">
     <ul class="md-tabs__list">
       
@@ -255,7 +255,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../" class="md-tabs__link">
+      <a href=".." class="md-tabs__link">
         
   
   
@@ -272,11 +272,9 @@
   
   
   
-    
   
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
+    <li class="md-tabs__item">
+      <a href="../quickstart/" class="md-tabs__link">
         
   
   
@@ -312,9 +310,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../configuration/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -464,9 +464,9 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../" title="stm32-sdk" class="md-nav__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+    <a href=".." title="stm32-sdk" class="md-nav__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -476,7 +476,7 @@
   </label>
   
     <div class="md-nav__source">
-      <a href="https://github.com/khosta77/stm32-sdk" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+      <a href="https://github.com/khosta77/stm32-sdk" title="Go to repository" class="md-source" data-md-component="source">
   <div class="md-source__icon md-icon">
     
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
@@ -496,7 +496,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href=".." class="md-nav__link">
         
   
   
@@ -520,37 +520,10 @@
       
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Quick start
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
         
   
   
@@ -566,125 +539,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Содержание">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Содержание
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Что нужно установить
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#stmtool" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Установка stmtool
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Первый проект
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Конфигурация (опционально)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Сборка
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Тесты
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Прошивка
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sdk" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Обновление SDK позже
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Что дальше
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -720,10 +574,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -739,6 +620,131 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#three-files-three-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three files, three questions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#editing-the-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Editing the configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-configurable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is configurable
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is configurable">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#subsystem-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subsystem gates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-with-stm32_use_drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging (with STM32_USE_DRIVERS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#freertos-tunables-with-stm32_use_freertos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FreeRTOS tunables (with STM32_USE_FREERTOS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works-under-the-hood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works under the hood
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-options-for-a-new-subsystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding options for a new subsystem
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1384,7 +1390,7 @@
                   <div class="md-sidebar__inner">
                     
 
-<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
   
@@ -1393,15 +1399,15 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Содержание
+      Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#three-files-three-questions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Что нужно установить
+        Three files, three questions
       
     </span>
   </a>
@@ -1409,10 +1415,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#stmtool" class="md-nav__link">
+  <a href="#editing-the-configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Установка stmtool
+        Editing the configuration
       
     </span>
   </a>
@@ -1420,10 +1426,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#what-is-configurable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Первый проект
+        What is configurable
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is configurable">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#subsystem-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subsystem gates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#logging-with-stm32_use_drivers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Logging (with STM32_USE_DRIVERS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#freertos-tunables-with-stm32_use_freertos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FreeRTOS tunables (with STM32_USE_FREERTOS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-it-works-under-the-hood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works under the hood
       
     </span>
   </a>
@@ -1431,65 +1498,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#adding-options-for-a-new-subsystem" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Конфигурация (опционально)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Сборка
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Тесты
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Прошивка
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sdk" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Обновление SDK позже
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Что дальше
+        Adding options for a new subsystem
       
     </span>
   </a>
@@ -1513,7 +1525,7 @@
 
 
   
-    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/quickstart.ru.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/configuration.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1521,115 +1533,226 @@
   
 
 
-<h1 id="_1">Быстрый старт<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
-<h2 id="_2">Что нужно установить<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h1 id="configuration-kconfig">Configuration (Kconfig)<a class="headerlink" href="#configuration-kconfig" title="Permanent link">&para;</a></h1>
+<p>Since v0.2.2 the firmware content of a project is configured through
+<strong>Kconfig</strong> — the same mechanism the Linux kernel and Zephyr use. The
+project-local <code>.config</code> file is the single source of truth: subsystem gates,
+logging, HSE frequency, float ABI and the FreeRTOS tunables all live there.
+The old way (<code>set(STM32_USE_* ...)</code> in <code>CMakeLists.txt</code>, <code>-DSTM32_LOG_LEVEL=...</code>
+on the command line) was <strong>removed</strong> — see the
+<a href="../migration/#new-in-v022">migration notes</a>.</p>
+<h2 id="three-files-three-questions">Three files, three questions<a class="headerlink" href="#three-files-three-questions" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Инструмент</th>
-<th>Минимальная версия</th>
-<th>Назначение</th>
+<th>File</th>
+<th>Question it answers</th>
+<th>Owner</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>docker</code></td>
-<td>любая свежая</td>
-<td>Выполняет любую сборку; содержит запиненный тулчейн и FreeRTOS</td>
+<td><code>stmproject.toml</code></td>
+<td>how to build and flash (SDK ref, chip, flash tool)</td>
+<td><code>stmtool</code>, host side</td>
 </tr>
 <tr>
-<td><code>python</code></td>
-<td>3.10</td>
-<td>Запускает <code>stmtool</code></td>
+<td><code>.config</code></td>
+<td>what is inside the firmware</td>
+<td>Kconfig; commit it to git</td>
 </tr>
 <tr>
-<td><code>pipx</code></td>
-<td>любая</td>
-<td>Изолированная установка <code>stmtool</code> (рекомендуется)</td>
-</tr>
-<tr>
-<td><code>st-flash</code></td>
-<td>любая</td>
-<td>Опционально, прошивка через ST-Link</td>
+<td><code>CMakeLists.txt</code></td>
+<td>how to link (sources + libraries)</td>
+<td>plain CMake, now thin</td>
 </tr>
 </tbody>
 </table>
-<p>Сборка выполняется внутри Docker-образа SDK, поэтому хостовый <code>arm-none-eabi-gcc</code>
-не требуется. Образ пинит <code>arm-none-eabi-gcc</code> 15.2 (GCC &gt;= 14 обязателен для
-сканирования модулей C++20). Если локальный тулчейн всё же установлен, <code>stmtool
-doctor</code> предупредит, когда он старше GCC 14.</p>
-<p>Проверить окружение:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>stmtool<span class="w"> </span>doctor
+<p>Chip selection deliberately stays in <code>stmproject.toml</code> (the west model): the
+Kconfig tree ships <em>with the SDK</em>, so the SDK ref and chip must be known
+before the tree can even be parsed.</p>
+<h2 id="editing-the-configuration">Editing the configuration<a class="headerlink" href="#editing-the-configuration" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>stmtool<span class="w"> </span>config<span class="w">          </span><span class="c1"># interactive menuconfig TUI (curses)</span>
 </code></pre></div>
-<h2 id="stmtool">Установка <code>stmtool</code><a class="headerlink" href="#stmtool" title="Permanent link">&para;</a></h2>
-<p>Предпочтительный способ — скрипт <code>install.sh</code>. Он удалит предыдущую установку,
-очистит кэш SDK, поставит последний релизный тег и настроит shell completion:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>./install.sh
+<p>The TUI shows every option with its help text, enforces dependencies (e.g.
+<code>STM32_USE_SENSORS</code> cannot be enabled without <code>STM32_USE_DRIVERS</code>) and writes
+<code>.config</code> on save. A project without <code>.config</code> starts from the tree defaults —
+the same command is therefore the migration path for pre-v0.2.2 projects.</p>
+<p><code>.config</code> is a plain text file and can be edited by hand; the build validates
+it strictly. Any assignment the tree rejects — an unknown symbol, an
+out-of-range value, a gate whose dependencies are not satisfied — fails the
+configure step with a pointer to the offending line, it is never silently
+dropped.</p>
+<h2 id="what-is-configurable">What is configurable<a class="headerlink" href="#what-is-configurable" title="Permanent link">&para;</a></h2>
+<p>Symbols appear in <code>.config</code> with the <code>CONFIG_</code> prefix.</p>
+<h3 id="subsystem-gates">Subsystem gates<a class="headerlink" href="#subsystem-gates" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Enables</th>
+<th>Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STM32_USE_DRIVERS</code></td>
+<td>driver modules + logging</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>STM32_USE_FREERTOS</code></td>
+<td>FreeRTOS kernel + <code>rtos.hpp</code> wrappers</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>STM32_USE_SENSORS</code></td>
+<td>MPU6050 / SSD1306 / W25Q32</td>
+<td><code>STM32_USE_DRIVERS</code></td>
+</tr>
+<tr>
+<td><code>STM32_USE_STORAGE</code></td>
+<td>flash storage layer</td>
+<td><code>STM32_USE_DRIVERS</code></td>
+</tr>
+<tr>
+<td><code>STM32_USE_SYSTEM</code></td>
+<td>component framework + concurrency layer</td>
+<td><code>STM32_USE_DRIVERS</code></td>
+</tr>
+<tr>
+<td><code>STM32_USE_TESTING</code></td>
+<td>on-device <code>ASSERT_*</code>/<code>EXPECT_*</code> helpers</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="core">Core<a class="headerlink" href="#core" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STM32_HSE_VALUE</code></td>
+<td><code>8000000</code></td>
+<td>external crystal frequency (Hz), 4–26 MHz</td>
+</tr>
+<tr>
+<td><code>STM32_FLOAT_ABI_HARD</code> / <code>_SOFTFP</code> / <code>_SOFT</code></td>
+<td><code>hard</code></td>
+<td>float ABI choice; selects the FPU flags and the FreeRTOS port</td>
+</tr>
+</tbody>
+</table>
+<h3 id="logging-with-stm32_use_drivers">Logging (with <code>STM32_USE_DRIVERS</code>)<a class="headerlink" href="#logging-with-stm32_use_drivers" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Default</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STM32_LOG_LEVEL_*</code> (choice <code>NONE</code>…<code>TRACE</code>)</td>
+<td><code>INFO</code></td>
+<td>compile-time ceiling; <code>LOG_*</code> above it vanish from flash</td>
+</tr>
+<tr>
+<td><code>STM32_LOG_BACKEND_SEL_*</code> (choice <code>NONE</code>/<code>ITM</code>/<code>UART</code>)</td>
+<td><code>NONE</code></td>
+<td>intended sink, exposed as the <code>STM32_LOG_BACKEND</code> define</td>
+</tr>
+</tbody>
+</table>
+<h3 id="freertos-tunables-with-stm32_use_freertos">FreeRTOS tunables (with <code>STM32_USE_FREERTOS</code>)<a class="headerlink" href="#freertos-tunables-with-stm32_use_freertos" title="Permanent link">&para;</a></h3>
+<p>Previously hardcoded in the SDK's <code>FreeRTOSConfig.h</code>, configurable since
+v0.2.2. Defaults reproduce the historic values exactly.</p>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Default</th>
+<th>Maps to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FREERTOS_TOTAL_HEAP_SIZE</code></td>
+<td><code>16384</code></td>
+<td><code>configTOTAL_HEAP_SIZE</code></td>
+</tr>
+<tr>
+<td><code>FREERTOS_TICK_RATE_HZ</code></td>
+<td><code>1000</code></td>
+<td><code>configTICK_RATE_HZ</code></td>
+</tr>
+<tr>
+<td><code>FREERTOS_MAX_PRIORITIES</code></td>
+<td><code>5</code></td>
+<td><code>configMAX_PRIORITIES</code></td>
+</tr>
+<tr>
+<td><code>FREERTOS_MINIMAL_STACK_SIZE</code></td>
+<td><code>128</code></td>
+<td><code>configMINIMAL_STACK_SIZE</code> (words)</td>
+</tr>
+<tr>
+<td><code>FREERTOS_TIMER_TASK_PRIORITY</code></td>
+<td><code>2</code></td>
+<td><code>configTIMER_TASK_PRIORITY</code></td>
+</tr>
+<tr>
+<td><code>FREERTOS_TIMER_QUEUE_LENGTH</code></td>
+<td><code>10</code></td>
+<td><code>configTIMER_QUEUE_LENGTH</code></td>
+</tr>
+<tr>
+<td><code>FREERTOS_TIMER_TASK_STACK_DEPTH</code></td>
+<td><code>256</code></td>
+<td><code>configTIMER_TASK_STACK_DEPTH</code> (words)</td>
+</tr>
+<tr>
+<td><code>FREERTOS_CHECK_FOR_STACK_OVERFLOW</code></td>
+<td><code>2</code></td>
+<td><code>configCHECK_FOR_STACK_OVERFLOW</code></td>
+</tr>
+</tbody>
+</table>
+<p>The timer-task priority must stay strictly below <code>FREERTOS_MAX_PRIORITIES</code>;
+the generator enforces this cross-check at configure time. Keep in mind that
+SDK demos create tasks at priority 2 — lowering <code>FREERTOS_MAX_PRIORITIES</code>
+below 3 would break them, and the range guard forbids it.</p>
+<h2 id="how-it-works-under-the-hood">How it works under the hood<a class="headerlink" href="#how-it-works-under-the-hood" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.config ──┐
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>          ├─ sdk/scripts/kconfig/genconfig.py (kconfiglib, in the build image)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>sdk/Kconfig ──┘        │
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                       ├─ out/generated/config.cmake      → CMake variables
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>                       └─ out/generated/stm32_autoconf.h  → CONFIG_* macros
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                                                            (FreeRTOSConfig.h reads them)
 </code></pre></div>
-<p>Альтернативно, установка <code>stmtool</code> напрямую из его репозитория:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pipx<span class="w"> </span>install<span class="w"> </span>git+https://github.com/khosta77/stmtool.git
-</code></pre></div>
-<h2 id="_3">Первый проект<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>stmtool<span class="w"> </span>project<span class="w"> </span>create<span class="w"> </span>my-blink<span class="w"> </span>--chip<span class="w"> </span>STM32F407VG
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="nb">cd</span><span class="w"> </span>my-blink
-</code></pre></div>
-<p>Структура сгенерированного проекта:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>my-blink/
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  src/main.cpp        # код приложения
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  CMakeLists.txt      # конфигурация сборки (только исходники + библиотеки)
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  stmproject.toml     # выбор чипа и привязка к версии SDK
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  .config             # конфигурация прошивки (Kconfig), из defconfig шаблона
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  .gitignore
-</code></pre></div>
-<p>По умолчанию используется <code>--template blink</code> (bare-metal). Список всех шаблонов:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>stmtool<span class="w"> </span>project<span class="w"> </span>templates
-</code></pre></div>
-<p>Чтобы начать с FreeRTOS-примера (например, MPU6050 + UART DMA):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>stmtool<span class="w"> </span>project<span class="w"> </span>create<span class="w"> </span>imu<span class="w"> </span>--chip<span class="w"> </span>STM32F407VG<span class="w"> </span>--template<span class="w"> </span>mpu6050-uart
-</code></pre></div>
-<p>Чтобы также сгенерировать <code>CLAUDE.md</code> под этот конкретный шаблон (распиновка,
-ожидаемый serial-выход, шаги верификации):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>stmtool<span class="w"> </span>project<span class="w"> </span>create<span class="w"> </span>imu<span class="w"> </span>--chip<span class="w"> </span>STM32F407VG<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span>--template<span class="w"> </span>mpu6050-uart<span class="w"> </span>--with-claude
-</code></pre></div>
-<h2 id="_4">Конфигурация (опционально)<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
-<p>Содержимое прошивки — гейты подсистем, логирование, тюнаблы FreeRTOS —
-живёт в проектном файле <code>.config</code> (Kconfig). <code>defconfig</code> шаблона уже даёт
-рабочий <code>.config</code>, так что этот шаг опционален. Чтобы что-то поменять,
-откройте menuconfig-TUI:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>stmtool<span class="w"> </span>config
-</code></pre></div>
-<p>Коммитьте <code>.config</code> в git — это часть проекта. Полный список опций — в
-<a href="../configuration/">Конфигурации</a>.</p>
-<h2 id="_5">Сборка<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
-<p>Сборка выполняется внутри Docker-образа SDK; артефакты кладутся в <code>out/</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>stmtool<span class="w"> </span>build
-</code></pre></div>
-<h2 id="_6">Тесты<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
-<p>Запустить host-юнит-тесты SDK (переносимая логика на мок-шинах, без железа):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>stmtool<span class="w"> </span><span class="nb">test</span>
-</code></pre></div>
-<h2 id="_7">Прошивка<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>stmtool<span class="w"> </span>flash
-</code></pre></div>
-<p>По умолчанию используется <code>st-flash</code>. Если у вас другой программатор —
-переопределите через <code>--tool</code>.</p>
-<h2 id="sdk">Обновление SDK позже<a class="headerlink" href="#sdk" title="Permanent link">&para;</a></h2>
-<p>Каждый проект фиксирует версию SDK в <code>stmproject.toml</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">[sdk]</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;develop&quot;</span><span class="w">   </span><span class="c1"># или тег, например &quot;0.1.2&quot;</span>
-</code></pre></div>
-<p>Чтобы обновить кэш SDK:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>update<span class="w">                       </span><span class="c1"># использует [sdk] version</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>update<span class="w"> </span>--version<span class="w"> </span><span class="m">0</span>.1.2<span class="w">       </span><span class="c1"># явный тег</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>list-versions<span class="w">                </span><span class="c1"># доступные теги</span>
-</code></pre></div>
-<h2 id="_8">Что дальше<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Прочитать <a href="../stmtool/">справочник по stmtool</a> — все команды.</li>
-<li>Посмотреть API <a href="../modules/drivers/">драйверов</a> и <a href="../modules/sensors/">сенсоров</a>.</li>
-<li>Перед апгрейдом SDK — <a href="../migration/">заметки по апгрейду</a>.</li>
-</ul>
+<p><code>sdk/cmake/kconfig.cmake</code> runs the generator on every configure, registers
+<code>.config</code> and the Kconfig fragments as configure dependencies (editing them
+re-triggers CMake), and also writes <code>out/generated/Kconfig.chip</code> — a
+chip-derived fragment (<code>STM32_FAMILY_STM32F4</code>, chip name) that future
+per-family options and the partition layer (#62) hang their <code>depends on</code> off.</p>
+<p>Templates ship a <code>defconfig</code> with their gate set;
+<code>stmtool project create</code> copies it into the new project as <code>.config</code>.</p>
+<h2 id="adding-options-for-a-new-subsystem">Adding options for a new subsystem<a class="headerlink" href="#adding-options-for-a-new-subsystem" title="Permanent link">&para;</a></h2>
+<p>Each subsystem owns a Kconfig fragment next to its sources
+(<code>sdk/rtos/Kconfig</code>, <code>sdk/drivers/Kconfig</code>, ...), <code>source</code>d from the root
+<code>sdk/Kconfig</code>. A new peripheral driver brings its options in its own
+fragment — use <code>depends on STM32_USE_DRIVERS</code>, give every option a <code>help</code>
+text and a safe default, and express invariants with <code>range</code>/<code>depends on</code>
+rather than CMake checks. Cross-symbol constraints Kconfig cannot express
+(strict inequalities) go into <code>_cross_checks</code> in
+<code>sdk/scripts/kconfig/genconfig.py</code>.</p>
 
 
 
@@ -1653,7 +1776,7 @@ doctor</code> предупредит, когда он старше GCC 14.</p>
           <button type="button" class="md-top md-icon" data-md-component="top" hidden>
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
-  К началу
+  Back to top
 </button>
         
       </main>
@@ -1685,10 +1808,10 @@ doctor</code> предупредит, когда он старше GCC 14.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

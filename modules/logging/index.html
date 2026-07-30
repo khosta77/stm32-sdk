@@ -312,6 +312,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../../configuration/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../../build-flags/" class="md-tabs__link">
         
   
@@ -558,6 +577,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../build-flags/" class="md-nav__link">
         
   
@@ -603,10 +649,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
         
           
-          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
             
   
   
@@ -624,8 +670,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_5">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -956,10 +1002,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -977,8 +1023,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1101,10 +1147,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
             
   
   
@@ -1122,8 +1168,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_7">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1529,12 +1575,13 @@ pattern as <code>driver/try.hpp</code>):</p>
 (<code>E</code>/<code>W</code>/<code>I</code>/<code>D</code>/<code>T</code>). Formatting is done by hand (no <code>printf</code>/<code>snprintf</code>), so it
 works under <code>nano.specs</code> and adds no float-formatting weight.</p>
 <h2 id="selecting-the-compile-time-level">Selecting the compile-time level<a class="headerlink" href="#selecting-the-compile-time-level" title="Permanent link">&para;</a></h2>
-<p>Set it through the CMake cache variable <code>STM32_LOG_LEVEL</code> (one of <code>NONE</code>,
-<code>ERROR</code>, <code>WARN</code>, <code>INFO</code>, <code>DEBUG</code>, <code>TRACE</code>; default <code>INFO</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_LEVEL<span class="o">=</span>DEBUG<span class="w"> </span>...
-</code></pre></div>
-<p>It maps to <code>-DSTM32_LOG_LEVEL=&lt;0..5&gt;</code>; the header defaults to <code>INFO</code> when the
-define is absent. A release build that sets <code>NONE</code> (or any level below your
+<p>Since v0.2.2 the level is a Kconfig choice in the project <code>.config</code>
+(<code>STM32_LOG_LEVEL_NONE</code> … <code>STM32_LOG_LEVEL_TRACE</code>, default <code>INFO</code>) — edit it
+with <code>stmtool config</code>, see <a href="../../configuration/">Configuration</a>. The old
+<code>-DSTM32_LOG_LEVEL=...</code> cache variable was removed.</p>
+<p>The choice still maps to the <code>STM32_LOG_LEVEL=&lt;0..5&gt;</code> compile definition on
+the driver target; the header defaults to <code>INFO</code> when the define is absent. A
+release build that selects <code>NONE</code> (or any level below your
 <code>LOG_DEBUG</code>/<code>LOG_TRACE</code> calls) strips those statements entirely.</p>
 <h2 id="backends">Backends<a class="headerlink" href="#backends" title="Permanent link">&para;</a></h2>
 <p>A backend is a sink — a <code>void(*)(void* ctx, const char* data, size_t len)</code> thunk
@@ -1550,27 +1597,26 @@ installed via <code>driver::log::setSink</code>. The SDK ships two, both exposin
   line. Generic over the bus in the terse constrained style; CTAD deduces the
   parameter from the constructor (<code>UartBackend g_sink{g_uart}</code>).</li>
 </ul>
-<p>The intended backend is named at build time via <code>STM32_LOG_BACKEND</code>
-(<code>none</code> / <code>itm</code> / <code>uart</code>, default <code>none</code>):</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>cmake<span class="w"> </span>-B<span class="w"> </span>out<span class="w"> </span>-DSTM32_LOG_BACKEND<span class="o">=</span>itm<span class="w"> </span>...
-</code></pre></div>
+<p>The intended backend is named in <code>.config</code> via the Kconfig choice
+<code>STM32_LOG_BACKEND_SEL_NONE</code> / <code>_ITM</code> / <code>_UART</code> (default <code>NONE</code>) — same
+place as the level, see <a href="../../configuration/">Configuration</a>.</p>
 <p>Both backend modules always compile (a template and inline CMSIS code cost
-nothing until instantiated), so the flag does not gate availability — it sets the
+nothing until instantiated), so the choice does not gate availability — it sets the
 <code>STM32_LOG_BACKEND</code> define (with the symbolic <code>STM32_LOG_BACKEND_NONE</code> / <code>_ITM</code> /
 <code>_UART</code> values), letting application code pick the matching type generically:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">#if STM32_LOG_BACKEND == STM32_LOG_BACKEND_ITM</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">ItmBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">;</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="cp">#else</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">UartBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">{</span><span class="n">g_uart</span><span class="p">};</span>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="cp">#endif</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">#if STM32_LOG_BACKEND == STM32_LOG_BACKEND_ITM</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">ItmBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="cp">#else</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">UartBackend</span><span class="w"> </span><span class="n">g_logSink</span><span class="p">{</span><span class="n">g_uart</span><span class="p">};</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="cp">#endif</span>
 </code></pre></div>
 <h2 id="custom-backend">Custom backend<a class="headerlink" href="#custom-backend" title="Permanent link">&para;</a></h2>
 <p>Any function with the sink signature works. Install it directly:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">mySink</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="cm">/*ctx*/</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">len</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">semihostPut</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">}</span>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">setSink</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mySink</span><span class="p">,</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kt">void</span><span class="w"> </span><span class="nf">mySink</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="cm">/*ctx*/</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">len</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">len</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">semihostPut</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">}</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">driver</span><span class="o">::</span><span class="n">log</span><span class="o">::</span><span class="n">setSink</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mySink</span><span class="p">,</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">);</span>
 </code></pre></div>
 <p><code>ctx</code> is passed back verbatim, so a stateful backend can carry <code>this</code> through it
 — exactly how <code>UartBackend</code> reaches its captured <code>UartDriver&amp;</code>.</p>
