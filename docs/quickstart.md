@@ -48,8 +48,9 @@ The generated layout:
 ```
 my-blink/
   src/main.cpp        # Application entry
-  CMakeLists.txt      # CMake configuration
+  CMakeLists.txt      # CMake configuration (sources + libraries only)
   stmproject.toml     # Chip and SDK version pin
+  .config             # Firmware configuration (Kconfig), from the template's defconfig
   .gitignore
 ```
 
@@ -73,6 +74,20 @@ serial output, verification steps for that specific scenario):
 stmtool project create imu --chip STM32F407VG \
   --template mpu6050-uart --with-claude
 ```
+
+## Configure (optional)
+
+Firmware content — subsystem gates, logging, FreeRTOS tunables — lives in the
+project `.config` file (Kconfig). The template's `defconfig` already gives a
+working `.config`, so this step is optional. To change anything, open the
+menuconfig TUI:
+
+```bash
+stmtool config
+```
+
+Commit `.config` to git — it is part of the project. See
+[Configuration](configuration.md) for the full option list.
 
 ## Build
 

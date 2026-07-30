@@ -36,6 +36,7 @@ stmtool project create <имя> --chip <чип> [--template <tpl>] [--with-claud
   src/main.cpp
   CMakeLists.txt
   stmproject.toml
+  .config            # копия defconfig шаблона
   CLAUDE.md          # только при --with-claude
   .gitignore
 ```
@@ -71,6 +72,20 @@ Docker-образ — `ghcr.io/khosta77/stm32-sdk-build:latest`, переопр�
 переменной окружения `STMTOOL_DOCKER_IMAGE` (в CI она указывает на локально
 собранный образ). Образ содержит запиненный ARM-тулчейн и заранее подготовленный
 FreeRTOS-Kernel, поэтому сборка не требует сети.
+
+### `stmtool config`
+
+```bash
+stmtool config [--chip <чип>]
+```
+
+Открыть интерактивный Kconfig-**menuconfig** TUI (curses) для проекта в
+текущей директории и записать результат в `.config` — единственный источник
+правды о содержимом прошивки начиная с SDK v0.2.2 (см.
+[Конфигурацию](configuration.ru.md)). Зависимости между опциями
+контролируются прямо в UI; проект без `.config` стартует с дефолтов дерева,
+что делает эту команду путём миграции для старых проектов. Чип берётся из
+`stmproject.toml`, если не переопределён через `--chip`.
 
 ### `stmtool test`
 

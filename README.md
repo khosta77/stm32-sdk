@@ -68,6 +68,7 @@ GCC >= 14 (`stmtool doctor` verifies this).
 | `stmtool project create <name> --chip <chip> --template <tpl>` | Pick a specific template |
 | `stmtool project create <name> ... --with-claude` | Also generate a `CLAUDE.md` tailored to the template |
 | `stmtool project templates` | List available templates |
+| `stmtool config` | Open the Kconfig menuconfig TUI (edits `.config`) |
 | `stmtool build` | Build project in Docker (artifacts in `out/`) |
 | `stmtool build --clean` | Clean the `out/` directory before building |
 | `stmtool test` | Build and run the SDK host unit tests in Docker |

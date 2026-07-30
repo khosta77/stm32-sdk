@@ -75,15 +75,14 @@ works under `nano.specs` and adds no float-formatting weight.
 
 ## Selecting the compile-time level
 
-Set it through the CMake cache variable `STM32_LOG_LEVEL` (one of `NONE`,
-`ERROR`, `WARN`, `INFO`, `DEBUG`, `TRACE`; default `INFO`):
+Since v0.2.2 the level is a Kconfig choice in the project `.config`
+(`STM32_LOG_LEVEL_NONE` … `STM32_LOG_LEVEL_TRACE`, default `INFO`) — edit it
+with `stmtool config`, see [Configuration](../configuration.md). The old
+`-DSTM32_LOG_LEVEL=...` cache variable was removed.
 
-```bash
-cmake -B out -DSTM32_LOG_LEVEL=DEBUG ...
-```
-
-It maps to `-DSTM32_LOG_LEVEL=<0..5>`; the header defaults to `INFO` when the
-define is absent. A release build that sets `NONE` (or any level below your
+The choice still maps to the `STM32_LOG_LEVEL=<0..5>` compile definition on
+the driver target; the header defaults to `INFO` when the define is absent. A
+release build that selects `NONE` (or any level below your
 `LOG_DEBUG`/`LOG_TRACE` calls) strips those statements entirely.
 
 ## Backends
@@ -101,15 +100,12 @@ installed via `driver::log::setSink`. The SDK ships two, both exposing
   line. Generic over the bus in the terse constrained style; CTAD deduces the
   parameter from the constructor (`UartBackend g_sink{g_uart}`).
 
-The intended backend is named at build time via `STM32_LOG_BACKEND`
-(`none` / `itm` / `uart`, default `none`):
-
-```bash
-cmake -B out -DSTM32_LOG_BACKEND=itm ...
-```
+The intended backend is named in `.config` via the Kconfig choice
+`STM32_LOG_BACKEND_SEL_NONE` / `_ITM` / `_UART` (default `NONE`) — same
+place as the level, see [Configuration](../configuration.md).
 
 Both backend modules always compile (a template and inline CMSIS code cost
-nothing until instantiated), so the flag does not gate availability — it sets the
+nothing until instantiated), so the choice does not gate availability — it sets the
 `STM32_LOG_BACKEND` define (with the symbolic `STM32_LOG_BACKEND_NONE` / `_ITM` /
 `_UART` values), letting application code pick the matching type generically:
 

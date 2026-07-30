@@ -1,13 +1,19 @@
 # FreeRTOS-обёртки
 
-FreeRTOS подключается опционально: `-DSTM32_USE_FREERTOS=ON` (по умолчанию для
-шаблонов в `templates/freertos/`). С FreeRTOS SDK предоставляет RAII-обёртки
+FreeRTOS подключается опционально: включите `STM32_USE_FREERTOS` в проектном
+`.config` (в `defconfig` каждого шаблона из `templates/freertos/` он уже
+включён). С FreeRTOS SDK предоставляет RAII-обёртки
 в `sdk/rtos/include/rtos/rtos.hpp`.
 
 ## Конфигурация
 
-- Heap: `heap_4`, 16 КБ по умолчанию.
-- `configMINIMAL_STACK_SIZE`: 128 слов.
+- Heap: `heap_4`, 16 КБ по умолчанию — с v0.2.2 размер задаёт Kconfig-символ
+  `FREERTOS_TOTAL_HEAP_SIZE` (по умолчанию `16384`).
+- `configMINIMAL_STACK_SIZE`: 128 слов — с v0.2.2 Kconfig-символ
+  `FREERTOS_MINIMAL_STACK_SIZE` (по умолчанию `128`).
+- Частота тика, число приоритетов и параметры таймерной задачи — тоже
+  Kconfig-символы (`FREERTOS_*`); дефолты воспроизводят исторические
+  значения, см. [Конфигурацию](../configuration.ru.md).
 - `SysTick` использует FreeRTOS — не определяйте `SysTick_Handler` отдельно.
 
 ## `rtos::Task`
@@ -52,8 +58,8 @@ sem.takeFromIsr(&hpw);           // из ISR
 
 Не вызывайте FreeRTOS API **до** `vTaskStartScheduler()` — операции с
 мьютексами / семафорами иначе зависают. Мы наступили на это при разработке
-шаблона `i2c-scan`; шаблон был перенесён в `bare-metal/` (`STM32_USE_FREERTOS=OFF`),
-чтобы обойти проблему.
+шаблона `i2c-scan`; шаблон был перенесён в `bare-metal/`
+(`STM32_USE_FREERTOS` выключен в его `.config`), чтобы обойти проблему.
 
 ## Lifetime глобальных объектов
 

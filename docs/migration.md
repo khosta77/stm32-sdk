@@ -14,6 +14,62 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.2.2
+
+v0.2.2 introduces **Kconfig** as the single source of truth for firmware
+configuration ([full guide](configuration.md)). This is a **hard cut**: the
+old configuration path was removed, every project must migrate when bumping
+the SDK.
+
+### Action: create a `.config` (mandatory)
+
+A project without `.config` no longer configures — CMake stops with an error.
+Two ways to create one:
+
+```bash
+stmtool config     # opens menuconfig with the tree defaults; save -> .config
+```
+
+or copy the defconfig of the template your project started from:
+
+```bash
+cp <sdk>/templates/freertos/blink/defconfig .config
+```
+
+Commit `.config` to git — it is part of the project, like `prj.conf` in
+Zephyr.
+
+### Action: strip the old configuration from `CMakeLists.txt`
+
+Delete the `set(STM32_CHIP ...)` and every `set(STM32_USE_* ...)` line —
+those values now come from `stmproject.toml` (chip) and `.config` (gates).
+Passing `-DSTM32_USE_*` or `-DSTM32_LOG_LEVEL/-DSTM32_LOG_BACKEND` on the
+command line has no effect anymore; move those choices into `.config`.
+
+### Action: clean up `stmproject.toml`
+
+The dead sections `[project]`, `[build]` and `[serial]` were never read by
+any tool — delete them. What remains is the manifest: `[sdk] version`,
+`[target] chip`, `[flash] tool`. (Project versioning returns properly with
+issue #90: git tag → generated `version.hpp`.)
+
+### Behavior change: FreeRTOS tunables are now configurable
+
+Heap size, tick rate, priority count and stack sizes were hardcoded in the
+SDK's `FreeRTOSConfig.h`; they are now Kconfig symbols (`FREERTOS_*`) with
+the historic values as defaults. A default `.config` builds **binary
+identical** firmware — no action needed unless you want to change them.
+
+### Toolchain: update stmtool and the Docker image
+
+The generation step needs `kconfiglib`, which ships in the updated build
+image; `stmtool config` needs an updated tool:
+
+```bash
+pipx upgrade stmtool
+docker pull ghcr.io/khosta77/stm32-sdk-build:latest
+```
+
 ## New in v0.2.1
 
 v0.2.1 moves `stmtool` out of the SDK monorepo into its own repository,

@@ -36,6 +36,7 @@ Generated layout (depends on template):
   src/main.cpp
   CMakeLists.txt
   stmproject.toml
+  .config            # copied from the template's defconfig
   CLAUDE.md          # only if --with-claude
   .gitignore
 ```
@@ -71,6 +72,20 @@ The Docker image is `ghcr.io/khosta77/stm32-sdk-build:latest`, overridable via
 the `STMTOOL_DOCKER_IMAGE` environment variable (CI points it at a locally built
 image). The image bundles the pinned ARM toolchain and a pre-provisioned
 FreeRTOS-Kernel, so builds need no network.
+
+### `stmtool config`
+
+```bash
+stmtool config [--chip <chip>]
+```
+
+Open the interactive Kconfig **menuconfig** TUI (curses) for the project in
+the current directory and write the result to `.config` — the single source
+of truth for firmware content since SDK v0.2.2 (see
+[Configuration](configuration.md)). Dependencies between options are enforced
+in the UI; a project without `.config` starts from the tree defaults, which
+makes this command the migration path for older projects. The chip is taken
+from `stmproject.toml` unless overridden with `--chip`.
 
 ### `stmtool test`
 

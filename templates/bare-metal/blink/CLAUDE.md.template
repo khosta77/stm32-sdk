@@ -22,6 +22,10 @@ stmtool flash
 stmtool sdk update          # if [sdk] version = "develop"
 ```
 
+Firmware configuration lives in `.config` (Kconfig, committed to git); edit it
+with `stmtool config`. See
+<https://khosta77.github.io/stm32-sdk/configuration/>.
+
 ## SDK reference
 
 - Documentation: <https://khosta77.github.io/stm32-sdk/>
