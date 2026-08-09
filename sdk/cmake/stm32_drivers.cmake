@@ -24,6 +24,7 @@ target_sources(stm32_drivers PUBLIC
         ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/flash.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/uart.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/exti.cppm
+        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/crc.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/log.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/log_backend_itm.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/log_backend_uart.cppm
