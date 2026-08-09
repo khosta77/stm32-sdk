@@ -892,6 +892,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CRC-32 — driver.crc / driver.soft_crc / driver.stm32f4.crc (v0.2.3)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#circularbuffer-drivercircular_buffer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1601,6 +1612,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CRC-32 — driver.crc / driver.soft_crc / driver.stm32f4.crc (v0.2.3)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#circularbuffer-drivercircular_buffer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2013,15 +2035,76 @@ FreeRTOS, <code>__disable_irq</code> иначе) вокруг окон BTF → S
 приоритет ISR (здесь 6) должен быть численно ≥
 <code>configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY</code> (5 у F4), иначе вызов недопустим.
 См. шаблон <code>button-events-demo</code>.</p>
+<h2 id="crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023">CRC-32 — <code>driver.crc</code> / <code>driver.soft_crc</code> / <code>driver.stm32f4.crc</code> (v0.2.3)<a class="headerlink" href="#crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023" title="Permanent link">&para;</a></h2>
+<p>CRC-32/IEEE — тот вариант, что используют zlib, gzip, PNG и Ethernet, поэтому
+контрольную сумму, посчитанную на плате, можно проверить на рабочей станции
+через <code>python3 -c 'import zlib; print(hex(zlib.crc32(data)))'</code> независимо от
+того, какая микросхема флэш-памяти выдала эти байты. Концепт <code>driver::ICrc</code> и
+константы <code>Crc32Spec</code> живут в <code>driver.crc</code>, переносимая реализация <code>SoftCrc</code> —
+в <code>driver.soft_crc</code>, драйвер периферии F4 <code>Crc</code> — в <code>driver.stm32f4.crc</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">crc</span><span class="p">;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">soft_crc</span><span class="p">;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">crc</span><span class="p">;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Crc32Spec</span><span class="p">;</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">SoftCrc</span><span class="p">;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1">// Аппаратный блок сам включает свой такт AHB1 в конструкторе.</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">Crc</span><span class="w"> </span><span class="n">g_crc</span><span class="p">{</span><span class="o">*</span><span class="n">CRC</span><span class="p">};</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1">// Однократный вызов.</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_crc</span><span class="p">.</span><span class="n">compute</span><span class="p">({</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1">// Потоковый режим: считаем сумму партиции флэша страница за страницей.</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="n">g_crc</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">off</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">off</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">size</span><span class="p">;</span><span class="w"> </span><span class="n">off</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">page</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">  </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">flash</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">base</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">off</span><span class="p">,</span><span class="w"> </span><span class="n">page</span><span class="p">);</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">  </span><span class="n">g_crc</span><span class="p">.</span><span class="n">update</span><span class="p">({</span><span class="n">page</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">page</span><span class="p">)});</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="p">}</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_crc</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1">// Тот же API без периферии — годится для host-тестов и constexpr.</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="n">SoftCrc</span><span class="w"> </span><span class="n">soft</span><span class="p">;</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">reference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">soft</span><span class="p">.</span><span class="n">compute</span><span class="p">({</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
+</code></pre></div>
+<ul>
+<li>Оба типа моделируют <code>driver::ICrc</code>: потоковая тройка <code>reset()</code> /
+  <code>update(span)</code> / <code>value()</code> плюс однократный <code>compute(span)</code>. <code>value()</code> —
+  чистое чтение: повторный вызов, в том числе посреди потока, вернёт то же
+  число и не израсходует состояние.</li>
+<li>Параметры фиксированы: полином <code>0x04C11DB7</code> (reflected <code>0xEDB88320</code>),
+  начальное значение <code>0xFFFFFFFF</code>, реверс входа и выхода, финальный XOR
+  <code>0xFFFFFFFF</code>. Контрольное значение <code>Crc32Spec::CHECK</code> равно <code>0xCBF43926</code>
+  (CRC-32 строки <code>"123456789"</code>) и проверяется на этапе компиляции
+  <code>consteval</code>-самопроверкой в <code>driver.soft_crc</code>.</li>
+<li>Принимаются буферы <strong>любой</strong> длины. У F4 <code>CRC_DR</code> берёт только 32-битные
+  слова (побайтовая подача появилась с F7), поэтому <code>Crc</code> отдаёт железу целые
+  слова, а хвостовые 1–3 байта домешивает программно при чтении <code>value()</code>.
+  Чанки любого размера можно подавать в любом порядке.</li>
+<li>Блок F4 считает MSB-first без реверсов и без финального XOR, то есть сам по
+  себе он не даёт CRC-32/IEEE. <code>Crc</code> соединяет два домена через <code>__RBIT</code> на
+  каждом входном слове и на результате: после <code>RESET</code> в <code>CRC_DR</code> читается
+  <code>0xFFFFFFFF</code>, чей реверс в точности равен начальному значению.</li>
+<li>В <code>CRC_CR</code> есть единственный бит <code>RESET</code> — ни полином, ни реверсы у F4 не
+  настраиваются (это появилось у F7/L4/G0/H7). Поэтому нет ни структуры
+  конфигурации, ни <code>consteval</code>-валидатора.</li>
+<li><strong>Один экземпляр на чип.</strong> Периферия хранит глобальное состояние, и два
+  чередующихся потребителя портят результат друг другу. Держите единственный
+  <code>Crc</code> и сериализуйте доступ снаружи (<code>rtos::Mutex</code>) либо используйте
+  <code>SoftCrc</code> — он реентерабелен.</li>
+<li><code>SoftCrc</code> не зависит от CMSIS, весь <code>constexpr</code> и битовый (8 шагов на байт,
+  ноль байт в <code>.rodata</code>), поэтому работает и на хосте, и внутри <code>consteval</code>, и
+  на чипах без блока CRC. Он покрыт <code>tests/host/test_crc.cpp</code>; аппаратный путь
+  сверяется с ним на плате шаблоном <code>unit-test-demo</code>.</li>
+</ul>
 <h2 id="circularbuffer-drivercircular_buffer">CircularBuffer — <code>driver.circular_buffer</code><a class="headerlink" href="#circularbuffer-drivercircular_buffer" title="Permanent link">&para;</a></h2>
 <p>Кольцевой буфер фиксированной ёмкости с одним производителем и одним
 потребителем (SPSC), используемый внутри <code>Uart&lt;&gt;</code> для RX/TX FIFO. Он CMSIS-free
 и lock-free (два индекса <code>std::atomic&lt;size_t&gt;</code> с acquire/release-упорядочиванием),
 поэтому безопасен через границу ISR/задача и покрыт host-тестами.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">circular_buffer</span><span class="p">;</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">CircularBuffer</span><span class="p">;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">CircularBuffer</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fifo</span><span class="p">;</span><span class="w">  </span><span class="c1">// N должно быть степенью двойки</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">circular_buffer</span><span class="p">;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">CircularBuffer</span><span class="p">;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">CircularBuffer</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fifo</span><span class="p">;</span><span class="w">  </span><span class="c1">// N должно быть степенью двойки</span>
 </code></pre></div>
 <ul>
 <li><code>N</code> должно быть степенью двойки (проверяется <code>static_assert</code>). Один слот

@@ -1274,6 +1274,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.2.3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v022" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1751,6 +1762,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Новое в v0.2.3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#v022" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2221,6 +2243,29 @@
 <li>Прошейте на железо и убедитесь, что ваш smoke-test проходит.</li>
 <li>Сливайте, когда всё зелёное.</li>
 </ol>
+<h2 id="v023">Новое в v0.2.3<a class="headerlink" href="#v023" title="Permanent link">&para;</a></h2>
+<p>v0.2.3 добавляет CRC-32. Релиз <strong>аддитивный</strong> — ни один существующий символ не
+изменился, для обновления править проект не нужно.</p>
+<p>Новая поверхность доступна всегда, когда включён <code>STM32_USE_DRIVERS</code> (нового
+Kconfig-символа не появилось):</p>
+<ol>
+<li><strong>Концепт и константы CRC-32</strong> (<code>driver.crc</code>): <code>driver::ICrc</code> — потоковая
+   тройка <code>reset()</code> / <code>update(span)</code> / <code>value()</code> плюс однократный
+   <code>compute(span)</code> — и <code>driver::Crc32Spec</code> с параметрами алгоритма и
+   контрольным значением <code>CHECK</code> = <code>0xCBF43926</code>.</li>
+<li><strong>Переносимая реализация</strong> (<code>driver.soft_crc</code>): <code>driver::SoftCrc</code> — без
+   CMSIS, весь <code>constexpr</code> и реентерабельный, поэтому работает на хосте,
+   внутри <code>consteval</code> и на чипах без блока CRC. Также экспортируется
+   <code>softCrcStep(state, byte)</code>.</li>
+<li><strong>Аппаратный драйвер</strong> (<code>driver.stm32f4.crc</code>): <code>driver::stm32f4::Crc{*CRC}</code>
+   — включает свой такт AHB1 в конструкторе, запись в
+   <code>__initialize_hardware()</code> не нужна.</li>
+</ol>
+<p>Вариант алгоритма — CRC-32/IEEE (zlib, gzip, PNG, Ethernet), поэтому сумма с
+платы совпадает с <code>zlib.crc32</code> на рабочей станции. Учтите, что периферия F4 —
+единственный глобальный ресурс: держите один экземпляр <code>Crc</code> и сериализуйте
+доступ либо используйте <code>SoftCrc</code>, у которого общего состояния нет.</p>
+<p>См. <a href="../modules/drivers/#crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023">Драйверы</a>.</p>
 <h2 id="v022">Новое в v0.2.2<a class="headerlink" href="#v022" title="Permanent link">&para;</a></h2>
 <p>v0.2.2 вводит <strong>Kconfig</strong> как единственный источник правды о конфигурации
 прошивки (<a href="../configuration/">полное руководство</a>). Это <strong>жёсткий срез</strong>:

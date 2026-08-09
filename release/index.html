@@ -1283,6 +1283,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v022" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1460,6 +1471,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v022" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1599,6 +1621,43 @@ the same source of truth the SDK CMake side already uses.</p>
    <a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a> picks up the new content.</li>
 </ol>
 <h2 id="release-history">Release history<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h2>
+<h3 id="v023">v0.2.3<a class="headerlink" href="#v023" title="Permanent link">&para;</a></h3>
+<p>Focus: <strong>CRC-32</strong> (#61) — the first half of the storage groundwork, ahead of
+the flash partition layer (#62). <strong>Additive</strong>: nothing existing changed.</p>
+<p>Highlights:</p>
+<ul>
+<li><strong>New concept <code>driver::ICrc</code></strong> (<code>driver.crc</code>) with the streaming triplet
+  <code>reset()</code> / <code>update(span)</code> / <code>value()</code> plus a one-shot <code>compute(span)</code>, and
+  <code>driver::Crc32Spec</code> carrying the algorithm parameters. <code>value()</code> is a pure
+  read, so a partition can be hashed page by page and inspected mid-stream.</li>
+<li><strong>Portable <code>SoftCrc</code></strong> (<code>driver.soft_crc</code>) — CMSIS-free, <code>constexpr</code>,
+  bitwise (zero <code>.rodata</code>) and reentrant. It is the reference implementation:
+  host-tested, usable inside <code>consteval</code>, and available on chips without a CRC
+  block. Ends with a <code>consteval</code> known-answer self-check in the style of
+  <code>resultSelfCheck</code>.</li>
+<li><strong>Hardware driver <code>Crc</code></strong> (<code>driver.stm32f4.crc</code>) over the F4 CRC unit.
+  Non-template, so it calls <code>__RBIT</code> directly; all MMIO through <code>driver::reg::*</code>;
+  enables its own AHB1 clock in the constructor.</li>
+<li><strong>CRC-32/IEEE semantics</strong> (zlib, gzip, PNG, Ethernet, and Zephyr's
+  <code>crc32_ieee</code>), chosen for interoperability: a flash dump verifies against
+  <code>zlib.crc32</code> on a workstation. The F4 block computes MSB-first with no
+  reflection and no final XOR, so the driver bridges the domains with <code>__RBIT</code>
+  on every input word and on the result.</li>
+<li><strong>Any buffer length.</strong> <code>CRC_DR</code> is 32-bit-only on F4, so whole words go to
+  the hardware and the trailing 1–3 bytes are folded in by software on read;
+  chunks of any size stream in any order.</li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li>No new Kconfig symbol — CRC ships under <code>STM32_USE_DRIVERS</code> like every other
+  peripheral driver.</li>
+<li>The peripheral is a single global resource: own one <code>Crc</code> and serialise
+  access externally, or use <code>SoftCrc</code>.</li>
+<li>Verified with <code>tests/host/test_crc.cpp</code> (check vector, empty input, every
+  length 0–12 against <code>zlib.crc32</code>, chunked streaming), 10/10 templates under
+  <code>STM32F407VG</code> with <code>-Werror</code>, and a hardware-versus-software cross-check on
+  an F407VG board via the <code>unit-test-demo</code> template.</li>
+</ul>
 <h3 id="v022">v0.2.2<a class="headerlink" href="#v022" title="Permanent link">&para;</a></h3>
 <p>Focus: <strong>Kconfig</strong> as the single source of truth for firmware configuration
 (#63) — the quality-of-life foundation before the peripheral wave. <strong>Breaking</strong>:

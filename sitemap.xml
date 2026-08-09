@@ -2,280 +2,280 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/build-flags/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/build-flags/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/build-flags/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/configuration/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/configuration/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/configuration/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/migration/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/migration/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/migration/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/quickstart/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/quickstart/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/quickstart/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/release/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/release/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/release/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/stmtool/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/stmtool/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/stmtool/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/chips/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/chips/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/chips/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/chips/datasheets/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/chips/datasheets/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/chips/datasheets/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/chips/stm32f4/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/chips/stm32f4/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/chips/stm32f4/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/modules/drivers/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/drivers/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/drivers/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/modules/freertos/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/freertos/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/freertos/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/modules/logging/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/logging/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/logging/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/modules/sensors/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/sensors/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/sensors/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/modules/system/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/system/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/system/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/modules/testing/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/testing/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/testing/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/sensors/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/sensors/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/sensors/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/sensors/mpu6050/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/sensors/mpu6050/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/sensors/mpu6050/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/sensors/ssd1306/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/sensors/ssd1306/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/sensors/ssd1306/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/sensors/w25q32/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/sensors/w25q32/"/>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/sensors/w25q32/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/build-flags/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/build-flags/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/build-flags/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/configuration/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/configuration/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/configuration/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/migration/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/migration/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/migration/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/quickstart/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/quickstart/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/quickstart/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/release/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/release/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/release/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/stmtool/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/stmtool/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/stmtool/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/chips/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/chips/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/chips/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/chips/datasheets/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/chips/datasheets/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/chips/datasheets/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/chips/stm32f4/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/chips/stm32f4/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/chips/stm32f4/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/modules/drivers/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/drivers/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/drivers/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/modules/freertos/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/freertos/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/freertos/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/modules/logging/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/logging/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/logging/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/modules/sensors/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/sensors/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/sensors/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/modules/system/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/system/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/system/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/modules/testing/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/testing/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/testing/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/sensors/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/sensors/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/sensors/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/sensors/mpu6050/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/sensors/mpu6050/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/sensors/mpu6050/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/sensors/ssd1306/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/sensors/ssd1306/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/sensors/ssd1306/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/sensors/w25q32/</loc>
-        <lastmod>2026-07-30</lastmod>
+        <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/sensors/w25q32/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/sensors/w25q32/"/>

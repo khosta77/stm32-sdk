@@ -892,6 +892,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CRC-32 — driver.crc / driver.soft_crc / driver.stm32f4.crc (v0.2.3)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#circularbuffer-drivercircular_buffer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1601,6 +1612,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CRC-32 — driver.crc / driver.soft_crc / driver.stm32f4.crc (v0.2.3)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#circularbuffer-drivercircular_buffer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2013,15 +2035,75 @@ defer work out of the ISR, have the callback call
 <code>executor.postFromISR(workItem)</code> — the ISR priority (6 here) must be numerically
 ≥ <code>configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY</code> (5 on F4) for that to be legal.
 See the <code>button-events-demo</code> template.</p>
+<h2 id="crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023">CRC-32 — <code>driver.crc</code> / <code>driver.soft_crc</code> / <code>driver.stm32f4.crc</code> (v0.2.3)<a class="headerlink" href="#crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023" title="Permanent link">&para;</a></h2>
+<p>CRC-32/IEEE — the variant used by zlib, gzip, PNG and Ethernet, so a checksum
+computed on the board can be verified on a workstation with
+<code>python3 -c 'import zlib; print(hex(zlib.crc32(data)))'</code> regardless of which
+flash chip produced the bytes. The concept <code>driver::ICrc</code> and the <code>Crc32Spec</code>
+constants live in <code>driver.crc</code>, the portable implementation <code>SoftCrc</code> in
+<code>driver.soft_crc</code>, and the F4 peripheral driver <code>Crc</code> in <code>driver.stm32f4.crc</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">crc</span><span class="p">;</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">soft_crc</span><span class="p">;</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">crc</span><span class="p">;</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Crc32Spec</span><span class="p">;</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">SoftCrc</span><span class="p">;</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="c1">// The hardware unit enables its own AHB1 clock in the constructor.</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">Crc</span><span class="w"> </span><span class="n">g_crc</span><span class="p">{</span><span class="o">*</span><span class="n">CRC</span><span class="p">};</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="c1">// One shot.</span>
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_crc</span><span class="p">.</span><span class="n">compute</span><span class="p">({</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="c1">// Streaming: hash a flash partition page by page.</span>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="n">g_crc</span><span class="p">.</span><span class="n">reset</span><span class="p">();</span>
+<a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">off</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">off</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">size</span><span class="p">;</span><span class="w"> </span><span class="n">off</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">page</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="w">  </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">flash</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">base</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">off</span><span class="p">,</span><span class="w"> </span><span class="n">page</span><span class="p">);</span>
+<a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a><span class="w">  </span><span class="n">g_crc</span><span class="p">.</span><span class="n">update</span><span class="p">({</span><span class="n">page</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">page</span><span class="p">)});</span>
+<a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="p">}</span>
+<a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">total</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g_crc</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>
+<a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a>
+<a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a><span class="c1">// Same API without the peripheral -- host-testable and constexpr-friendly.</span>
+<a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="n">SoftCrc</span><span class="w"> </span><span class="n">soft</span><span class="p">;</span>
+<a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a><span class="k">const</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">reference</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">soft</span><span class="p">.</span><span class="n">compute</span><span class="p">({</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
+</code></pre></div>
+<ul>
+<li>Both types model <code>driver::ICrc</code>: the streaming triplet <code>reset()</code> /
+  <code>update(span)</code> / <code>value()</code> plus the one-shot <code>compute(span)</code>. <code>value()</code> is a
+  pure read — calling it twice, or in the middle of a stream, returns the same
+  number and does not consume state.</li>
+<li>Parameters are fixed: polynomial <code>0x04C11DB7</code> (reflected <code>0xEDB88320</code>), seed
+  <code>0xFFFFFFFF</code>, input and output reflected, final XOR <code>0xFFFFFFFF</code>. The check
+  value <code>Crc32Spec::CHECK</code> is <code>0xCBF43926</code> (CRC-32 of <code>"123456789"</code>), enforced
+  at compile time by a <code>consteval</code> self-check in <code>driver.soft_crc</code>.</li>
+<li>Buffers of <strong>any</strong> length are accepted. <code>CRC_DR</code> takes 32-bit words only on
+  F4 (byte-wide feeding arrived with F7), so <code>Crc</code> sends whole words to the
+  hardware and folds the trailing 1–3 bytes in by software when <code>value()</code> is
+  read. Chunks of any size may be streamed in any order.</li>
+<li>The F4 block computes MSB-first with no reflection and no final XOR, so it
+  does not natively produce CRC-32/IEEE. <code>Crc</code> bridges the two domains with
+  <code>__RBIT</code> on every input word and on the result; after <code>RESET</code>, <code>CRC_DR</code> reads
+  <code>0xFFFFFFFF</code>, whose reflection is exactly the seed.</li>
+<li><code>CRC_CR</code> holds a single <code>RESET</code> bit — neither the polynomial nor the
+  reflection is configurable on F4 (that arrived with F7/L4/G0/H7). There is no
+  config struct and therefore no <code>consteval</code> validator.</li>
+<li><strong>One instance per chip.</strong> The peripheral holds global state, and two
+  interleaved users corrupt each other's result. Own a single <code>Crc</code> and
+  serialise access externally (<code>rtos::Mutex</code>), or use <code>SoftCrc</code>, which is
+  reentrant.</li>
+<li><code>SoftCrc</code> is CMSIS-free, <code>constexpr</code> and bitwise (8 steps per byte, zero
+  <code>.rodata</code>), so it also runs on the host, inside <code>consteval</code>, and on chips
+  without a CRC block. It is covered by <code>tests/host/test_crc.cpp</code>; the hardware
+  path is checked against it on the board by the <code>unit-test-demo</code> template.</li>
+</ul>
 <h2 id="circularbuffer-drivercircular_buffer">CircularBuffer — <code>driver.circular_buffer</code><a class="headerlink" href="#circularbuffer-drivercircular_buffer" title="Permanent link">&para;</a></h2>
 <p>A fixed-capacity, single-producer/single-consumer ring buffer used internally by
 <code>Uart&lt;&gt;</code> for its RX/TX FIFOs. It is CMSIS-free and lock-free (two
 <code>std::atomic&lt;size_t&gt;</code> indices with acquire/release ordering), so it is safe
 across an ISR/task boundary and is host-tested.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">circular_buffer</span><span class="p">;</span>
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">CircularBuffer</span><span class="p">;</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="n">CircularBuffer</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fifo</span><span class="p">;</span><span class="w">  </span><span class="c1">// N must be a power of two</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">circular_buffer</span><span class="p">;</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">using</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">CircularBuffer</span><span class="p">;</span>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="n">CircularBuffer</span><span class="o">&lt;</span><span class="kt">uint8_t</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fifo</span><span class="p">;</span><span class="w">  </span><span class="c1">// N must be a power of two</span>
 </code></pre></div>
 <ul>
 <li><code>N</code> must be a power of two (enforced by <code>static_assert</code>). One slot is reserved

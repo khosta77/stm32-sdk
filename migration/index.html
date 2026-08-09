@@ -1274,6 +1274,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.2.3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v022" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1751,6 +1762,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#new-in-v023" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New in v0.2.3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#new-in-v022" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2221,6 +2243,29 @@ upgrade deliberately.</p>
 <li>Flash to hardware and verify the smoke-test for your scenario.</li>
 <li>Merge back once green.</li>
 </ol>
+<h2 id="new-in-v023">New in v0.2.3<a class="headerlink" href="#new-in-v023" title="Permanent link">&para;</a></h2>
+<p>v0.2.3 adds CRC-32. It is <strong>additive</strong> — no existing symbol changed, and no
+project needs edits to upgrade.</p>
+<p>New surface, available whenever <code>STM32_USE_DRIVERS</code> is on (no new Kconfig
+symbol):</p>
+<ol>
+<li><strong>CRC-32 concept and constants</strong> (<code>driver.crc</code>): <code>driver::ICrc</code> — the
+   streaming triplet <code>reset()</code> / <code>update(span)</code> / <code>value()</code> plus a one-shot
+   <code>compute(span)</code> — and <code>driver::Crc32Spec</code> with the algorithm parameters and
+   the <code>CHECK</code> value <code>0xCBF43926</code>.</li>
+<li><strong>Portable implementation</strong> (<code>driver.soft_crc</code>): <code>driver::SoftCrc</code>,
+   CMSIS-free, <code>constexpr</code> and reentrant, so it works on the host, inside
+   <code>consteval</code> and on chips without a CRC block. Also exports
+   <code>softCrcStep(state, byte)</code>.</li>
+<li><strong>Hardware driver</strong> (<code>driver.stm32f4.crc</code>): <code>driver::stm32f4::Crc{*CRC}</code> —
+   enables its own AHB1 clock in the constructor, so no
+   <code>__initialize_hardware()</code> entry is needed.</li>
+</ol>
+<p>The variant is CRC-32/IEEE (zlib, gzip, PNG, Ethernet), so a checksum from the
+board matches <code>zlib.crc32</code> on a workstation. Note that the F4 peripheral is a
+single global resource: own one <code>Crc</code> instance and serialise access, or use
+<code>SoftCrc</code>, which has no shared state.</p>
+<p>See <a href="../modules/drivers/#crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023">Drivers</a>.</p>
 <h2 id="new-in-v022">New in v0.2.2<a class="headerlink" href="#new-in-v022" title="Permanent link">&para;</a></h2>
 <p>v0.2.2 introduces <strong>Kconfig</strong> as the single source of truth for firmware
 configuration (<a href="../configuration/">full guide</a>). This is a <strong>hard cut</strong>: the
