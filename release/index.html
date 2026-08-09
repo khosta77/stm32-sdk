@@ -1708,6 +1708,15 @@ the same source of truth the SDK CMake side already uses.</p>
   length 0–12 against <code>zlib.crc32</code>, chunked streaming), 10/10 templates under
   <code>STM32F407VG</code> with <code>-Werror</code>, and a hardware-versus-software cross-check on
   an F407VG board via the <code>unit-test-demo</code> template.</li>
+<li>The partition layer is host-tested too (<code>tests/host/test_partition.cpp</code>):
+  relative addressing, refusal past a partition end, a neighbour surviving a
+  full erase, page splitting on long writes, and <code>checksum()</code> agreeing with
+  <code>SoftCrc</code>. The validator's negative cases — overlap, unaligned offset,
+  misspelled name — were checked by hand; each stops the build with its own
+  message. The <code>w25q32-flash-test</code> template demonstrates the map on hardware.</li>
+<li>No devicetree was introduced. Zephyr keeps <code>flash_map</code> in DTS because C99
+  cannot compute at compile time; <code>consteval</code> gives the same guarantee with no
+  generator or bindings.</li>
 </ul>
 <h3 id="v022">v0.2.2<a class="headerlink" href="#v022" title="Permanent link">&para;</a></h3>
 <p>Focus: <strong>Kconfig</strong> as the single source of truth for firmware configuration
