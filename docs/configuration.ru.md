@@ -49,7 +49,7 @@ TUI показывает каждую опцию с её help-текстом, с
 | `STM32_USE_DRIVERS` | модули драйверов + логирование | — |
 | `STM32_USE_FREERTOS` | ядро FreeRTOS + RAII-обёртки `rtos.hpp` | — |
 | `STM32_USE_SENSORS` | MPU6050 / SSD1306 / W25Q32 | `STM32_USE_DRIVERS` |
-| `STM32_USE_STORAGE` | слой flash-хранилища | `STM32_USE_DRIVERS` |
+| `STM32_USE_STORAGE` | слой флэш-партиций | `STM32_USE_DRIVERS` |
 | `STM32_USE_SYSTEM` | каркас компонентов + слой конкурентности | `STM32_USE_DRIVERS` |
 | `STM32_USE_TESTING` | хелперы `ASSERT_*`/`EXPECT_*` на устройстве | — |
 

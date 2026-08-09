@@ -55,10 +55,33 @@ the same source of truth the SDK CMake side already uses.
 
 ### v0.2.3
 
-Focus: **CRC-32** (#61) — the first half of the storage groundwork, ahead of
-the flash partition layer (#62). **Additive**: nothing existing changed.
+Focus: **storage groundwork** — CRC-32 (#61) and the flash partition layer
+(#62). **Additive**: nothing existing changed.
 
-Highlights:
+Highlights — partitions:
+
+- **Declarative partition map** (`storage.partition`) in the spirit of
+  Zephyr's `flash_map`, but validated by `consteval` instead of generated from
+  devicetree. `partitionTable<Spec>({...})` rejects overlaps, unaligned starts
+  and ends, zero sizes, duplicate names and out-of-range entries at compile
+  time; `find("name")` is `consteval` too, so a typo does not build.
+- **Compile-time geometry** (`storage.geometry`): `UniformGeometry` derives
+  from any spec exposing `CAPACITY`/`SECTOR_SIZE` — `sensor::W25q32Spec`
+  already does — while `Stm32f4Geometry<12>` describes the mixed
+  16K/64K/128K layout of the F4 internal flash, which the driver only exposes
+  through a runtime method.
+- **Device adapters** (`storage.flash_device`) behind one `IFlashDevice`
+  concept. `ExternalFlashDevice` adds the multi-page write the SPI chip driver
+  lacks; `InternalFlashDevice` maps offsets onto absolute addresses and byte
+  ranges onto sector indices.
+- **`Partition`** addresses relative to itself, like `flash_area`, and returns
+  `InvalidArg` instead of letting an overlong access spill into a neighbour.
+  `checksum()` streams the partition through any `driver::ICrc` engine.
+- `STM32_USE_STORAGE` moved into its own `sdk/storage/Kconfig` fragment, and
+  `stm32_storage` became a real OBJECT library with a module file set (it was
+  an INTERFACE target pointing at a directory that did not exist).
+
+Highlights — CRC:
 
 - **New concept `driver::ICrc`** (`driver.crc`) with the streaming triplet
   `reset()` / `update(span)` / `value()` plus a one-shot `compute(span)`, and

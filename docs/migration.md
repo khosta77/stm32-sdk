@@ -16,8 +16,40 @@ upgrade deliberately.
 
 ## New in v0.2.3
 
-v0.2.3 adds CRC-32. It is **additive** — no existing symbol changed, and no
-project needs edits to upgrade.
+v0.2.3 adds CRC-32 and the flash partition layer. It is **additive** — no
+existing symbol changed, and no project needs edits to upgrade.
+
+### Flash partitions (`STM32_USE_STORAGE`)
+
+The gate that shipped empty in v0.2.2 now has content. Enable it in `.config`
+(it depends on `STM32_USE_DRIVERS`) and add `stm32_storage` to
+`target_link_libraries` in your `CMakeLists.txt`:
+
+```cpp
+import storage.flash_device;
+import storage.partition;
+
+constexpr auto kPartitions = storage::partitionTable<sensor::W25q32Spec>({
+    {.name = "boot",    .offset = 0x000000, .size = 0x010000},
+    {.name = "config",  .offset = 0x010000, .size = 0x001000},
+    {.name = "storage", .offset = 0x011000, .size = 0x3EF000},
+});
+
+storage::ExternalFlashDevice device{flash};
+storage::Partition config{device, kPartitions.find("config")};
+(void) config.write(0, {data, len});   // offset 0 == start of "config"
+```
+
+Overlaps, unaligned boundaries, out-of-range entries and misspelled names are
+compile errors. Offsets are relative to the partition; anything past its end
+returns `Status::InvalidArg`. `checksum()` hashes a partition through any
+`driver::ICrc` engine. Full guide: [Storage](modules/storage.md).
+
+The `STM32_USE_STORAGE` symbol moved from `sdk/drivers/Kconfig` into its own
+`sdk/storage/Kconfig` fragment. The name and its `depends on
+STM32_USE_DRIVERS` are unchanged, so existing `.config` files keep working.
+
+### CRC-32
 
 New surface, available whenever `STM32_USE_DRIVERS` is on (no new Kconfig
 symbol):

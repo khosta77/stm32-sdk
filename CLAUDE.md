@@ -273,6 +273,16 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 - `sdk/sensors/` — sensor concepts (`IImu`/`IDisplay`/`IExternalFlash`) +
   implementations. Sensors are templates on their bus type
   (`template <driver::II2c I2cDriver> class Mpu6050`); MPU6050, SSD1306, W25Q32.
+- `sdk/storage/` — flash partition layer (since v0.2.3, `STM32_USE_STORAGE`),
+  linked as `stm32_storage`, CMSIS-free and host-tested. `geometry.cppm`
+  (`IFlashGeometry`, `UniformGeometry` from any `CAPACITY`/`SECTOR_SIZE` spec,
+  `Stm32f4Geometry` for the mixed 16K/64K/128K internal layout),
+  `partition.cppm` (`PartitionSpec`, `PartitionTable`, `consteval
+  partitionTable()` + `find()` — overlaps, unaligned bounds, duplicate names
+  and typos are compile errors), `flash_device.cppm` (`IFlashDevice` plus
+  `ExternalFlashDevice`/`InternalFlashDevice` adapters and the `Partition`
+  view with relative addressing, bounds checks and `checksum()` over
+  `driver::ICrc`). No devicetree — `consteval` replaces the Zephyr generator.
 - `sdk/system/` — component framework (since v0.1.8, `STM32_USE_SYSTEM`):
   `component.cppm` (`system::Component` concept + `ComponentBase` +
   `ComponentState`/`Criticality`), `bootstrap.cppm` (variadic
@@ -292,8 +302,8 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 - `tests/host/` — standalone CMake tree (v0.1.13) built with the image's host
   `g++`: compiles the CMSIS-free portable modules + `testing.mock` into `ctest`
   executables (`test_result`/`test_mock`/`test_sensor_mock`/`test_log`/
-  `test_circular_buffer`/`test_w25q32`/`test_ssd1306`/`test_crc`). Run via
-  `stmtool test`;
+  `test_circular_buffer`/`test_w25q32`/`test_ssd1306`/`test_crc`/
+  `test_partition`). Run via `stmtool test`;
   a `host-tests` CI job runs the same. `system.work_queue`/`system.signal_bus`
   still pull CMSIS/FreeRTOS and are not host-portable yet.
 - `templates/` — 10 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,
