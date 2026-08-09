@@ -394,6 +394,70 @@ extern "C" void EXTI0_IRQHandler() {
 `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 у F4), иначе вызов недопустим.
 См. шаблон `button-events-demo`.
 
+## CRC-32 — `driver.crc` / `driver.soft_crc` / `driver.stm32f4.crc` (v0.2.3)
+
+CRC-32/IEEE — тот вариант, что используют zlib, gzip, PNG и Ethernet, поэтому
+контрольную сумму, посчитанную на плате, можно проверить на рабочей станции
+через `python3 -c 'import zlib; print(hex(zlib.crc32(data)))'` независимо от
+того, какая микросхема флэш-памяти выдала эти байты. Концепт `driver::ICrc` и
+константы `Crc32Spec` живут в `driver.crc`, переносимая реализация `SoftCrc` —
+в `driver.soft_crc`, драйвер периферии F4 `Crc` — в `driver.stm32f4.crc`.
+
+```cpp
+import driver.crc;
+import driver.soft_crc;
+import driver.stm32f4.crc;
+using driver::Crc32Spec;
+using driver::SoftCrc;
+
+// Аппаратный блок сам включает свой такт AHB1 в конструкторе.
+driver::stm32f4::Crc g_crc{*CRC};
+
+// Однократный вызов.
+const uint32_t sum = g_crc.compute({data, len});
+
+// Потоковый режим: считаем сумму партиции флэша страница за страницей.
+g_crc.reset();
+for (uint32_t off = 0; off < size; off += sizeof(page)) {
+  (void) flash.read(base + off, page);
+  g_crc.update({page, sizeof(page)});
+}
+const uint32_t total = g_crc.value();
+
+// Тот же API без периферии — годится для host-тестов и constexpr.
+SoftCrc soft;
+const uint32_t reference = soft.compute({data, len});
+```
+
+- Оба типа моделируют `driver::ICrc`: потоковая тройка `reset()` /
+  `update(span)` / `value()` плюс однократный `compute(span)`. `value()` —
+  чистое чтение: повторный вызов, в том числе посреди потока, вернёт то же
+  число и не израсходует состояние.
+- Параметры фиксированы: полином `0x04C11DB7` (reflected `0xEDB88320`),
+  начальное значение `0xFFFFFFFF`, реверс входа и выхода, финальный XOR
+  `0xFFFFFFFF`. Контрольное значение `Crc32Spec::CHECK` равно `0xCBF43926`
+  (CRC-32 строки `"123456789"`) и проверяется на этапе компиляции
+  `consteval`-самопроверкой в `driver.soft_crc`.
+- Принимаются буферы **любой** длины. У F4 `CRC_DR` берёт только 32-битные
+  слова (побайтовая подача появилась с F7), поэтому `Crc` отдаёт железу целые
+  слова, а хвостовые 1–3 байта домешивает программно при чтении `value()`.
+  Чанки любого размера можно подавать в любом порядке.
+- Блок F4 считает MSB-first без реверсов и без финального XOR, то есть сам по
+  себе он не даёт CRC-32/IEEE. `Crc` соединяет два домена через `__RBIT` на
+  каждом входном слове и на результате: после `RESET` в `CRC_DR` читается
+  `0xFFFFFFFF`, чей реверс в точности равен начальному значению.
+- В `CRC_CR` есть единственный бит `RESET` — ни полином, ни реверсы у F4 не
+  настраиваются (это появилось у F7/L4/G0/H7). Поэтому нет ни структуры
+  конфигурации, ни `consteval`-валидатора.
+- **Один экземпляр на чип.** Периферия хранит глобальное состояние, и два
+  чередующихся потребителя портят результат друг другу. Держите единственный
+  `Crc` и сериализуйте доступ снаружи (`rtos::Mutex`) либо используйте
+  `SoftCrc` — он реентерабелен.
+- `SoftCrc` не зависит от CMSIS, весь `constexpr` и битовый (8 шагов на байт,
+  ноль байт в `.rodata`), поэтому работает и на хосте, и внутри `consteval`, и
+  на чипах без блока CRC. Он покрыт `tests/host/test_crc.cpp`; аппаратный путь
+  сверяется с ним на плате шаблоном `unit-test-demo`.
+
 ## CircularBuffer — `driver.circular_buffer`
 
 Кольцевой буфер фиксированной ёмкости с одним производителем и одним

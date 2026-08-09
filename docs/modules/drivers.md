@@ -394,6 +394,69 @@ defer work out of the ISR, have the callback call
 ≥ `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY` (5 on F4) for that to be legal.
 See the `button-events-demo` template.
 
+## CRC-32 — `driver.crc` / `driver.soft_crc` / `driver.stm32f4.crc` (v0.2.3)
+
+CRC-32/IEEE — the variant used by zlib, gzip, PNG and Ethernet, so a checksum
+computed on the board can be verified on a workstation with
+`python3 -c 'import zlib; print(hex(zlib.crc32(data)))'` regardless of which
+flash chip produced the bytes. The concept `driver::ICrc` and the `Crc32Spec`
+constants live in `driver.crc`, the portable implementation `SoftCrc` in
+`driver.soft_crc`, and the F4 peripheral driver `Crc` in `driver.stm32f4.crc`.
+
+```cpp
+import driver.crc;
+import driver.soft_crc;
+import driver.stm32f4.crc;
+using driver::Crc32Spec;
+using driver::SoftCrc;
+
+// The hardware unit enables its own AHB1 clock in the constructor.
+driver::stm32f4::Crc g_crc{*CRC};
+
+// One shot.
+const uint32_t sum = g_crc.compute({data, len});
+
+// Streaming: hash a flash partition page by page.
+g_crc.reset();
+for (uint32_t off = 0; off < size; off += sizeof(page)) {
+  (void) flash.read(base + off, page);
+  g_crc.update({page, sizeof(page)});
+}
+const uint32_t total = g_crc.value();
+
+// Same API without the peripheral -- host-testable and constexpr-friendly.
+SoftCrc soft;
+const uint32_t reference = soft.compute({data, len});
+```
+
+- Both types model `driver::ICrc`: the streaming triplet `reset()` /
+  `update(span)` / `value()` plus the one-shot `compute(span)`. `value()` is a
+  pure read — calling it twice, or in the middle of a stream, returns the same
+  number and does not consume state.
+- Parameters are fixed: polynomial `0x04C11DB7` (reflected `0xEDB88320`), seed
+  `0xFFFFFFFF`, input and output reflected, final XOR `0xFFFFFFFF`. The check
+  value `Crc32Spec::CHECK` is `0xCBF43926` (CRC-32 of `"123456789"`), enforced
+  at compile time by a `consteval` self-check in `driver.soft_crc`.
+- Buffers of **any** length are accepted. `CRC_DR` takes 32-bit words only on
+  F4 (byte-wide feeding arrived with F7), so `Crc` sends whole words to the
+  hardware and folds the trailing 1–3 bytes in by software when `value()` is
+  read. Chunks of any size may be streamed in any order.
+- The F4 block computes MSB-first with no reflection and no final XOR, so it
+  does not natively produce CRC-32/IEEE. `Crc` bridges the two domains with
+  `__RBIT` on every input word and on the result; after `RESET`, `CRC_DR` reads
+  `0xFFFFFFFF`, whose reflection is exactly the seed.
+- `CRC_CR` holds a single `RESET` bit — neither the polynomial nor the
+  reflection is configurable on F4 (that arrived with F7/L4/G0/H7). There is no
+  config struct and therefore no `consteval` validator.
+- **One instance per chip.** The peripheral holds global state, and two
+  interleaved users corrupt each other's result. Own a single `Crc` and
+  serialise access externally (`rtos::Mutex`), or use `SoftCrc`, which is
+  reentrant.
+- `SoftCrc` is CMSIS-free, `constexpr` and bitwise (8 steps per byte, zero
+  `.rodata`), so it also runs on the host, inside `consteval`, and on chips
+  without a CRC block. It is covered by `tests/host/test_crc.cpp`; the hardware
+  path is checked against it on the board by the `unit-test-demo` template.
+
 ## CircularBuffer — `driver.circular_buffer`
 
 A fixed-capacity, single-producer/single-consumer ring buffer used internally by
