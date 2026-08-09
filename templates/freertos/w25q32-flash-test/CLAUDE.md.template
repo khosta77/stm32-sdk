@@ -34,8 +34,9 @@ with `stmtool config`. See
 
 ## This template
 
-Exercises the `sensor.w25q32` driver and the `IExternalFlash` concept.
-Run once at boot, output goes over USART2 (115200 baud, interrupt mode).
+Exercises the `sensor.w25q32` driver and the `IExternalFlash` concept, then
+the `storage` partition layer on top of the same chip. Runs once at boot,
+output goes over USART2 (115200 baud, interrupt mode).
 
 ### Pinout (SPI2)
 
@@ -100,8 +101,49 @@ If no output:
 - Confirm SPI2 wiring; the simplest miswiring is MISO/MOSI swap.
 - Verify VCC is 3.3 V — W25Q32 is not 5 V tolerant.
 
+### Partition map
+
+The second half of the run addresses the same chip through the partition
+layer. The map lives in `main.cpp` and is validated at compile time:
+
+```cpp
+constexpr auto kPartitions = storage::partitionTable<sensor::W25q32Spec>({
+    {.name = "boot",    .offset = 0x000000, .size = 0x010000},
+    {.name = "config",  .offset = 0x010000, .size = 0x001000},
+    {.name = "storage", .offset = 0x011000, .size = 0x3EF000},
+});
+```
+
+An overlap, an offset that is not 4 KiB-aligned or a partition running past
+the 4 MiB chip fails to compile — `partitionTable()` is `consteval`. Names
+are looked up the same way (`kPartitions.find("config")`), so a typo is a
+build error too.
+
+Offsets passed to a `storage::Partition` are relative to that partition, and
+anything reaching past its end returns `Status::InvalidArg` instead of
+landing in a neighbour. Expected extra output:
+
+```
+--- partitions ---
+  boot     offset=0x000000 size=0x010000
+  config   offset=0x010000 size=0x001000
+  storage  offset=0x011000 size=0x3EF000
+erase "config" (4096 bytes)...
+PARTITION RW OK
+write past the end rejected: yes
+ISOLATION OK
+checksum("config") hw=0x........ sw=0x........ MATCH
+```
+
+`ISOLATION OK` means the pattern the raw test wrote at address 0 survived a
+full erase of `config`. The checksum line compares the hardware CRC unit
+against the portable `SoftCrc`; both are CRC-32/IEEE, so the number can be
+reproduced on a workstation with `zlib.crc32` over a dump of the same range.
+
 ### When to extend
 
 The driver also supports `chipErase()` (slow — seconds), `eraseSector()` at
 any 4 KiB-aligned address, and `read()` of arbitrary length. Total capacity
-is 4 MiB (32 Mbit, 1024 sectors × 4 KiB).
+is 4 MiB (32 Mbit, 1024 sectors × 4 KiB). Writes longer than a 256-byte page
+go through `storage::ExternalFlashDevice`, which splits them at page
+boundaries; the chip driver's own `writePage()` rejects them.
