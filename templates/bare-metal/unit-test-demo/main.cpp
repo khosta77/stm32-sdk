@@ -4,17 +4,22 @@
 #include "testing/unit_test.hpp"
 
 import driver.types;
+import driver.crc;
 import driver.gpio;
 import driver.reg;
+import driver.soft_crc;
 import driver.stm32f4.clock;
+import driver.stm32f4.crc;
 import driver.stm32f4.gpio;
 
+using driver::Crc32Spec;
 using driver::gpio;
 using driver::OutputSpeed;
 using driver::OutputType;
 using driver::PinMode;
 using driver::PullMode;
 using driver::Result;
+using driver::SoftCrc;
 using driver::Status;
 using driver::stm32f4::GpioPin;
 
@@ -38,6 +43,10 @@ GpioPin g_uartTx{
         .af = 7,
     }),
 };
+
+// The hardware CRC unit enables its own AHB1 clock in the constructor, so no
+// entry is needed in __initialize_hardware() above.
+driver::stm32f4::Crc g_crc{*CRC};
 
 void uartInit() {
   const uint32_t pclk = driver::stm32f4::getApb1Clock();
@@ -88,6 +97,41 @@ TEST(result_ok_status_normalizes) {
   EXPECT_EQ(r.status(), Status::None);
 }
 
+// The CRC tests below are the ones that genuinely need the board: they check
+// that the __RBIT bridge over the fixed F4 unit really lands on CRC-32/IEEE.
+// The expected values come from zlib on a workstation, e.g.
+//   python3 -c 'import zlib; print(hex(zlib.crc32(b"123456789")))'  ->
+//   0xcbf43926
+const uint8_t kCheck[] = {'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+const uint8_t kAlphabet[] =
+    {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l'};
+
+TEST(hardware_crc_matches_the_standard_check_value) {
+  EXPECT_EQ(g_crc.compute({kCheck, 9}), Crc32Spec::CHECK);
+  EXPECT_EQ(g_crc.compute({kCheck, 9}), 0xCBF43926U);
+}
+
+TEST(hardware_crc_agrees_with_software_for_every_length) {
+  // Lengths 0..12 cover every remainder modulo 4, so this exercises the whole
+  // word/tail split inside the driver.
+  for (size_t len = 0; len <= 12; ++len) {
+    SoftCrc reference;
+    EXPECT_EQ(
+        g_crc.compute({kAlphabet, len}),
+        reference.compute({kAlphabet, len})
+    );
+  }
+}
+
+TEST(hardware_crc_streams_in_chunks) {
+  for (size_t cut = 0; cut <= 9; ++cut) {
+    g_crc.reset();
+    g_crc.update({kCheck, cut});
+    g_crc.update({kCheck + cut, 9 - cut});
+    EXPECT_EQ(g_crc.value(), Crc32Spec::CHECK);
+  }
+}
+
 }  // namespace
 
 int main() {
@@ -99,6 +143,9 @@ int main() {
   RUN_TEST(runner, result_ok_carries_value);
   RUN_TEST(runner, result_error_reports_status);
   RUN_TEST(runner, result_ok_status_normalizes);
+  RUN_TEST(runner, hardware_crc_matches_the_standard_check_value);
+  RUN_TEST(runner, hardware_crc_agrees_with_software_for_every_length);
+  RUN_TEST(runner, hardware_crc_streams_in_chunks);
 
   (void) runner.summary();
 
