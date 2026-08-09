@@ -73,14 +73,6 @@ config STM32_LOG_BACKEND_NUM
 	default 1 if STM32_LOG_BACKEND_SEL_ITM
 	default 2 if STM32_LOG_BACKEND_SEL_UART
 
-config STM32_USE_STORAGE
-	bool "Flash storage library"
-	default n
-	help
-	  Internal-flash storage layer (STM32_USE_STORAGE). Partition tables
-	  in the Zephyr spirit arrive with #62 as consteval-validated
-	  constexpr tables on top of this gate.
-
 endif
 
 endmenu

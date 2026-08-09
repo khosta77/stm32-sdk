@@ -49,5 +49,6 @@ endmenu
 source "drivers/Kconfig"
 source "rtos/Kconfig"
 source "sensors/Kconfig"
+source "storage/Kconfig"
 source "system/Kconfig"
 source "testing/Kconfig"

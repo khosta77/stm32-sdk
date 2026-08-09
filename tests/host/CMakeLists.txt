@@ -30,6 +30,8 @@ target_sources(sdk_portable PUBLIC
     ${SDK}/drivers/include/driver/interface/i_flash.cppm
     ${SDK}/drivers/include/driver/interface/i_crc.cppm
     ${SDK}/drivers/include/driver/soft_crc.cppm
+    ${SDK}/storage/include/storage/geometry.cppm
+    ${SDK}/storage/include/storage/partition.cppm
     ${SDK}/sensors/include/sensor/imu.cppm
     ${SDK}/sensors/include/sensor/display.cppm
     ${SDK}/sensors/include/sensor/external_flash.cppm
@@ -61,3 +63,4 @@ add_host_test(test_circular_buffer)
 add_host_test(test_w25q32)
 add_host_test(test_ssd1306)
 add_host_test(test_crc)
+add_host_test(test_partition)
