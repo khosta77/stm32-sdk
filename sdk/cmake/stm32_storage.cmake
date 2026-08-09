@@ -6,6 +6,7 @@ target_sources(stm32_storage PUBLIC
     FILES
         ${_STM32_SDK_DIR}/storage/include/storage/geometry.cppm
         ${_STM32_SDK_DIR}/storage/include/storage/partition.cppm
+        ${_STM32_SDK_DIR}/storage/include/storage/flash_device.cppm
 )
 
 target_include_directories(stm32_storage PUBLIC
