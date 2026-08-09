@@ -14,6 +14,33 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.2.3
+
+v0.2.3 adds CRC-32. It is **additive** — no existing symbol changed, and no
+project needs edits to upgrade.
+
+New surface, available whenever `STM32_USE_DRIVERS` is on (no new Kconfig
+symbol):
+
+1. **CRC-32 concept and constants** (`driver.crc`): `driver::ICrc` — the
+   streaming triplet `reset()` / `update(span)` / `value()` plus a one-shot
+   `compute(span)` — and `driver::Crc32Spec` with the algorithm parameters and
+   the `CHECK` value `0xCBF43926`.
+2. **Portable implementation** (`driver.soft_crc`): `driver::SoftCrc`,
+   CMSIS-free, `constexpr` and reentrant, so it works on the host, inside
+   `consteval` and on chips without a CRC block. Also exports
+   `softCrcStep(state, byte)`.
+3. **Hardware driver** (`driver.stm32f4.crc`): `driver::stm32f4::Crc{*CRC}` —
+   enables its own AHB1 clock in the constructor, so no
+   `__initialize_hardware()` entry is needed.
+
+The variant is CRC-32/IEEE (zlib, gzip, PNG, Ethernet), so a checksum from the
+board matches `zlib.crc32` on a workstation. Note that the F4 peripheral is a
+single global resource: own one `Crc` instance and serialise access, or use
+`SoftCrc`, which has no shared state.
+
+See [Drivers](modules/drivers.md#crc-32-drivercrc-driversoft_crc-driverstm32f4crc-v023).
+
 ## New in v0.2.2
 
 v0.2.2 introduces **Kconfig** as the single source of truth for firmware

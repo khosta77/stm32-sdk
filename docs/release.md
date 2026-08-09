@@ -53,6 +53,45 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.2.3
+
+Focus: **CRC-32** (#61) — the first half of the storage groundwork, ahead of
+the flash partition layer (#62). **Additive**: nothing existing changed.
+
+Highlights:
+
+- **New concept `driver::ICrc`** (`driver.crc`) with the streaming triplet
+  `reset()` / `update(span)` / `value()` plus a one-shot `compute(span)`, and
+  `driver::Crc32Spec` carrying the algorithm parameters. `value()` is a pure
+  read, so a partition can be hashed page by page and inspected mid-stream.
+- **Portable `SoftCrc`** (`driver.soft_crc`) — CMSIS-free, `constexpr`,
+  bitwise (zero `.rodata`) and reentrant. It is the reference implementation:
+  host-tested, usable inside `consteval`, and available on chips without a CRC
+  block. Ends with a `consteval` known-answer self-check in the style of
+  `resultSelfCheck`.
+- **Hardware driver `Crc`** (`driver.stm32f4.crc`) over the F4 CRC unit.
+  Non-template, so it calls `__RBIT` directly; all MMIO through `driver::reg::*`;
+  enables its own AHB1 clock in the constructor.
+- **CRC-32/IEEE semantics** (zlib, gzip, PNG, Ethernet, and Zephyr's
+  `crc32_ieee`), chosen for interoperability: a flash dump verifies against
+  `zlib.crc32` on a workstation. The F4 block computes MSB-first with no
+  reflection and no final XOR, so the driver bridges the domains with `__RBIT`
+  on every input word and on the result.
+- **Any buffer length.** `CRC_DR` is 32-bit-only on F4, so whole words go to
+  the hardware and the trailing 1–3 bytes are folded in by software on read;
+  chunks of any size stream in any order.
+
+Notes:
+
+- No new Kconfig symbol — CRC ships under `STM32_USE_DRIVERS` like every other
+  peripheral driver.
+- The peripheral is a single global resource: own one `Crc` and serialise
+  access externally, or use `SoftCrc`.
+- Verified with `tests/host/test_crc.cpp` (check vector, empty input, every
+  length 0–12 against `zlib.crc32`, chunked streaming), 10/10 templates under
+  `STM32F407VG` with `-Werror`, and a hardware-versus-software cross-check on
+  an F407VG board via the `unit-test-demo` template.
+
 ### v0.2.2
 
 Focus: **Kconfig** as the single source of truth for firmware configuration

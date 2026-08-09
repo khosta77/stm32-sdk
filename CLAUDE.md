@@ -250,10 +250,18 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 - `sdk/drivers/include/driver/` — modules:
     - `types.cppm`, `reg.cppm`, `circular_buffer.cppm` — utilities.
     - `interface/i_*.cppm` — interface **concepts** (`IGpioPin`, `IUart`,
-      `II2c`, `ISpi`, `IFlash`, `IExti`), not virtual classes (since v0.1.7).
+      `II2c`, `ISpi`, `IFlash`, `IExti`, `ICrc`), not virtual classes (since
+      v0.1.7).
     - `stm32f4/*.cppm` — implementations (`GpioPin`, `Uart<>`, `I2c`, `Spi`,
-      `DmaStream`, `InternalFlash`, `ExtiLine`, `clock`); model the concepts
-      without inheritance, each ends with `static_assert(IXxx<Impl>)`.
+      `DmaStream`, `InternalFlash`, `ExtiLine`, `Crc`, `clock`); model the
+      concepts without inheritance, each ends with `static_assert(IXxx<Impl>)`.
+    - `soft_crc.cppm` (since v0.2.3) — `driver.soft_crc`: `SoftCrc`, the
+      CMSIS-free `constexpr` CRC-32/IEEE reference next to `null_gpio.cppm`,
+      plus `softCrcStep` reused by the F4 driver for tail bytes. The F4 block
+      is fixed (MSB-first, no reflection, no final XOR, 32-bit `CRC_DR` only),
+      so `stm32f4/crc.cppm` bridges to IEEE with `__RBIT` and folds the
+      trailing 1–3 bytes in by software. One CRC unit per chip — global state,
+      serialise externally; `SoftCrc` is reentrant.
     - `log.cppm` + textual `log.hpp` (since v0.1.14) — `driver.log`: compile-time
       `LOG_*` macros (`STM32_LOG_LEVEL` strips levels to `((void)0)`), runtime
       `setLevel`, sink installed via a `void(*)(void*, const char*, size_t)`
@@ -284,7 +292,8 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
 - `tests/host/` — standalone CMake tree (v0.1.13) built with the image's host
   `g++`: compiles the CMSIS-free portable modules + `testing.mock` into `ctest`
   executables (`test_result`/`test_mock`/`test_sensor_mock`/`test_log`/
-  `test_circular_buffer`/`test_w25q32`/`test_ssd1306`). Run via `stmtool test`;
+  `test_circular_buffer`/`test_w25q32`/`test_ssd1306`/`test_crc`). Run via
+  `stmtool test`;
   a `host-tests` CI job runs the same. `system.work_queue`/`system.signal_bus`
   still pull CMSIS/FreeRTOS and are not host-portable yet.
 - `templates/` — 10 project templates (`bare-metal/blink`, `bare-metal/i2c-scan`,

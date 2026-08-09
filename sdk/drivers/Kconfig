@@ -5,8 +5,9 @@ config STM32_USE_DRIVERS
 	default n
 	help
 	  C++20-module driver layer (GPIO, I2C, SPI, UART, DMA, EXTI, flash,
-	  clock) plus the driver.log facility. Required by sensors, storage
-	  and the system component framework.
+	  CRC, clock) plus the driver.log facility and the portable
+	  driver.soft_crc. Required by sensors, storage and the system
+	  component framework.
 
 if STM32_USE_DRIVERS
 
