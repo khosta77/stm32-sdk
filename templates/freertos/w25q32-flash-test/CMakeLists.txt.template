@@ -26,6 +26,7 @@ target_link_libraries(${PROJECT_NAME}.elf PRIVATE
     stm32_rtos
     stm32_drivers
     stm32_sensors
+    stm32_storage
     stm32_link
 )
 
