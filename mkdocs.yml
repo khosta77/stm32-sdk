@@ -72,6 +72,7 @@ nav:
   - Modules:
       - Drivers: modules/drivers.md
       - Sensors: modules/sensors.md
+      - Storage: modules/storage.md
       - FreeRTOS: modules/freertos.md
       - System: modules/system.md
       - Logging: modules/logging.md

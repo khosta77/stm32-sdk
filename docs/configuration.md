@@ -48,7 +48,7 @@ Symbols appear in `.config` with the `CONFIG_` prefix.
 | `STM32_USE_DRIVERS` | driver modules + logging | — |
 | `STM32_USE_FREERTOS` | FreeRTOS kernel + `rtos.hpp` wrappers | — |
 | `STM32_USE_SENSORS` | MPU6050 / SSD1306 / W25Q32 | `STM32_USE_DRIVERS` |
-| `STM32_USE_STORAGE` | flash storage layer | `STM32_USE_DRIVERS` |
+| `STM32_USE_STORAGE` | flash partition layer | `STM32_USE_DRIVERS` |
 | `STM32_USE_SYSTEM` | component framework + concurrency layer | `STM32_USE_DRIVERS` |
 | `STM32_USE_TESTING` | on-device `ASSERT_*`/`EXPECT_*` helpers | — |
 

@@ -16,8 +16,42 @@
 
 ## Новое в v0.2.3
 
-v0.2.3 добавляет CRC-32. Релиз **аддитивный** — ни один существующий символ не
-изменился, для обновления править проект не нужно.
+v0.2.3 добавляет CRC-32 и слой флэш-партиций. Релиз **аддитивный** — ни один
+существующий символ не изменился, для обновления править проект не нужно.
+
+### Флэш-партиции (`STM32_USE_STORAGE`)
+
+Гейт, приехавший пустым в v0.2.2, наполнен. Включите его в `.config` (он
+зависит от `STM32_USE_DRIVERS`) и добавьте `stm32_storage` в
+`target_link_libraries` своего `CMakeLists.txt`:
+
+```cpp
+import storage.flash_device;
+import storage.partition;
+
+constexpr auto kPartitions = storage::partitionTable<sensor::W25q32Spec>({
+    {.name = "boot",    .offset = 0x000000, .size = 0x010000},
+    {.name = "config",  .offset = 0x010000, .size = 0x001000},
+    {.name = "storage", .offset = 0x011000, .size = 0x3EF000},
+});
+
+storage::ExternalFlashDevice device{flash};
+storage::Partition config{device, kPartitions.find("config")};
+(void) config.write(0, {data, len});   // смещение 0 == начало "config"
+```
+
+Перекрытия, невыравненные границы, выход за пределы носителя и опечатки в
+именах — ошибки компиляции. Смещения относительны партиции; обращение за её
+конец возвращает `Status::InvalidArg`. `checksum()` считает контрольную сумму
+партиции любым движком `driver::ICrc`. Полное руководство:
+[Хранилище](modules/storage.ru.md).
+
+Символ `STM32_USE_STORAGE` переехал из `sdk/drivers/Kconfig` в собственный
+фрагмент `sdk/storage/Kconfig`. Имя и зависимость `depends on
+STM32_USE_DRIVERS` не изменились, поэтому существующие `.config` продолжают
+работать.
+
+### CRC-32
 
 Новая поверхность доступна всегда, когда включён `STM32_USE_DRIVERS` (нового
 Kconfig-символа не появилось):
