@@ -114,6 +114,15 @@ Notes:
   length 0–12 against `zlib.crc32`, chunked streaming), 10/10 templates under
   `STM32F407VG` with `-Werror`, and a hardware-versus-software cross-check on
   an F407VG board via the `unit-test-demo` template.
+- The partition layer is host-tested too (`tests/host/test_partition.cpp`):
+  relative addressing, refusal past a partition end, a neighbour surviving a
+  full erase, page splitting on long writes, and `checksum()` agreeing with
+  `SoftCrc`. The validator's negative cases — overlap, unaligned offset,
+  misspelled name — were checked by hand; each stops the build with its own
+  message. The `w25q32-flash-test` template demonstrates the map on hardware.
+- No devicetree was introduced. Zephyr keeps `flash_map` in DTS because C99
+  cannot compute at compile time; `consteval` gives the same guarantee with no
+  generator or bindings.
 
 ### v0.2.2
 
