@@ -99,6 +99,13 @@
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/sensors/"/>
     </url>
     <url>
+        <loc>https://khosta77.github.io/stm32-sdk/modules/storage/</loc>
+        <lastmod>2026-08-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/storage/"/>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/storage/"/>
+    </url>
+    <url>
         <loc>https://khosta77.github.io/stm32-sdk/modules/system/</loc>
         <lastmod>2026-08-09</lastmod>
         <changefreq>daily</changefreq>
@@ -237,6 +244,13 @@
         <changefreq>daily</changefreq>
         <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/sensors/"/>
         <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/sensors/"/>
+    </url>
+    <url>
+        <loc>https://khosta77.github.io/stm32-sdk/ru/modules/storage/</loc>
+        <lastmod>2026-08-09</lastmod>
+        <changefreq>daily</changefreq>
+        <xhtml:link rel="alternate" hreflang="ru" href="https://khosta77.github.io/stm32-sdk/ru/modules/storage/"/>
+        <xhtml:link rel="alternate" hreflang="en" href="https://khosta77.github.io/stm32-sdk/modules/storage/"/>
     </url>
     <url>
         <loc>https://khosta77.github.io/stm32-sdk/ru/modules/system/</loc>

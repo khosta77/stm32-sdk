@@ -741,6 +741,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../modules/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../modules/freertos/" class="md-nav__link">
         
   
@@ -1622,9 +1650,32 @@ the same source of truth the SDK CMake side already uses.</p>
 </ol>
 <h2 id="release-history">Release history<a class="headerlink" href="#release-history" title="Permanent link">&para;</a></h2>
 <h3 id="v023">v0.2.3<a class="headerlink" href="#v023" title="Permanent link">&para;</a></h3>
-<p>Focus: <strong>CRC-32</strong> (#61) — the first half of the storage groundwork, ahead of
-the flash partition layer (#62). <strong>Additive</strong>: nothing existing changed.</p>
-<p>Highlights:</p>
+<p>Focus: <strong>storage groundwork</strong> — CRC-32 (#61) and the flash partition layer
+(#62). <strong>Additive</strong>: nothing existing changed.</p>
+<p>Highlights — partitions:</p>
+<ul>
+<li><strong>Declarative partition map</strong> (<code>storage.partition</code>) in the spirit of
+  Zephyr's <code>flash_map</code>, but validated by <code>consteval</code> instead of generated from
+  devicetree. <code>partitionTable&lt;Spec&gt;({...})</code> rejects overlaps, unaligned starts
+  and ends, zero sizes, duplicate names and out-of-range entries at compile
+  time; <code>find("name")</code> is <code>consteval</code> too, so a typo does not build.</li>
+<li><strong>Compile-time geometry</strong> (<code>storage.geometry</code>): <code>UniformGeometry</code> derives
+  from any spec exposing <code>CAPACITY</code>/<code>SECTOR_SIZE</code> — <code>sensor::W25q32Spec</code>
+  already does — while <code>Stm32f4Geometry&lt;12&gt;</code> describes the mixed
+  16K/64K/128K layout of the F4 internal flash, which the driver only exposes
+  through a runtime method.</li>
+<li><strong>Device adapters</strong> (<code>storage.flash_device</code>) behind one <code>IFlashDevice</code>
+  concept. <code>ExternalFlashDevice</code> adds the multi-page write the SPI chip driver
+  lacks; <code>InternalFlashDevice</code> maps offsets onto absolute addresses and byte
+  ranges onto sector indices.</li>
+<li><strong><code>Partition</code></strong> addresses relative to itself, like <code>flash_area</code>, and returns
+  <code>InvalidArg</code> instead of letting an overlong access spill into a neighbour.
+  <code>checksum()</code> streams the partition through any <code>driver::ICrc</code> engine.</li>
+<li><code>STM32_USE_STORAGE</code> moved into its own <code>sdk/storage/Kconfig</code> fragment, and
+  <code>stm32_storage</code> became a real OBJECT library with a module file set (it was
+  an INTERFACE target pointing at a directory that did not exist).</li>
+</ul>
+<p>Highlights — CRC:</p>
 <ul>
 <li><strong>New concept <code>driver::ICrc</code></strong> (<code>driver.crc</code>) with the streaming triplet
   <code>reset()</code> / <code>update(span)</code> / <code>value()</code> plus a one-shot <code>compute(span)</code>, and

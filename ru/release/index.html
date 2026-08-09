@@ -741,6 +741,34 @@
   
   
     <li class="md-nav__item">
+      <a href="../modules/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../modules/freertos/" class="md-nav__link">
         
   
@@ -1643,9 +1671,34 @@ maintainer, пока API не стабилизируется (цель — v1.0)
 </ol>
 <h2 id="_5">История релизов<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <h3 id="v023">v0.2.3<a class="headerlink" href="#v023" title="Permanent link">&para;</a></h3>
-<p>Фокус: <strong>CRC-32</strong> (#61) — первая половина фундамента под хранилище, перед
-слоем флэш-партиций (#62). <strong>Аддитивный</strong>: ничего существующего не изменилось.</p>
-<p>Основное:</p>
+<p>Фокус: <strong>фундамент под хранилище</strong> — CRC-32 (#61) и слой флэш-партиций (#62).
+<strong>Аддитивный</strong>: ничего существующего не изменилось.</p>
+<p>Основное — партиции:</p>
+<ul>
+<li><strong>Декларативная карта партиций</strong> (<code>storage.partition</code>) в духе <code>flash_map</code>
+  из Zephyr, но проверяемая <code>consteval</code>, а не генерируемая из devicetree.
+  <code>partitionTable&lt;Spec&gt;({...})</code> на этапе компиляции отвергает перекрытия,
+  невыравненные начала и концы, нулевые размеры, дубликаты имён и выход за
+  пределы носителя; <code>find("name")</code> тоже <code>consteval</code>, поэтому опечатка не
+  собирается.</li>
+<li><strong>Геометрия на этапе компиляции</strong> (<code>storage.geometry</code>): <code>UniformGeometry</code>
+  выводится из любой спеки с <code>CAPACITY</code>/<code>SECTOR_SIZE</code> — у
+  <code>sensor::W25q32Spec</code> они уже есть, — а <code>Stm32f4Geometry&lt;12&gt;</code> описывает
+  смешанную раскладку 16K/64K/128K внутренней флэш F4, которую драйвер
+  предоставляет только рантайм-методом.</li>
+<li><strong>Адаптеры устройств</strong> (<code>storage.flash_device</code>) за единым концептом
+  <code>IFlashDevice</code>. <code>ExternalFlashDevice</code> добавляет многостраничную запись,
+  которой нет в драйвере SPI-микросхемы; <code>InternalFlashDevice</code> переводит
+  смещения в абсолютные адреса, а диапазоны байт — в индексы секторов.</li>
+<li><strong><code>Partition</code></strong> адресуется относительно себя, как <code>flash_area</code>, и
+  возвращает <code>InvalidArg</code> вместо того, чтобы позволить длинному обращению
+  залезть к соседу. <code>checksum()</code> прогоняет партицию через любой движок
+  <code>driver::ICrc</code>.</li>
+<li><code>STM32_USE_STORAGE</code> переехал в собственный фрагмент <code>sdk/storage/Kconfig</code>, а
+  <code>stm32_storage</code> стал полноценной OBJECT-библиотекой с набором модулей
+  (раньше это был INTERFACE-таргет, указывавший на несуществующий каталог).</li>
+</ul>
+<p>Основное — CRC:</p>
 <ul>
 <li><strong>Новый концепт <code>driver::ICrc</code></strong> (<code>driver.crc</code>) с потоковой тройкой
   <code>reset()</code> / <code>update(span)</code> / <code>value()</code> плюс однократный <code>compute(span)</code>, и
