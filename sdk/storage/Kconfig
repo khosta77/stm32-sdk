@@ -1,0 +1,18 @@
+menu "Storage"
+
+config STM32_USE_STORAGE
+	bool "Flash partition layer"
+	default n
+	depends on STM32_USE_DRIVERS
+	help
+	  Declarative flash partition map (#62): a constexpr table validated by
+	  a consteval validator, in the spirit of Zephyr's flash_map but without
+	  devicetree. Partitions are addressed by name, offsets inside a
+	  partition are relative to it, and overlaps, unaligned boundaries and
+	  out-of-range entries are compile errors.
+
+	  Works over both the F4 internal flash (driver::IFlash) and an external
+	  SPI flash such as the W25Q32; the external adapter states its own
+	  structural requirements, so STM32_USE_SENSORS is not required.
+
+endmenu
