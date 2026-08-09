@@ -32,6 +32,7 @@ target_sources(sdk_portable PUBLIC
     ${SDK}/drivers/include/driver/soft_crc.cppm
     ${SDK}/storage/include/storage/geometry.cppm
     ${SDK}/storage/include/storage/partition.cppm
+    ${SDK}/storage/include/storage/flash_device.cppm
     ${SDK}/sensors/include/sensor/imu.cppm
     ${SDK}/sensors/include/sensor/display.cppm
     ${SDK}/sensors/include/sensor/external_flash.cppm
