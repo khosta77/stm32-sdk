@@ -412,6 +412,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../emulation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Emulation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../release/" class="md-tabs__link">
         
   
@@ -1358,6 +1377,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../emulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release/" class="md-nav__link">
         
   
@@ -1700,6 +1746,7 @@ Kconfig поставляется <em>вместе с SDK</em>, поэтому р
 </tr>
 </tbody>
 </table>
+<p>Вариант <code>ITM</code> зависит от <code>STM32_CORE_HAS_ITM</code> — символа, производного от чипа (см. ниже). ITM относится к отладочному блоку ARMv7-M, поэтому на Cortex-M0/M0+ опция скрыта, а её ручная простановка в <code>.config</code> роняет configure сообщением <code>STM32_LOG_BACKEND_SEL_ITM was assigned 'y' but evaluated to 'n'</code> — вместо падения много позже внутри модуля, который не находит <code>ITM_SendChar</code>.</p>
 <h3 id="freertos-stm32_use_freertos">Тюнаблы FreeRTOS (при <code>STM32_USE_FREERTOS</code>)<a class="headerlink" href="#freertos-stm32_use_freertos" title="Permanent link">&para;</a></h3>
 <p>Раньше были захардкожены в <code>FreeRTOSConfig.h</code> SDK, с v0.2.2 настраиваются.
 Дефолты в точности воспроизводят исторические значения.</p>
@@ -1770,8 +1817,33 @@ Kconfig поставляется <em>вместе с SDK</em>, поэтому р
 <p><code>sdk/cmake/kconfig.cmake</code> запускает генератор на каждой конфигурации,
 регистрирует <code>.config</code> и фрагменты Kconfig как configure-зависимости (их
 правка перезапускает CMake), а также пишет <code>out/generated/Kconfig.chip</code> —
-производный от чипа фрагмент (<code>STM32_FAMILY_STM32F4</code>, имя чипа), на который
-будущие per-family опции и слой партиций (#62) вешают свои <code>depends on</code>.</p>
+производный от чипа фрагмент, на который per-family опции вешают свои
+<code>depends on</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Сгенерированный символ</th>
+<th>Значение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STM32_FAMILY_&lt;ID&gt;</code></td>
+<td>семейство <code>STM32_CHIP</code>, например <code>STM32_FAMILY_STM32F4</code></td>
+</tr>
+<tr>
+<td><code>STM32_CHIP_NAME</code></td>
+<td>сама строка чипа</td>
+</tr>
+<tr>
+<td><code>STM32_CORE_HAS_ITM</code></td>
+<td>есть ли у ядра отладочный блок ARMv7-M (<code>n</code> на Cortex-M0/M0+)</td>
+</tr>
+</tbody>
+</table>
+<p>Рядом с ними пишется <code>out/generated/version.hpp</code> — но он берётся из
+<code>git describe</code> в каталоге проекта, а не из <code>.config</code>; см.
+<a href="../migration/">заметки по апгрейду</a>.</p>
 <p>Шаблоны поставляют <code>defconfig</code> со своим набором гейтов;
 <code>stmtool project create</code> копирует его в новый проект как <code>.config</code>.</p>
 <h2 id="_7">Добавление опций для новой подсистемы<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>

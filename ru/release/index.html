@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/release/">
       
       
-        <link rel="prev" href="../sensors/w25q32/">
+        <link rel="prev" href="../emulation/">
       
       
         <link rel="next" href="../migration/">
@@ -401,6 +401,25 @@
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../emulation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Emulation
+
+      </a>
+    </li>
   
 
       
@@ -1203,6 +1222,33 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../emulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -1309,6 +1355,17 @@
   
     <nav class="md-nav" aria-label="История релизов">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#v024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.4
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#v023" class="md-nav__link">
@@ -1510,6 +1567,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#v024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.4
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#v023" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1646,13 +1714,13 @@ maintainer, пока API не стабилизируется (цель — v1.0)
 именно тег создаёт релиз для пользователей <code>stmtool</code>.</p>
 <p><code>tools/stmtool/pyproject.toml</code> конфигурирует:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">[build-system]</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;poetry-core&gt;=1.9&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;poetry-dynamic-versioning&gt;=1.4&quot;</span><span class="p">]</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;poetry_dynamic_versioning.backend&quot;</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">requires</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"poetry-core&gt;=1.9"</span><span class="p">,</span><span class="w"> </span><span class="s2">"poetry-dynamic-versioning&gt;=1.4"</span><span class="p">]</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">build-backend</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"poetry_dynamic_versioning.backend"</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="k">[tool.poetry-dynamic-versioning]</span>
 <a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">vcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;git&quot;</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;pep440&quot;</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">vcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"git"</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">style</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"pep440"</span>
 </code></pre></div>
 <p>Плагин поднимается от <code>tools/stmtool/pyproject.toml</code> до корневого
 <code>.git</code> и берёт последний <code>vMAJOR.MINOR.PATCH</code> тег — тот же источник
@@ -1662,7 +1730,7 @@ maintainer, пока API не стабилизируется (цель — v1.0)
 <li><code>develop</code> должен быть зелёным на CI (matrix F407VG/F401CE/F411CE).</li>
 <li>Локально проверить доки: <code>mkdocs serve</code>.</li>
 <li>Повесить тег на merge-коммит в <code>develop</code>:
-   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v0.1.3<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Release v0.1.3&quot;</span><span class="w"> </span>&lt;коммит&gt;
+   <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span>v0.1.3<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Release v0.1.3"</span><span class="w"> </span>&lt;коммит&gt;
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>v0.1.3
 </code></pre></div></li>
 <li>Создать GitHub Release с заметками из секции «История релизов» этой страницы.</li>
@@ -1670,6 +1738,66 @@ maintainer, пока API не стабилизируется (цель — v1.0)
    <a href="https://khosta77.github.io/stm32-sdk/">https://khosta77.github.io/stm32-sdk/</a> подтянул свежий контент.</li>
 </ol>
 <h2 id="_5">История релизов<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h3 id="v024">v0.2.4<a class="headerlink" href="#v024" title="Permanent link">&para;</a></h3>
+<p>Правила и долги сборки. Новой функциональности прошивки нет — релиз убирает из
+SDK последний <code>throw</code>, выключает исключения и RTTI, расшивает привязку к F4 в
+семейно-нейтральном коде, даёт проектам настоящую версию и ставит гейт рантайма
+в CI. <strong>Ломающий</strong>: см. <a href="../migration/">заметки по апгрейду</a>.</p>
+<ul>
+<li><strong>Валидаторы без <code>throw</code> (#86).</strong> <code>gpio()</code> / <code>exti()</code> / <code>i2c()</code> / <code>spi()</code> /
+  <code>uart()</code> принимают конфиг параметром шаблона и проверяют его через
+  <code>static_assert</code>: <code>gpio&lt;{...}&gt;()</code> вместо <code>gpio({...})</code>. Диагностика при этом
+  стала лучше, а не хуже — сообщение теперь и есть диагностика, а не эхо
+  исходной строки; GCC добавляет подставленные значения (<code>the comparison
+  reduces to '(42 &lt;= 15)'</code>), и сообщаются все нарушенные правила сразу, а не
+  только первое.</li>
+<li><strong><code>storage::PartitionMap</code> (#86).</strong> Карта партиций стала типом, чтобы её
+  записи были аргументами шаблона; <code>partitionTable()</code> и <code>PartitionTable&lt;N&gt;</code>
+  удалены. Имена хранятся встроенно (не более 15 символов), поскольку указатель
+  на строковый литерал не является допустимым аргументом шаблона. Опечатка в
+  <code>find&lt;"config"&gt;()</code> теперь даёт <code>static assertion failed: PartitionMap: no
+  partition with this name</code> и печатает всю карту со значениями.</li>
+<li><strong><code>-fno-exceptions</code>/<code>-fno-rtti</code> по всему SDK (#86).</strong> Выигрыш оказался
+  значительно больше роста <code>.ARM.exidx</code>, из которого исходила оценка в #86:
+  вместе с таблицами уходят раскрутчик стека и personality-функция.
+  <code>bare-metal/blink</code> — 5892 → 1724 байта flash (−71%), FreeRTOS-демо −30…−35%.
+  RAM не изменился. Флаги применяются через единственную переменную
+  <code>STM32_CXX_DIALECT_FLAGS</code>, потому что GCC зашивает диалект в BMI каждого
+  модуля и частичное применение ломает <code>import</code>.</li>
+<li><strong>Расшивка слоя семейств (#98).</strong> <code>system.work_queue</code> и
+  <code>driver.log_backend_itm</code> больше не включают <code>cmsis/stm32f4xx.h</code> — вместо
+  этого каждый HAL поставляет <code>include/cmsis_device.h</code>. Список модулей драйверов
+  переехал в <code>sdk/drivers/families/&lt;семейство&gt;.cmake</code>. <code>sdk/chips.json</code> заменил
+  шестнадцать байт-в-байт одинаковых заглушек «not yet supported» и захардкоженный
+  список чипов в stmtool. <code>STM32_LOG_BACKEND_SEL_ITM</code> теперь зависит от
+  <code>STM32_CORE_HAS_ITM</code>, поэтому на Cortex-M0/M0+ он отвергается на configure —
+  в <code>core_cm0plus.h</code> <code>ITM_SendChar</code> не объявлен вовсе.</li>
+<li><strong>Версионирование проектов (#90).</strong> <code>out/generated/version.hpp</code> берётся из
+  <code>git describe</code> в каталоге проекта: <code>firmware::VERSION</code> плюс semver-константы,
+  <code>VERSION_TAGGED</code> и <code>VERSION_DIRTY</code>. Отсутствие тега — запасной вариант
+  (<code>v0.0.0-untagged</code>), а не ошибка. <code>signal-bus-demo</code> логирует версию при старте.</li>
+<li><strong>QEMU-гейт рантайма (#95).</strong> CI загружает <code>signal-bus-demo</code> на
+  <code>netduinoplus2</code> и требует баннер bootstrap, «all components started»,
+  самопроверку очереди работ и доставку событий. Это закрывает единственную
+  настоящую дыру в покрытии: <code>system.work_queue</code> / <code>executor</code> / <code>timer</code> /
+  <code>signal_bus</code> тянут CMSIS и FreeRTOS и в host-наборе отсутствуют. Семихостинг
+  оказался не нужен — QEMU эмулирует USART, поэтому вывод несёт настоящий
+  драйвер UART образа. Новая страница: <a href="../emulation/">Эмуляция</a>.</li>
+</ul>
+<p><strong>Примечания.</strong> Проверено: host-тесты 9/9, 10/10 шаблонов под STM32F407VG с
+<code>-Werror</code>, замер flash до/после на четырёх шаблонах, негативные compile-проверки
+и для валидаторов, и для карты партиций, вывод списка поддерживаемых семейств
+из <code>chips.json</code> для чужого чипа, отказ ITM-гейта на ядре без ITM, а также
+прохождение QEMU-гейта на исправном образе и его падение при отсутствующем
+маркере. <strong>На железе не проверялось:</strong> ничего из этого релиза на плату не
+прошивалось. Долг с v0.2.3 (сверка CRC в <code>unit-test-demo</code>, строка
+<code>ISOLATION OK</code> в <code>w25q32-flash-test</code>) остаётся открытым.</p>
+<p><strong>Осознанно не сделано.</strong> <code>trace_write()</code> в <code>sdk/core/src/diag/trace-impl.cpp</code>
+по-прежнему возвращает <code>-1</code>, потому что ни один <code>OS_USE_TRACE_*</code> сборкой не
+задаётся, а в <code>_exit()</code> по-прежнему стоит <code>// TODO</code> на месте семихостинг-выхода.
+Оба пункта были в плане только потому, что он исходил из необходимости
+семихостинга для QEMU-гейта; она не подтвердилась. Это настоящий пробел, и он
+заслуживает отдельной задачи.</p>
 <h3 id="v023">v0.2.3<a class="headerlink" href="#v023" title="Permanent link">&para;</a></h3>
 <p>Фокус: <strong>фундамент под хранилище</strong> — CRC-32 (#61) и слой флэш-партиций (#62).
 <strong>Аддитивный</strong>: ничего существующего не изменилось.</p>

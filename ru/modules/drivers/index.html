@@ -412,6 +412,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../../emulation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Emulation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../../release/" class="md-tabs__link">
         
   
@@ -1422,6 +1441,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../emulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../release/" class="md-nav__link">
         
   
@@ -1723,7 +1769,7 @@
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">g_i2c</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="n">payload</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="o">::</span><span class="n">Ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* обработать */</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">}</span>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// намеренный сброс внутри ISR</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="kt">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// намеренный сброс внутри ISR</span>
 </code></pre></div>
 <h3 id="resultt"><code>Result&lt;T&gt;</code><a class="headerlink" href="#resultt" title="Permanent link">&para;</a></h3>
 <p><code>Result&lt;T&gt;</code> несёт <strong>либо</strong> значение <code>T</code>, <strong>либо</strong> ошибку <code>Status</code>
@@ -1751,7 +1797,7 @@ POD-payload, возвращаемых драйверами).</p>
 <code>import driver.types;</code>; окружающая функция должна возвращать <code>Status</code> (или
 <code>Result&lt;U&gt;</code>).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">types</span><span class="p">;</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;driver/try.hpp&quot;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="cp">#include</span><span class="w"> </span><span class="cpf">"driver/try.hpp"</span>
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
 <a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">driver</span><span class="o">::</span><span class="n">Status</span><span class="w"> </span><span class="nf">configure</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="n">DRV_TRY</span><span class="p">(</span><span class="n">g_i2c</span><span class="p">.</span><span class="n">writeReg</span><span class="p">(</span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="n">REG_CTRL</span><span class="p">,</span><span class="w"> </span><span class="n">ctrl</span><span class="p">));</span><span class="w">  </span><span class="c1">// вернуть Status, если не Ok</span>
@@ -1773,19 +1819,19 @@ POD-payload, возвращаемых драйверами).</p>
 <a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
 <a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="n">GpioPin</span><span class="w"> </span><span class="n">g_led</span><span class="p">{</span>
 <a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">    </span><span class="o">*</span><span class="n">GPIOD</span><span class="p">,</span>
-<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="n">gpio</span><span class="p">({</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">    </span><span class="n">gpio</span><span class="o">&lt;</span><span class="p">{</span>
 <a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">        </span><span class="p">.</span><span class="n">pin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
 <a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">        </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PinMode</span><span class="o">::</span><span class="n">Output</span><span class="p">,</span>
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">        </span><span class="p">.</span><span class="n">pull</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PullMode</span><span class="o">::</span><span class="n">None</span><span class="p">,</span>
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">        </span><span class="p">.</span><span class="n">speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OutputSpeed</span><span class="o">::</span><span class="n">Low</span><span class="p">,</span>
 <a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">        </span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OutputType</span><span class="o">::</span><span class="n">PushPull</span><span class="p">,</span>
-<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">    </span><span class="p">}</span><span class="o">&gt;</span><span class="p">(),</span>
 <a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="p">};</span>
 <a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
 <a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="n">g_led</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
 <a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="n">g_led</span><span class="p">.</span><span class="n">toggle</span><span class="p">();</span>
 </code></pre></div>
-<p>Свободная функция <code>gpio({...})</code> — <code>consteval</code>-валидатор: бросает (на этапе
+<p>Свободная функция <code>gpio&lt;{...}&gt;()</code> — <code>consteval</code>-валидатор: бросает (на этапе
 компиляции) при <code>pin &gt; 15</code>, <code>mode == None</code>, отсутствующих <code>speed</code>/<code>type</code> для
 Output / AlternateFunction, <code>af &gt; 15</code> для AF.</p>
 <p>Тактирование GPIO-порта включается в конструкторе <code>GpioPin</code> (смотрит на адрес
@@ -1820,13 +1866,13 @@ chip-agnostic и лежит на верхнем уровне в
 <a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
 <a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="n">I2c</span><span class="w"> </span><span class="n">g_i2c1</span><span class="p">{</span>
 <a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">    </span><span class="o">*</span><span class="n">I2C1</span><span class="p">,</span>
-<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="n">i2c</span><span class="p">({</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="n">i2c</span><span class="o">&lt;</span><span class="p">{</span>
 <a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">        </span><span class="p">.</span><span class="n">clockSpeed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">400000</span><span class="p">,</span>
 <a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">        </span><span class="p">.</span><span class="n">fastMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">,</span>
-<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">    </span><span class="p">}</span><span class="o">&gt;</span><span class="p">(),</span>
 <a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">};</span>
 </code></pre></div>
-<p><code>i2c({...})</code> — <code>consteval</code>-валидатор (как <code>gpio()</code> / <code>exti()</code>): бросает на этапе
+<p><code>i2c&lt;{...}&gt;()</code> — <code>consteval</code>-валидатор (как <code>gpio()</code> / <code>exti()</code>): бросает на этапе
 компиляции при <code>clockSpeed</code> вне <code>[1, 400000]</code> или <code>clockSpeed &gt; 100000</code> без
 <code>fastMode</code>. <code>I2cConfig</code> и <code>i2c()</code> живут в interface-модуле <code>driver.i2c</code> —
 импортируйте его рядом с <code>driver.stm32f4.i2c</code> (реализация его не реэкспортирует).</p>
@@ -1861,19 +1907,19 @@ FreeRTOS, <code>__disable_irq</code> иначе) вокруг окон BTF → S
 <a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="n">Uart</span><span class="o">&lt;</span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="mi">256</span><span class="o">&gt;</span><span class="w"> </span><span class="n">g_uart2</span><span class="p">{</span>
 <a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="o">*</span><span class="n">USART2</span><span class="p">,</span>
 <a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="n">USART2_IRQn</span><span class="p">,</span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="n">uart</span><span class="p">({</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="n">uart</span><span class="o">&lt;</span><span class="p">{</span>
 <a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">        </span><span class="p">.</span><span class="n">baudrate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">115200</span><span class="p">,</span>
 <a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">        </span><span class="p">.</span><span class="n">dataBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataBits</span><span class="o">::</span><span class="n">Eight</span><span class="p">,</span>
 <a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">        </span><span class="p">.</span><span class="n">stopBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StopBits</span><span class="o">::</span><span class="n">One</span><span class="p">,</span>
 <a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">        </span><span class="p">.</span><span class="n">parity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Parity</span><span class="o">::</span><span class="n">None</span><span class="p">,</span>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span><span class="p">}</span><span class="o">&gt;</span><span class="p">(),</span>
 <a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="p">};</span>
 <a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
-<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">USART2_IRQHandler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="k">extern</span><span class="w"> </span><span class="s">"C"</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">USART2_IRQHandler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">  </span><span class="n">g_uart2</span><span class="p">.</span><span class="n">irqHandler</span><span class="p">();</span>
 <a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="p">}</span>
 </code></pre></div>
-<p><code>uart({...})</code> — <code>consteval</code>-валидатор: бросает на этапе компиляции при
+<p><code>uart&lt;{...}&gt;()</code> — <code>consteval</code>-валидатор: бросает на этапе компиляции при
 <code>baudrate == 0</code> или незаданных <code>dataBits</code>/<code>stopBits</code> (<code>DataBits::None</code> /
 <code>StopBits::None</code>). <code>UartConfig</code> и enum'ы живут в <code>driver.uart</code>.</p>
 <p>Template-параметры: <code>Uart&lt;RxBufSize, TxBufSize, Mode&gt;</code>, где:</p>
@@ -1894,7 +1940,7 @@ FreeRTOS, <code>__disable_irq</code> иначе) вокруг окон BTF → S
 <a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="p">),</span>
 <a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">};</span>
 <a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
-<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">DMA1_Stream6_IRQHandler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="k">extern</span><span class="w"> </span><span class="s">"C"</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">DMA1_Stream6_IRQHandler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="n">g_uart2</span><span class="p">.</span><span class="n">dmaTxIrqHandler</span><span class="p">();</span>
 <a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="p">}</span>
 </code></pre></div>
@@ -1911,22 +1957,22 @@ FreeRTOS, <code>__disable_irq</code> иначе) вокруг окон BTF → S
 <a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
 <a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="n">Spi</span><span class="w"> </span><span class="n">g_spi2</span><span class="p">{</span>
 <a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="o">*</span><span class="n">SPI2</span><span class="p">,</span>
-<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="n">spi</span><span class="p">({</span>
-<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">        </span><span class="p">.</span><span class="n">clockHz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10&#39;000&#39;000</span><span class="p">,</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">    </span><span class="n">spi</span><span class="o">&lt;</span><span class="p">{</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">        </span><span class="p">.</span><span class="n">clockHz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10'000'000</span><span class="p">,</span>
 <a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">        </span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiMode</span><span class="o">::</span><span class="n">Mode0</span><span class="p">,</span>
 <a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">        </span><span class="p">.</span><span class="n">lsbFirst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span>
 <a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">        </span><span class="p">.</span><span class="n">dataSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpiDataSize</span><span class="o">::</span><span class="n">Bits8</span><span class="p">,</span>
-<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="p">}</span><span class="o">&gt;</span><span class="p">(),</span>
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">};</span>
 </code></pre></div>
-<p><code>spi({...})</code> — <code>consteval</code>-валидатор: бросает на этапе компиляции при
+<p><code>spi&lt;{...}&gt;()</code> — <code>consteval</code>-валидатор: бросает на этапе компиляции при
 <code>clockHz == 0</code>, незаданных <code>mode</code>/<code>dataSize</code> (<code>SpiMode::None</code> /
 <code>SpiDataSize::None</code>) или <code>SpiDataSize::Bits16</code>. <code>SpiConfig</code>, <code>SpiMode</code>
 (<code>Mode0..Mode3</code>, CPOL/CPHA) и <code>SpiDataSize</code> живут в <code>driver.spi</code>.</p>
 <blockquote>
 <p>Поддерживается только <code>SpiDataSize::Bits8</code>. Драйвер гонит регистр данных по
 одному байту, поэтому 16-битный размер фрейма испортил бы фрейминг; с v0.2.0
-<code>spi({...})</code> отклоняет <code>Bits16</code> на этапе компиляции. Значение enum
+<code>spi&lt;{...}&gt;()</code> отклоняет <code>Bits16</code> на этапе компиляции. Значение enum
 зарезервировано под будущий 16-битный путь.</p>
 </blockquote>
 <p><code>Spi</code> выбирает <code>PCLK1</code> для SPI2/SPI3 (APB1) и <code>PCLK2</code> для SPI1/SPI4/SPI5/SPI6
@@ -2020,7 +2066,7 @@ FreeRTOS, <code>__disable_irq</code> иначе) вокруг окон BTF → S
 <h2 id="exti-driverstm32f4exti-v0110">EXTI — <code>driver.stm32f4.exti</code> (v0.1.10)<a class="headerlink" href="#exti-driverstm32f4exti-v0110" title="Permanent link">&para;</a></h2>
 <p>Драйвер линий внешних прерываний: маршрутизирует вывод GPIO на линию EXTI,
 настраивает фронт и вызывает captureless-колбэк из ISR. Концепт <code>driver::IExti</code>,
-агрегат <code>ExtiConfig</code> и валидатор <code>exti({...})</code> живут в <code>driver.exti</code>; реализация
+агрегат <code>ExtiConfig</code> и валидатор <code>exti&lt;{...}&gt;()</code> живут в <code>driver.exti</code>; реализация
 для F4 <code>ExtiLine</code> — в <code>driver.stm32f4.exti</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">exti</span><span class="p">;</span>
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">exti</span><span class="p">;</span>
@@ -2031,21 +2077,21 @@ FreeRTOS, <code>__disable_irq</code> иначе) вокруг окон BTF → S
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="c1">// Привязка линии к методу; колбэк выполняется в контексте прерывания.</span>
 <a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="n">ExtiLine</span><span class="w"> </span><span class="n">g_button</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExtiLine</span><span class="o">::</span><span class="n">bind</span><span class="o">&lt;&amp;</span><span class="n">App</span><span class="o">::</span><span class="n">onButton</span><span class="o">&gt;</span><span class="p">(</span>
-<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="n">exti</span><span class="p">({</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="n">exti</span><span class="o">&lt;</span><span class="p">{</span>
 <a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">        </span><span class="p">.</span><span class="n">line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
 <a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">        </span><span class="p">.</span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExtiPort</span><span class="o">::</span><span class="n">A</span><span class="p">,</span>
 <a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">        </span><span class="p">.</span><span class="n">trigger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExtiTrigger</span><span class="o">::</span><span class="n">Rising</span><span class="p">,</span>
 <a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">        </span><span class="p">.</span><span class="n">priority</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
-<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span><span class="p">}),</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span><span class="p">}</span><span class="o">&gt;</span><span class="p">(),</span>
 <a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">    </span><span class="n">app</span>
 <a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="p">);</span>
 <a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>
-<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">EXTI0_IRQHandler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="k">extern</span><span class="w"> </span><span class="s">"C"</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">EXTI0_IRQHandler</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">  </span><span class="n">g_button</span><span class="p">.</span><span class="n">irqHandler</span><span class="p">();</span>
 <a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="p">}</span>
 </code></pre></div>
 <ul>
-<li><code>exti({...})</code> — <code>consteval</code>-валидатор: бросает (на этапе компиляции) при
+<li><code>exti&lt;{...}&gt;()</code> — <code>consteval</code>-валидатор: бросает (на этапе компиляции) при
   <code>line &gt; 15</code> или <code>priority &gt; 15</code> (у F4 4 бита приоритета NVIC).</li>
 <li>Конструктор включает такт SYSCFG, выбирает порт в <code>SYSCFG_EXTICR</code>, ставит
   <code>RTSR</code>/<code>FTSR</code> под фронт, гасит pending-бит, задаёт приоритет NVIC, включает IRQ

@@ -412,6 +412,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../../emulation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Emulation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../../release/" class="md-tabs__link">
         
   
@@ -1311,6 +1330,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../../emulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../release/" class="md-nav__link">
         
   
@@ -1477,18 +1523,20 @@ devicetree: перекрытия, невыравненные границы и �
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="n">sensor</span><span class="p">.</span><span class="n">w25q32</span><span class="p">;</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">import</span><span class="w"> </span><span class="n">storage</span><span class="p">.</span><span class="n">partition</span><span class="p">;</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">kPartitions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">storage</span><span class="o">::</span><span class="n">partitionTable</span><span class="o">&lt;</span><span class="n">sensor</span><span class="o">::</span><span class="n">W25q32Spec</span><span class="o">&gt;</span><span class="p">({</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;boot&quot;</span><span class="p">,</span><span class="w">    </span><span class="p">.</span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x000000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x010000</span><span class="p">},</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;config&quot;</span><span class="p">,</span><span class="w">  </span><span class="p">.</span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x010000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x001000</span><span class="p">},</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;storage&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x011000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x3EF000</span><span class="p">},</span>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">});</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">using</span><span class="w"> </span><span class="n">Partitions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">storage</span><span class="o">::</span><span class="n">PartitionMap</span><span class="o">&lt;</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="n">sensor</span><span class="o">::</span><span class="n">W25q32Spec</span><span class="p">,</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"boot"</span><span class="p">,</span><span class="w">    </span><span class="p">.</span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x000000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x010000</span><span class="p">},</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"config"</span><span class="p">,</span><span class="w">  </span><span class="p">.</span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x010000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x001000</span><span class="p">},</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="p">{.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"storage"</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x011000</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x3EF000</span><span class="p">}</span><span class="o">&gt;</span><span class="p">;</span>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">kConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kPartitions</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">&quot;config&quot;</span><span class="p">);</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="k">constexpr</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">kConfig</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Partitions</span><span class="o">::</span><span class="n">find</span><span class="o">&lt;</span><span class="s">"config"</span><span class="o">&gt;</span><span class="p">();</span>
 </code></pre></div>
-<p><code>partitionTable()</code> — <code>consteval</code>, та же идиома, что <code>gpio()</code> / <code>spi()</code> /
-<code>exti()</code>. На этапе компиляции отвергаются:</p>
+<p>Карта — это тип, а не объект: каждая запись является аргументом шаблона,
+и именно поэтому любой инвариант выражается через <code>static_assert</code>. На этапе
+компиляции отвергаются:</p>
 <ul>
-<li>пустое или дублирующееся имя;</li>
+<li>пустая карта, пустое или дублирующееся имя;</li>
+<li>имя длиннее 15 символов (<code>PARTITION_NAME_MAX</code> равен 16 вместе с NUL);</li>
 <li>нулевой размер;</li>
 <li>смещение или конец не на границе сектора (стирание такой партиции
   откусило бы кусок соседней);</li>
@@ -1496,9 +1544,18 @@ devicetree: перекрытия, невыравненные границы и �
 <li>любая пара перекрывающихся партиций — проверка попарная, поэтому записи не
   обязаны идти по порядку.</li>
 </ul>
-<p><code>find()</code> тоже <code>consteval</code>, поэтому опечатка в имени — ошибка сборки, а не
-неудачный поиск в рантайме. <code>count()</code> и <code>operator[]</code> — <code>constexpr</code>, ими
+<p>Нарушенный инвариант называет себя сам:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>error: static assertion failed: PartitionMap: partition offset must be sector-aligned
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>note: In instantiation of 'struct storage::PartitionMap&lt;..., PartitionSpec{
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>      PartitionName{"config"}, 65537, 4096}&gt;'
+</code></pre></div>
+<p><code>find&lt;"имя"&gt;()</code> — <code>consteval</code>, поэтому опечатка в имени даёт ошибку сборки, а
+не неудачный поиск в рантайме. <code>count()</code> и <code>at(i)</code> — <code>constexpr</code>, ими
 пользуется обычный цикл по карте.</p>
+<p>Имена хранятся не как <code>const char *</code>, а как встроенный буфер на 16 байт: указатель
+на строковый литерал не является допустимым аргументом шаблона.
+<code>Partition::name()</code> по-прежнему отдаёт <code>const char *</code> внутрь этого буфера,
+поэтому <code>nameEquals</code> и вызовы в духе printf не затронуты.</p>
 <p>Параметр типа — геометрия носителя. <code>sensor::W25q32Spec</code> подходит как есть,
 потому что предоставляет <code>CAPACITY</code> и <code>SECTOR_SIZE</code>; для внутренней флэш
 используется <code>storage::Stm32f4Geometry&lt;12&gt;</code>, описывающая смешанную раскладку
@@ -1517,21 +1574,21 @@ devicetree: перекрытия, невыравненные границы и �
   <code>consteval</code>-самопроверка держит оба описания в согласии.</li>
 </ul>
 <p><code>GeometryOf&lt;Spec&gt;</code> выбирает нужное — поэтому работают оба варианта записи
-<code>partitionTable&lt;...&gt;</code>.</p>
+<code>PartitionMap&lt;...&gt;</code>.</p>
 <h2 id="storageflash_device">Устройства — <code>storage.flash_device</code><a class="headerlink" href="#storageflash_device" title="Permanent link">&para;</a></h2>
 <p><code>storage::IFlashDevice</code> — это то, что нужно слою партиций от носителя:
 адресация от нуля, запись любой длины, стирание по диапазону байт. Ни один из
 существующих флэш-контрактов такого напрямую не даёт, поэтому в слое два
 адаптера:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="n">storage</span><span class="p">.</span><span class="n">flash_device</span><span class="p">;</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c1">// Внешняя SPI-флэш.</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">storage</span><span class="o">::</span><span class="n">ExternalFlashDevice</span><span class="w"> </span><span class="n">device</span><span class="p">{</span><span class="n">flash</span><span class="p">};</span><span class="w">   </span><span class="c1">// flash — sensor::W25q32</span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">// Внутренняя флэш.</span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">InternalFlash</span><span class="w"> </span><span class="n">raw</span><span class="p">{</span><span class="mi">12</span><span class="p">};</span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">storage</span><span class="o">::</span><span class="n">InternalFlashDevice</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">raw</span><span class="p">),</span><span class="w"> </span><span class="n">storage</span><span class="o">::</span><span class="n">Stm32f4Geometry</span><span class="o">&lt;</span><span class="mi">12</span><span class="o">&gt;&gt;</span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="n">device</span><span class="p">{</span><span class="n">raw</span><span class="p">};</span><span class="w">                              </span><span class="c1">// база по умолчанию 0x08000000</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">import</span><span class="w"> </span><span class="n">storage</span><span class="p">.</span><span class="n">flash_device</span><span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1">// Внешняя SPI-флэш.</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">storage</span><span class="o">::</span><span class="n">ExternalFlashDevice</span><span class="w"> </span><span class="n">device</span><span class="p">{</span><span class="n">flash</span><span class="p">};</span><span class="w">   </span><span class="c1">// flash — sensor::W25q32</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">// Внутренняя флэш.</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">InternalFlash</span><span class="w"> </span><span class="n">raw</span><span class="p">{</span><span class="mi">12</span><span class="p">};</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">storage</span><span class="o">::</span><span class="n">InternalFlashDevice</span><span class="o">&lt;</span><span class="k">decltype</span><span class="p">(</span><span class="n">raw</span><span class="p">),</span><span class="w"> </span><span class="n">storage</span><span class="o">::</span><span class="n">Stm32f4Geometry</span><span class="o">&lt;</span><span class="mi">12</span><span class="o">&gt;&gt;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="n">device</span><span class="p">{</span><span class="n">raw</span><span class="p">};</span><span class="w">                              </span><span class="c1">// база по умолчанию 0x08000000</span>
 </code></pre></div>
 <ul>
 <li><code>ExternalFlashDevice</code> добавляет <strong>многостраничную запись</strong>, которой нет в
@@ -1545,14 +1602,14 @@ devicetree: перекрытия, невыравненные границы и �
   его <code>eraseSector(uint8_t)</code>.</li>
 </ul>
 <h2 id="_1">Представление партиции<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">storage</span><span class="o">::</span><span class="n">Partition</span><span class="w"> </span><span class="n">config</span><span class="p">{</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="n">kConfig</span><span class="p">};</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span><span class="w">                        </span><span class="c1">// вся партиция целиком</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span><span class="w">          </span><span class="c1">// смещение 0 == начало &quot;config&quot;</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">Crc</span><span class="w"> </span><span class="n">crc</span><span class="p">{</span><span class="o">*</span><span class="n">CRC</span><span class="p">};</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">checksum</span><span class="p">(</span><span class="n">crc</span><span class="p">);</span><span class="w">        </span><span class="c1">// driver::Result&lt;uint32_t&gt;</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">storage</span><span class="o">::</span><span class="n">Partition</span><span class="w"> </span><span class="n">config</span><span class="p">{</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="n">kConfig</span><span class="p">};</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span><span class="w">                        </span><span class="c1">// вся партиция целиком</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span><span class="w">          </span><span class="c1">// смещение 0 == начало "config"</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">});</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">Crc</span><span class="w"> </span><span class="n">crc</span><span class="p">{</span><span class="o">*</span><span class="n">CRC</span><span class="p">};</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">config</span><span class="p">.</span><span class="n">checksum</span><span class="p">(</span><span class="n">crc</span><span class="p">);</span><span class="w">        </span><span class="c1">// driver::Result&lt;uint32_t&gt;</span>
 </code></pre></div>
 <ul>
 <li>Смещения <strong>относительны партиции</strong>, ровно как в

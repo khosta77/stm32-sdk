@@ -10,35 +10,35 @@
       
       
       
-        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/chips/stm32f4/">
+        <link rel="canonical" href="https://khosta77.github.io/stm32-sdk/ru/emulation/">
       
       
-        <link rel="prev" href="../datasheets/">
+        <link rel="prev" href="../sensors/w25q32/">
       
       
-        <link rel="next" href="../../sensors/">
+        <link rel="next" href="../release/">
       
       
         
-          <link rel="alternate" href="../../../chips/stm32f4/" hreflang="en">
+          <link rel="alternate" href="../../emulation/" hreflang="en">
         
           <link rel="alternate" href="./" hreflang="ru">
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>STM32F4 - stm32-sdk</title>
+        <title>Emulation - stm32-sdk</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -57,7 +57,7 @@
       
     
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -82,7 +82,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#stm32f4" class="md-skip">
+        <a href="#qemu" class="md-skip">
           Перейти к содержанию
         </a>
       
@@ -96,7 +96,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
-    <a href="../../" title="stm32-sdk" class="md-header__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+    <a href="../" title="stm32-sdk" class="md-header__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              STM32F4
+              Emulation
             
           </span>
         </div>
@@ -163,7 +163,7 @@
       <ul class="md-select__list">
         
           <li class="md-select__item">
-            <a href="../../../chips/stm32f4/" hreflang="en" class="md-select__link">
+            <a href="../../emulation/" hreflang="en" class="md-select__link">
               English
             </a>
           </li>
@@ -255,7 +255,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../" class="md-tabs__link">
+      <a href="../" class="md-tabs__link">
         
   
   
@@ -274,7 +274,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../quickstart/" class="md-tabs__link">
+      <a href="../quickstart/" class="md-tabs__link">
         
   
   
@@ -293,7 +293,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../stmtool/" class="md-tabs__link">
+      <a href="../stmtool/" class="md-tabs__link">
         
   
   
@@ -312,7 +312,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../configuration/" class="md-tabs__link">
+      <a href="../configuration/" class="md-tabs__link">
         
   
   
@@ -331,7 +331,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../build-flags/" class="md-tabs__link">
+      <a href="../build-flags/" class="md-tabs__link">
         
   
   
@@ -352,7 +352,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../modules/drivers/" class="md-tabs__link">
+        <a href="../modules/drivers/" class="md-tabs__link">
           
   
   
@@ -368,13 +368,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../chips/" class="md-tabs__link">
           
   
   
@@ -394,7 +392,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../sensors/" class="md-tabs__link">
+        <a href="../sensors/" class="md-tabs__link">
           
   
   
@@ -410,9 +408,11 @@
   
   
   
+    
   
-    <li class="md-tabs__item">
-      <a href="../../emulation/" class="md-tabs__link">
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
         
   
   
@@ -431,7 +431,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../release/" class="md-tabs__link">
+      <a href="../release/" class="md-tabs__link">
         
   
   
@@ -450,7 +450,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../migration/" class="md-tabs__link">
+      <a href="../migration/" class="md-tabs__link">
         
   
   
@@ -485,7 +485,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Навигация" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../" title="stm32-sdk" class="md-nav__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
+    <a href="../" title="stm32-sdk" class="md-nav__button md-logo" aria-label="stm32-sdk" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -515,7 +515,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -542,7 +542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../quickstart/" class="md-nav__link">
+      <a href="../quickstart/" class="md-nav__link">
         
   
   
@@ -569,7 +569,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../stmtool/" class="md-nav__link">
+      <a href="../stmtool/" class="md-nav__link">
         
   
   
@@ -596,7 +596,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../configuration/" class="md-nav__link">
+      <a href="../configuration/" class="md-nav__link">
         
   
   
@@ -623,7 +623,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../build-flags/" class="md-nav__link">
+      <a href="../build-flags/" class="md-nav__link">
         
   
   
@@ -704,7 +704,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/drivers/" class="md-nav__link">
+      <a href="../modules/drivers/" class="md-nav__link">
         
   
   
@@ -732,7 +732,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/sensors/" class="md-nav__link">
+      <a href="../modules/sensors/" class="md-nav__link">
         
   
   
@@ -760,7 +760,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/storage/" class="md-nav__link">
+      <a href="../modules/storage/" class="md-nav__link">
         
   
   
@@ -788,7 +788,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/freertos/" class="md-nav__link">
+      <a href="../modules/freertos/" class="md-nav__link">
         
   
   
@@ -816,7 +816,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/system/" class="md-nav__link">
+      <a href="../modules/system/" class="md-nav__link">
         
   
   
@@ -844,7 +844,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/logging/" class="md-nav__link">
+      <a href="../modules/logging/" class="md-nav__link">
         
   
   
@@ -872,7 +872,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../modules/testing/" class="md-nav__link">
+      <a href="../modules/testing/" class="md-nav__link">
         
   
   
@@ -904,31 +904,28 @@
       
   
   
-    
   
   
-  
     
     
     
     
-      
-        
-        
       
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
         
           
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
             
   
   
@@ -946,7 +943,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -964,7 +961,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../chips/" class="md-nav__link">
         
   
   
@@ -992,7 +989,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../datasheets/" class="md-nav__link">
+      <a href="../chips/datasheets/" class="md-nav__link">
         
   
   
@@ -1017,37 +1014,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    STM32F4
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../chips/stm32f4/" class="md-nav__link">
         
   
   
@@ -1063,81 +1033,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Содержание">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Содержание
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Тактирование
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Карта памяти
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vector-table" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vector table
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#newlib-nanospecs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Newlib nano.specs
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Даташиты
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1211,7 +1106,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sensors/" class="md-nav__link">
+      <a href="../sensors/" class="md-nav__link">
         
   
   
@@ -1239,7 +1134,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sensors/mpu6050/" class="md-nav__link">
+      <a href="../sensors/mpu6050/" class="md-nav__link">
         
   
   
@@ -1267,7 +1162,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sensors/ssd1306/" class="md-nav__link">
+      <a href="../sensors/ssd1306/" class="md-nav__link">
         
   
   
@@ -1295,7 +1190,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../sensors/w25q32/" class="md-nav__link">
+      <a href="../sensors/w25q32/" class="md-nav__link">
         
   
   
@@ -1327,10 +1222,37 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../emulation/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1346,6 +1268,81 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Зачем он нужен
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qemu_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что QEMU эмулирует на самом деле
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Сам гейт
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Список периферии генерируется, а не ведётся руками
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем это не является
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1357,7 +1354,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../release/" class="md-nav__link">
+      <a href="../release/" class="md-nav__link">
         
   
   
@@ -1384,7 +1381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../migration/" class="md-nav__link">
+      <a href="../migration/" class="md-nav__link">
         
   
   
@@ -1434,7 +1431,18 @@
   <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Тактирование
+        Зачем он нужен
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#qemu_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Что QEMU эмулирует на самом деле
       
     </span>
   </a>
@@ -1445,29 +1453,7 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Карта памяти
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#vector-table" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Vector table
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#newlib-nanospecs" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Newlib nano.specs
+        Сам гейт
       
     </span>
   </a>
@@ -1478,7 +1464,18 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Даташиты
+        Список периферии генерируется, а не ведётся руками
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Чем это не является
       
     </span>
   </a>
@@ -1502,7 +1499,7 @@
 
 
   
-    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/chips/stm32f4.ru.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
+    <a href="https://github.com/khosta77/stm32-sdk/edit/develop/docs/emulation.ru.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
       
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
     </a>
@@ -1510,47 +1507,110 @@
   
 
 
-<h1 id="stm32f4">Семейство STM32F4<a class="headerlink" href="#stm32f4" title="Permanent link">&para;</a></h1>
-<p>Опорное семейство SDK. Все драйверы и шаблоны валидируются на F407VG;
-F401CE и F411CE входят в CI-матрицу.</p>
-<h2 id="_1">Тактирование<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<p><code>SystemCoreClock</code> настраивается в SDK-овском override <code>__initialize_hardware()</code>.
-Делители APB1 / APB2 читаются из <code>RCC-&gt;CFGR.PPRE1/PPRE2</code>. Используйте:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">import</span><span class="w"> </span><span class="n">driver</span><span class="p">.</span><span class="n">stm32f4</span><span class="p">.</span><span class="n">clock</span><span class="p">;</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="kt">uint32_t</span><span class="w"> </span><span class="n">apb1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">getApb1Clock</span><span class="p">();</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="kt">uint32_t</span><span class="w"> </span><span class="n">apb2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">getApb2Clock</span><span class="p">();</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="kt">uint32_t</span><span class="w"> </span><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">driver</span><span class="o">::</span><span class="n">stm32f4</span><span class="o">::</span><span class="n">getTimeoutLoops</span><span class="p">();</span>
+<h1 id="qemu">Эмуляция (QEMU)<a class="headerlink" href="#qemu" title="Permanent link">&para;</a></h1>
+<p>С v0.2.4 CI загружает образ прошивки под QEMU и проверяет, что она дошла до
+рабочего состояния. Эта страница описывает, что именно проверяет гейт и —
+что важнее — чего он <strong>не</strong> доказывает.</p>
+<h2 id="_1">Зачем он нужен<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Уровней проверки три, и ловят они разное:</p>
+<table>
+<thead>
+<tr>
+<th>Уровень</th>
+<th>Ловит</th>
+<th>Не ловит</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>сборка с <code>-Werror</code></td>
+<td>не компилируется</td>
+<td>что угодно в рантайме</td>
+</tr>
+<tr>
+<td>host-тесты (<code>stmtool test</code>)</td>
+<td>логику CMSIS-free модулей</td>
+<td>всё, что трогает железо или RTOS</td>
+</tr>
+<tr>
+<td><strong>QEMU-смоук</strong></td>
+<td><strong>«собралось, но виснет на плате»</strong></td>
+<td><strong>регистровое поведение периферии</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Дыра, которую закрывает эмулятор, вполне реальна и больше ничем не покрыта:
+битая таблица векторов, планировщик, который не стартует, очередь работ,
+уходящая в дедлок, куча, переполняющаяся на первом же выделении. Отдельно
+стоит помнить, что <code>system.work_queue</code>, <code>system.executor</code>, <code>system.timer</code> и
+<code>system.signal_bus</code> тянут CMSIS и FreeRTOS и потому отсутствуют в наборе
+host-тестов — QEMU сейчас единственная автоматическая проверка для них.</p>
+<h2 id="qemu_1">Что QEMU эмулирует на самом деле<a class="headerlink" href="#qemu_1" title="Permanent link">&para;</a></h2>
+<p>Машина — <code>netduinoplus2</code> (STM32F405RG, Cortex-M4). Её модель SoC реализует:</p>
+<blockquote>
+<p>ядро ARMv7-M и NVIC, RCC, SYSCFG, USART ×8, TIM2–5, ADC ×6, SPI ×6, EXTI</p>
+</blockquote>
+<p>и явно <strong>не</strong> реализует:</p>
+<blockquote>
+<p>GPIO, I2C, DMA, CRC, блок интерфейса флэш, RNG, RTC, DAC, SDIO, CAN,
+Ethernet, USB OTG, IWDG/WWDG, DCMI, I2S, PWR</p>
+</blockquote>
+<p>Обращения к нереализованному блоку поглощаются молча: чтения возвращают ноль,
+записи логируются. Поэтому демо с миганием светодиода через GPIO <em>работает</em>,
+но ничего не показывает, а скан I2C ничего не находит — эмулятор не врёт,
+просто ему нечем.</p>
+<p>Машины <strong>STM32G0 в QEMU нет</strong>, как нет вообще ни одной STM32-машины на
+Cortex-M0/M0+. Поэтому работа по эмуляции платы на G0 идёт в сторону Renode
+(issue #94), а не сюда.</p>
+<h2 id="_2">Сам гейт<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><code>sdk/scripts/qemu/run_smoke.py</code> загружает ELF, даёт ему поработать до
+таймаута — прошивка представляет собой суперцикл, поэтому таймаут здесь
+нормальный путь, а не сбой — и проверяет подстроки в выводе UART:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python3<span class="w"> </span>sdk/scripts/qemu/run_smoke.py<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>--elf<span class="w"> </span>out/my-app.elf<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>--timeout<span class="w"> </span><span class="m">20</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>--expect<span class="w"> </span><span class="s2">"all components started"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span>--reject<span class="w"> </span><span class="s2">"CRITICAL"</span>
 </code></pre></div>
-<p>Не предполагайте <code>SystemCoreClock / 4</code> для APB1 — делитель зависит от чипа
-и сброса.</p>
-<h2 id="_2">Карта памяти<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
-<p><code>sdk/hal/stm32f4/ldscripts/mem.ld.in</code> заполняется на этапе configure:</p>
+<p>Код возврата 0 означает, что каждый <code>--expect</code> встретился, а ни один
+<code>--reject</code> — нет.</p>
+<p>Два флага важны, и ошибиться в них легко:</p>
 <ul>
-<li>Origin flash (<code>0x08000000</code>) и размер — из <code>STM32_CHIP</code>.</li>
-<li>Origin RAM (<code>0x20000000</code>) и размер.</li>
-<li>Origin CCM (<code>0x10000000</code>) и размер — для чипов, где CCM есть
-  (F405/407/427/429/437/439).</li>
+<li><code>--serial-index</code> (по умолчанию 1). <code>stm32f405_soc</code> подключает <code>serial_hd(i)</code>
+  к USART1, USART2, USART3, UART4… именно в этом порядке, а шаблоны SDK
+  логируют в <strong>USART2</strong>, то есть индекс 1. Неверный индекс даёт пустой лог, и
+  скрипт сообщает именно об этом, а не о ненайденном маркере.</li>
+<li>Скрипт использует <code>-display none -monitor none</code>, а не <code>-nographic</code>.
+  <code>-nographic</code> неявно вешает монитор QEMU на первый последовательный порт, что
+  и конфликтует с явным <code>-serial stdio</code>, и печатает баннер монитора прямо в
+  проверяемый текст.</li>
 </ul>
-<p>Linker script — <code>sdk/core/ldscripts/sections.ld</code>. <code>-nostartfiles</code> обязателен:
-без него newlib <code>crt0</code> перекроет SDK-овский <code>_start</code>.</p>
-<h2 id="vector-table">Vector table<a class="headerlink" href="#vector-table" title="Permanent link">&para;</a></h2>
-<p>Vector tables генерируются для каждого семейства из CMSIS-заголовков. Чтобы
-обработать прерывание периферии, достаточно определить
-<code>extern "C" void XXX_IRQHandler()</code> в своём коде; если не определено —
-используется weak default из SDK (вызывает <code>__default_irq_handler()</code> —
-сейчас бесконечный цикл).</p>
-<h2 id="newlib-nanospecs">Newlib <code>nano.specs</code><a class="headerlink" href="#newlib-nanospecs" title="Permanent link">&para;</a></h2>
-<p>Сборка использует <code>nano.specs</code> для уменьшения flash. Побочные эффекты:</p>
-<ul>
-<li><code>printf</code> не линкует <code>%f</code> по умолчанию. Либо добавьте
-  <code>target_link_options(... PRIVATE -u _printf_float)</code>, либо используйте
-  целочисленное форматирование.</li>
-<li><code>malloc</code> однокучный, не thread-safe по умолчанию. С FreeRTOS мы используем
-  <code>heap_4</code> из самого FreeRTOS, а не newlib-овский <code>_sbrk</code>.</li>
-</ul>
-<h2 id="_3">Даташиты<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
-<p>Справочные материалы ST — <a href="../datasheets/">Даташиты</a>.</p>
+<p>CI прогоняет гейт на <code>freertos/signal-bus-demo</code>, собранном под <code>STM32F405RG</code> —
+это единственный шаблон, чьё поведение на этой машине наблюдаемо полностью,
+поскольку ему нужны только UART и слой конкурентности. Ожидаемый вывод:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>=== signal-bus-demo bootstrap ===
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>firmware v0.0.0-untagged
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>all components started
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>workqueue self-check: PASS
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>beat #0 value=-100
+</code></pre></div>
+<p>QEMU работает на раннере CI, а не внутри Docker-образа SDK — образ остаётся
+компактной средой сборки.</p>
+<h2 id="_3">Список периферии генерируется, а не ведётся руками<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<p><code>--trace-log</code> передаёт QEMU <code>-d guest_errors,unimp -D &lt;файл&gt;</code>, поэтому каждое
+обращение к нереализованному блоку записывается. CI сохраняет его артефактом
+<code>qemu-unimplemented-devices</code>. Для смоук-образа там только GPIOA и GPIOD —
+светодиод, — и по этому видно, что ничего функционального не проглатывается
+молча.</p>
+<p>Это намеренно генерируемый ответ на вопрос «какую периферию трогает прошивка
+из той, что эмулятор не моделирует»: список, который ведут руками, устареет за
+один релиз.</p>
+<h2 id="_4">Чем это не является<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>Это не замена железу. Регистровую корректность таймингов I2C, кадрирования
+SPI, передач DMA или стирания флэш здесь не увидеть вовсе — для этих блоков у
+QEMU нет модели, а для тех, что есть, модель приближённая. Утверждение «драйвер
+работает на кристалле» по-прежнему означает: прошито на плату и проверено
+глазами.</p>
 
 
 
@@ -1606,10 +1666,10 @@ F401CE и F411CE входят в CI-матрицу.</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "content.code.copy", "content.action.edit", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

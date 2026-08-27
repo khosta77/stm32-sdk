@@ -412,6 +412,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../emulation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Emulation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../release/" class="md-tabs__link">
         
   
@@ -1008,7 +1027,7 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Добавление нового семейства
+        Индекс чипов
       
     </span>
   </a>
@@ -1017,6 +1036,17 @@
       
         <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Добавление нового семейства
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Даташиты
@@ -1278,6 +1308,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../emulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release/" class="md-nav__link">
         
   
@@ -1355,7 +1412,7 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Добавление нового семейства
+        Индекс чипов
       
     </span>
   </a>
@@ -1364,6 +1421,17 @@
       
         <li class="md-nav__item">
   <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Добавление нового семейства
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         Даташиты
@@ -1484,16 +1552,43 @@
 </li>
 </ul>
 <p>Размер flash декодируется автоматически в <code>sdk/cmake/families/stm32f4.cmake</code>.</p>
-<h2 id="_2">Добавление нового семейства<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_2">Индекс чипов<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><code>sdk/chips.json</code> — единственный источник правды о том, какие семейства
+поддерживает SDK. <code>stm32_families.cmake</code> читает его, чтобы понять, известно ли
+семейство чипа, поддерживается ли оно и есть ли для него family-файл; stmtool
+читает его для автодополнения и чтобы отвергнуть неподдерживаемый чип до начала
+сборки.</p>
+<p>До v0.2.4 то же самое хранилось в шестнадцати байт-в-байт одинаковых заглушках
+«not yet supported» плюс в захардкоженном списке внутри stmtool, так что
+добавление семейства означало правку в семнадцати местах, и любое из них могло
+устареть.</p>
+<p>Неподдерживаемый чип теперь сообщает список поддерживаемых семейств из этого
+одного файла:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>The G0 family is not yet supported by stm32-sdk.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Chip requested: STM32G0B0RE
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Currently supported: stm32f4
+</code></pre></div>
+<h2 id="_3">Добавление нового семейства<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <ol>
+<li>Переключить <code>supported</code> в <code>true</code> для семейства в <code>sdk/chips.json</code> и
+   перечислить конкретные партномера в <code>chips</code>.</li>
 <li>Создать <code>sdk/cmake/families/stm32XX.cmake</code> с функцией <code>stm32XX_get_chip_info</code>,
    заполняющей RAM, CCM, flash, флаги CPU.</li>
-<li>Положить CMSIS device headers в <code>sdk/hal/stm32XX/include/cmsis/</code>.</li>
+<li>Создать <code>sdk/drivers/families/stm32XX.cmake</code>, перечислив модули
+   <code>driver/stm32XX/*.cppm</code> этого семейства в <code>STM32_DRIVER_FAMILY_MODULES</code> в
+   порядке импорта.</li>
+<li>Положить CMSIS device headers в <code>sdk/hal/stm32XX/include/cmsis/</code>, а также
+   <code>sdk/hal/stm32XX/include/cmsis_device.h</code> — семейно-нейтральную обёртку,
+   которую включает общий код (<code>system.work_queue</code>, ITM-бэкенд лога) вместо
+   имени конкретного device-заголовка.</li>
 <li>Добавить vector tables в <code>sdk/hal/stm32XX/src/cmsis/</code>.</li>
 <li>Создать <code>sdk/hal/stm32XX/ldscripts/mem.ld.in</code>.</li>
+<li>Для семейства на Cortex-M0/M0+ добавить его в <code>_stm32_cortex_m0_families</code> в
+   <code>sdk/cmake/kconfig.cmake</code>, чтобы <code>STM32_CORE_HAS_ITM</code> получился <code>n</code> и
+   ITM-бэкенд лога скрывался, а не падал при компиляции.</li>
 </ol>
 <p>Конкретный пример реализации — <a href="stm32f4/">STM32F4</a>.</p>
-<h2 id="_3">Даташиты<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h2 id="_4">Даташиты<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>См. <a href="datasheets/">Даташиты</a> — прямые ссылки на reference manuals, datasheets
 и programming manuals от ST.</p>
 

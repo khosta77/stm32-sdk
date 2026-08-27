@@ -412,6 +412,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../emulation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Emulation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../release/" class="md-tabs__link">
         
   
@@ -1352,6 +1371,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../emulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release/" class="md-nav__link">
         
   
@@ -1607,7 +1653,7 @@ shell completion:</p>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  src/main.cpp        # Application entry
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  CMakeLists.txt      # CMake configuration (sources + libraries only)
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  stmproject.toml     # Chip and SDK version pin
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  .config             # Firmware configuration (Kconfig), from the template&#39;s defconfig
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  .config             # Firmware configuration (Kconfig), from the template's defconfig
 <a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>  .gitignore
 </code></pre></div>
 <p>Pick a different template — by default <code>--template blink</code> (bare-metal) is used.
@@ -1647,12 +1693,12 @@ programmer.</p>
 <h2 id="update-the-sdk-later">Update the SDK later<a class="headerlink" href="#update-the-sdk-later" title="Permanent link">&para;</a></h2>
 <p>Each project pins its SDK version in <code>stmproject.toml</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">[sdk]</span>
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;develop&quot;</span><span class="w">   </span><span class="c1"># or a tag like &quot;0.1.2&quot;</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"develop"</span><span class="w">   </span><span class="c1"># or a tag like "0.1.2"</span>
 </code></pre></div>
 <p>To refresh the SDK cache:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>update<span class="w">                       </span><span class="c1"># use [sdk] version</span>
 <a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>update<span class="w"> </span>--version<span class="w"> </span><span class="m">0</span>.1.2<span class="w">       </span><span class="c1"># explicit tag</span>
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>list-versions<span class="w">                </span><span class="c1"># see what&#39;s available</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>stmtool<span class="w"> </span>sdk<span class="w"> </span>list-versions<span class="w">                </span><span class="c1"># see what's available</span>
 </code></pre></div>
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>

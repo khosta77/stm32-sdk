@@ -412,6 +412,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../emulation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Emulation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../release/" class="md-tabs__link">
         
   
@@ -1358,6 +1377,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../emulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release/" class="md-nav__link">
         
   
@@ -1699,6 +1745,7 @@ dropped.</p>
 </tr>
 </tbody>
 </table>
+<p>The <code>ITM</code> choice depends on <code>STM32_CORE_HAS_ITM</code>, a chip-derived symbol (see below). ITM belongs to the ARMv7-M debug block, so on a Cortex-M0/M0+ part the option is hidden and assigning it in <code>.config</code> by hand fails the configure step with <code>STM32_LOG_BACKEND_SEL_ITM was assigned 'y' but evaluated to 'n'</code> -- rather than failing much later inside a module that cannot find <code>ITM_SendChar</code>.</p>
 <h3 id="freertos-tunables-with-stm32_use_freertos">FreeRTOS tunables (with <code>STM32_USE_FREERTOS</code>)<a class="headerlink" href="#freertos-tunables-with-stm32_use_freertos" title="Permanent link">&para;</a></h3>
 <p>Previously hardcoded in the SDK's <code>FreeRTOSConfig.h</code>, configurable since
 v0.2.2. Defaults reproduce the historic values exactly.</p>
@@ -1768,8 +1815,32 @@ below 3 would break them, and the range guard forbids it.</p>
 <p><code>sdk/cmake/kconfig.cmake</code> runs the generator on every configure, registers
 <code>.config</code> and the Kconfig fragments as configure dependencies (editing them
 re-triggers CMake), and also writes <code>out/generated/Kconfig.chip</code> — a
-chip-derived fragment (<code>STM32_FAMILY_STM32F4</code>, chip name) that future
-per-family options and the partition layer (#62) hang their <code>depends on</code> off.</p>
+chip-derived fragment that per-family options hang their <code>depends on</code> off:</p>
+<table>
+<thead>
+<tr>
+<th>Generated symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>STM32_FAMILY_&lt;ID&gt;</code></td>
+<td>the family of <code>STM32_CHIP</code>, e.g. <code>STM32_FAMILY_STM32F4</code></td>
+</tr>
+<tr>
+<td><code>STM32_CHIP_NAME</code></td>
+<td>the chip string itself</td>
+</tr>
+<tr>
+<td><code>STM32_CORE_HAS_ITM</code></td>
+<td>whether the core has the ARMv7-M debug block (<code>n</code> on Cortex-M0/M0+)</td>
+</tr>
+</tbody>
+</table>
+<p><code>out/generated/version.hpp</code> is written next to them, from <code>git describe</code> in the
+project directory rather than from <code>.config</code> — see the
+<a href="../migration/#new-in-v024">upgrade notes</a>.</p>
 <p>Templates ship a <code>defconfig</code> with their gate set;
 <code>stmtool project create</code> copies it into the new project as <code>.config</code>.</p>
 <h2 id="adding-options-for-a-new-subsystem">Adding options for a new subsystem<a class="headerlink" href="#adding-options-for-a-new-subsystem" title="Permanent link">&para;</a></h2>

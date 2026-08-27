@@ -412,6 +412,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../emulation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Emulation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../release/" class="md-tabs__link">
         
   
@@ -1005,6 +1024,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#the-chip-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The chip index
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#adding-a-new-family" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1278,6 +1308,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../emulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release/" class="md-nav__link">
         
   
@@ -1350,6 +1407,17 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-chip-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The chip index
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#adding-a-new-family" class="md-nav__link">
@@ -1484,13 +1552,37 @@ configure time via <code>-DSTM32_CHIP=&lt;name&gt;</code> (set automatically by 
 </li>
 </ul>
 <p>Flash size is decoded automatically by <code>sdk/cmake/families/stm32f4.cmake</code>.</p>
+<h2 id="the-chip-index">The chip index<a class="headerlink" href="#the-chip-index" title="Permanent link">&para;</a></h2>
+<p><code>sdk/chips.json</code> is the single source of truth for which families the SDK
+supports. <code>stm32_families.cmake</code> reads it to decide whether a chip's family is
+known, supported, and has a family file; stmtool reads it for shell completion
+and to reject an unsupported chip before a build starts.</p>
+<p>Before v0.2.4 the same knowledge lived in sixteen byte-identical "not yet
+supported" family stubs plus a hardcoded list inside stmtool, so adding a
+family meant editing seventeen places and any one of them could go stale.</p>
+<p>An unsupported chip now reports the supported list out of that one file:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>The G0 family is not yet supported by stm32-sdk.
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Chip requested: STM32G0B0RE
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Currently supported: stm32f4
+</code></pre></div>
 <h2 id="adding-a-new-family">Adding a new family<a class="headerlink" href="#adding-a-new-family" title="Permanent link">&para;</a></h2>
 <ol>
+<li>Flip <code>supported</code> to <code>true</code> for the family in <code>sdk/chips.json</code> and list its
+   concrete part numbers under <code>chips</code>.</li>
 <li>Create <code>sdk/cmake/families/stm32XX.cmake</code> with a <code>stm32XX_get_chip_info</code>
    function that fills RAM, CCM, flash size, and CPU flags.</li>
-<li>Add CMSIS device headers under <code>sdk/hal/stm32XX/include/cmsis/</code>.</li>
+<li>Create <code>sdk/drivers/families/stm32XX.cmake</code> listing that family's
+   <code>driver/stm32XX/*.cppm</code> modules in <code>STM32_DRIVER_FAMILY_MODULES</code>, in
+   import order.</li>
+<li>Add CMSIS device headers under <code>sdk/hal/stm32XX/include/cmsis/</code>, plus
+   <code>sdk/hal/stm32XX/include/cmsis_device.h</code> — the family-neutral wrapper that
+   common code (<code>system.work_queue</code>, the ITM log backend) includes instead of
+   naming a device header.</li>
 <li>Add vector tables under <code>sdk/hal/stm32XX/src/cmsis/</code>.</li>
 <li>Create <code>sdk/hal/stm32XX/ldscripts/mem.ld.in</code>.</li>
+<li>On a Cortex-M0/M0+ family, add it to <code>_stm32_cortex_m0_families</code> in
+   <code>sdk/cmake/kconfig.cmake</code> so <code>STM32_CORE_HAS_ITM</code> comes out <code>n</code> and the ITM
+   log backend is hidden rather than failing to compile.</li>
 </ol>
 <p>See <a href="stm32f4/">STM32F4</a> for a concrete implementation reference.</p>
 <h2 id="datasheets">Datasheets<a class="headerlink" href="#datasheets" title="Permanent link">&para;</a></h2>

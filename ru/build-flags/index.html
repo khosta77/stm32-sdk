@@ -412,6 +412,25 @@
   
   
     <li class="md-tabs__item">
+      <a href="../emulation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Emulation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
       <a href="../release/" class="md-tabs__link">
         
   
@@ -690,6 +709,17 @@
     <span class="md-ellipsis">
       
         Активные флаги (v0.1.4)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rtti-v024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Исключения и RTTI выключены (v0.2.4)
       
     </span>
   </a>
@@ -1319,6 +1349,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../emulation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Emulation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../release/" class="md-nav__link">
         
   
@@ -1419,6 +1476,17 @@
     <span class="md-ellipsis">
       
         Активные флаги (v0.1.4)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rtti-v024" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Исключения и RTTI выключены (v0.2.4)
       
     </span>
   </a>
@@ -1545,6 +1613,59 @@
 смешиваются 8/16/32-битные регистровые поля, он выдаёт стену шума без
 реальных находок. Возможно вернётся в одном из будущих релизов после
 отдельного прохода чистки.</p>
+<h2 id="rtti-v024">Исключения и RTTI выключены (v0.2.4)<a class="headerlink" href="#rtti-v024" title="Permanent link">&para;</a></h2>
+<p>С v0.2.4 каждая C++-цель несёт:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>-fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables
+</code></pre></div>
+<p>В рантайме SDK никогда ничего не бросал — валидаторы конфигов сообщают о
+неверном вводе через <code>static_assert</code>, на этапе компиляции, — поэтому машинерия
+исключений была мёртвым весом. Её удаление выбрасывает таблицы
+<code>.ARM.exidx</code> / <code>.ARM.extab</code> <em>и вместе с ними</em> раскрутчик стека и
+personality-функцию, которые притягивает libstdc++:</p>
+<table>
+<thead>
+<tr>
+<th>шаблон</th>
+<th>flash до</th>
+<th>после</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bare-metal/blink</code></td>
+<td>5892</td>
+<td>1724 (−71%)</td>
+</tr>
+<tr>
+<td><code>freertos/signal-bus-demo</code></td>
+<td>21796</td>
+<td>14236 (−35%)</td>
+</tr>
+<tr>
+<td><code>freertos/w25q32-flash-test</code></td>
+<td>23796</td>
+<td>16344 (−31%)</td>
+</tr>
+<tr>
+<td><code>freertos/imu-flash-oled-demo</code></td>
+<td>25812</td>
+<td>18016 (−30%)</td>
+</tr>
+</tbody>
+</table>
+<p>Следствие для прикладного кода: <code>try</code> / <code>catch</code> / <code>throw</code> / <code>dynamic_cast</code> /
+<code>typeid</code> не компилируются.</p>
+<p>Флаги живут в одной переменной <code>STM32_CXX_DIALECT_FLAGS</code> в
+<code>sdk/cmake/stm32_sdk.cmake</code> и применяются к <code>stm32_core</code> <em>и</em> к каждой
+OBJECT/STATIC-библиотеке, которые намеренно не линкуют <code>stm32_core</code>. Это не
+вопрос аккуратности: GCC хранит диалект в BMI каждого модуля, поэтому
+рассогласование producer и consumer прямо ломает импорт:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>error: module driver.gpio: language dialect differs 'C++20',
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>       expected 'C++20/no-exceptions'
+</code></pre></div>
+<p><code>-fno-exceptions</code> и <code>-fno-rtti</code> завёрнуты в <code>$&lt;$&lt;COMPILE_LANGUAGE:CXX&gt;:...&gt;</code>,
+потому что <code>stm32_rtos</code> компилирует ещё и C, где GCC выдал бы на них
+предупреждение, а <code>-Werror</code> превратил бы его в ошибку.</p>
 <h2 id="-werror">Политика <code>-Werror</code><a class="headerlink" href="#-werror" title="Permanent link">&para;</a></h2>
 <p><code>-Werror</code> включён постоянно начиная с v0.1.4. Любое предупреждение,
 дошедшее до компилятора — это ошибка сборки. Это касается и самого SDK,
@@ -1559,10 +1680,10 @@
    FreeRTOS). Используйте <code>set_source_files_properties</code> рядом с этим
    конкретным файлом, не глобальный <code>-Wno-*</code>. Пример из SDK:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_HAL_DIR</span><span class="o">}</span><span class="s">/src/cmsis/</span><span class="o">${</span><span class="nv">STM32_VECTORS_FILE</span><span class="o">}</span>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span><span class="w"> </span><span class="s2">&quot;-Wno-pedantic&quot;</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">STM32_HAL_DIR</span><span class="o">}</span><span class="s">/src/cmsis/</span><span class="o">${</span><span class="nv">STM32_VECTORS_FILE</span><span class="o">}</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span><span class="w"> </span><span class="s2">"-Wno-pedantic"</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">)</span>
 </code></pre></div>
 <p>Так предупреждение остаётся видимым везде, кроме одного
    поимённого файла.</p>
@@ -1575,7 +1696,7 @@ vendor-SDK, который триггерит предупреждения — �
 сборки — компилятор гарантирует, что каждый <code>Status</code> проверен. Когда сброс
 действительно намеренный (например, потеря байта в полном ISR-кольце), его
 делают явным через <code>(void)</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="n">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// ISR: сброс байта при полном RX-буфере</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="n">_rxBuf</span><span class="p">.</span><span class="n">push</span><span class="p">(</span><span class="kt">byte</span><span class="p">);</span><span class="w">  </span><span class="c1">// ISR: сброс байта при полном RX-буфере</span>
 </code></pre></div>
 <p>Это осознанная политика на этапе компиляции, а не предупреждение, которое
 надо подавлять. См. <a href="../modules/drivers/">драйверы</a> про <code>Result&lt;T&gt;</code> и
@@ -1584,11 +1705,11 @@ vendor-SDK, который триггерит предупреждения — �
 <p>Файл <code>sdk/core/src/newlib/cxx.cpp</code> — это translation unit для C++
 runtime support. Он обязан компилироваться с C++ образца GCC 11, чтобы
 сохранялся ABI-контракт с newlib. SDK задаёт это per-file override'ом:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">_STM32_SDK_DIR</span><span class="o">}</span><span class="s">/core/src/newlib/cxx.cpp</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">        </span><span class="s2">&quot;-std=gnu++11;-fabi-version=0;-fno-exceptions;-fno-rtti;-fno-use-cxa-atexit;-fno-threadsafe-statics&quot;</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nb">set_source_files_properties</span><span class="p">(</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="o">${</span><span class="nv">_STM32_SDK_DIR</span><span class="o">}</span><span class="s">/core/src/newlib/cxx.cpp</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="s">PROPERTIES</span><span class="w"> </span><span class="s">COMPILE_OPTIONS</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">        </span><span class="s2">"-std=gnu++11;-fabi-version=0;-fno-exceptions;-fno-rtti;-fno-use-cxa-atexit;-fno-threadsafe-statics"</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="p">)</span>
 </code></pre></div>
 <p>Всё остальное, включая <code>main.cpp</code> шаблонов, компилируется в C++20
 (<code>gnu++20</code>).</p>
