@@ -21,7 +21,7 @@ using storage::GeometryOf;
 using storage::InternalFlashDevice;
 using storage::nameEquals;
 using storage::Partition;
-using storage::partitionTable;
+using storage::PartitionMap;
 using storage::Stm32f4Geometry;
 
 namespace {
@@ -33,11 +33,11 @@ struct FlashSpec {
   static constexpr uint32_t SECTOR_SIZE = 4096U;
 };
 
-constexpr auto kMap = partitionTable<FlashSpec>({
+using Map = PartitionMap<
+    FlashSpec,
     {.name = "boot", .offset = 0x0000, .size = 0x2000},
     {.name = "config", .offset = 0x2000, .size = 0x1000},
-    {.name = "storage", .offset = 0x3000, .size = 0xD000},
-});
+    {.name = "storage", .offset = 0x3000, .size = 0xD000}>;
 
 // Behaves like a real SPI flash chip: programming may not cross a page
 // boundary, so the adapter has to split long writes itself.
@@ -148,10 +148,10 @@ struct FakeInternalGeometry {
   }
 };
 
-constexpr auto kDeviceMap = partitionTable<FakeInternalGeometry>({
+using DeviceMap = PartitionMap<
+    FakeInternalGeometry,
     {.name = "head", .offset = 0, .size = 512},
-    {.name = "tail", .offset = 512, .size = 1536},
-});
+    {.name = "tail", .offset = 512, .size = 1536}>;
 
 void put(const char *s) {
   std::fputs(s, stdout);
@@ -160,16 +160,16 @@ void put(const char *s) {
 }  // namespace
 
 TEST(partition_table_keeps_every_entry) {
-  EXPECT_EQ(kMap.count(), size_t{3});
-  EXPECT_EQ(kMap[0].offset, 0x0000U);
-  EXPECT_EQ(kMap[2].size, 0xD000U);
+  EXPECT_EQ(Map::count(), size_t{3});
+  EXPECT_EQ(Map::at(0).offset, 0x0000U);
+  EXPECT_EQ(Map::at(2).size, 0xD000U);
 }
 
 TEST(partition_lookup_by_name_is_compile_time) {
   // find() is consteval, so these are resolved by the compiler; a typo in the
   // name would not build at all.
-  constexpr auto boot = kMap.find("boot");
-  constexpr auto storage = kMap.find("storage");
+  constexpr auto boot = Map::find<"boot">();
+  constexpr auto storage = Map::find<"storage">();
   EXPECT_EQ(boot.offset, 0x0000U);
   EXPECT_EQ(boot.size, 0x2000U);
   EXPECT_EQ(storage.offset, 0x3000U);
@@ -177,8 +177,8 @@ TEST(partition_lookup_by_name_is_compile_time) {
 
 TEST(partition_map_covers_the_device_without_gaps_or_overlap) {
   uint32_t covered = 0;
-  for (size_t i = 0; i < kMap.count(); ++i) {
-    covered += kMap[i].size;
+  for (size_t i = 0; i < Map::count(); ++i) {
+    covered += Map::at(i).size;
   }
   EXPECT_EQ(covered, FlashSpec::CAPACITY);
 }
@@ -222,12 +222,12 @@ TEST(f4_geometry_matches_the_internal_flash_layout) {
 
 TEST(f4_geometry_accepts_a_partition_map) {
   // Sector 4 spans 64K..128K, so a partition may start at 128K but not at 96K.
-  constexpr auto map = partitionTable<Stm32f4Geometry<12>>({
+  using F4Map = PartitionMap<
+      Stm32f4Geometry<12>,
       {.name = "firmware", .offset = 0, .size = 128U * 1024U},
-      {.name = "data", .offset = 128U * 1024U, .size = 128U * 1024U},
-  });
-  EXPECT_EQ(map.count(), size_t{2});
-  EXPECT_EQ(map.find("data").offset, 128U * 1024U);
+      {.name = "data", .offset = 128U * 1024U, .size = 128U * 1024U}>;
+  EXPECT_EQ(F4Map::count(), size_t{2});
+  EXPECT_EQ(F4Map::find<"data">().offset, 128U * 1024U);
 }
 
 TEST(external_device_splits_long_writes_across_pages) {
@@ -257,7 +257,7 @@ TEST(external_device_splits_long_writes_across_pages) {
 TEST(partition_addresses_relative_to_its_offset) {
   FakeInternalFlash flash;
   InternalFlashDevice<FakeInternalFlash, FakeInternalGeometry> device{flash, 0};
-  Partition tail{device, kDeviceMap.find("tail")};
+  Partition tail{device, DeviceMap::find<"tail">()};
 
   const uint8_t data[] = {0xDE, 0xAD, 0xBE, 0xEF};
   ASSERT_EQ(tail.write(0, {data, sizeof(data)}), Status::Ok);
@@ -278,7 +278,7 @@ TEST(partition_addresses_relative_to_its_offset) {
 TEST(partition_rejects_access_past_its_end) {
   FakeInternalFlash flash;
   InternalFlashDevice<FakeInternalFlash, FakeInternalGeometry> device{flash, 0};
-  Partition head{device, kDeviceMap.find("head")};
+  Partition head{device, DeviceMap::find<"head">()};
 
   uint8_t buffer[8] = {};
   // "head" is 512 bytes: byte 512 already belongs to "tail".
@@ -292,8 +292,8 @@ TEST(partition_rejects_access_past_its_end) {
 TEST(partition_erase_leaves_the_neighbour_alone) {
   FakeInternalFlash flash;
   InternalFlashDevice<FakeInternalFlash, FakeInternalGeometry> device{flash, 0};
-  Partition head{device, kDeviceMap.find("head")};
-  Partition tail{device, kDeviceMap.find("tail")};
+  Partition head{device, DeviceMap::find<"head">()};
+  Partition tail{device, DeviceMap::find<"tail">()};
 
   const uint8_t marker[] = {0x11, 0x22};
   ASSERT_EQ(head.write(0, {marker, sizeof(marker)}), Status::Ok);
@@ -311,7 +311,7 @@ TEST(partition_erase_leaves_the_neighbour_alone) {
 TEST(partition_checksum_matches_software_crc) {
   FakeInternalFlash flash;
   InternalFlashDevice<FakeInternalFlash, FakeInternalGeometry> device{flash, 0};
-  Partition head{device, kDeviceMap.find("head")};
+  Partition head{device, DeviceMap::find<"head">()};
 
   uint8_t payload[512];
   for (size_t i = 0; i < sizeof(payload); ++i) {
@@ -332,10 +332,10 @@ TEST(partition_checksum_matches_software_crc) {
 TEST(partition_over_external_flash_splits_pages) {
   FakeExternalFlash flash;
   ExternalFlashDevice device{flash};
-  constexpr auto map = partitionTable<FakeExternalSpec>({
-      {.name = "logs", .offset = 256, .size = 512},
-  });
-  Partition logs{device, map.find("logs")};
+  using LogMap = PartitionMap<
+      FakeExternalSpec,
+      {.name = "logs", .offset = 256, .size = 512}>;
+  Partition logs{device, LogMap::find<"logs">()};
 
   uint8_t payload[130];
   for (size_t i = 0; i < sizeof(payload); ++i) {
