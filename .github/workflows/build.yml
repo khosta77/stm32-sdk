@@ -130,3 +130,85 @@ jobs:
         env:
           STMSDK_PATH: ${{ github.workspace }}
           STMTOOL_DOCKER_IMAGE: stm32-sdk-build:ci
+
+  # Runtime smoke gate (#95). -Werror proves it compiles and the host tests
+  # cover the CMSIS-free modules, but neither catches "links fine, hangs on
+  # the board". QEMU boots the image and checks it actually reached a working
+  # state: scheduler running, components started, events flowing.
+  #
+  # netduinoplus2 emulates USART/SPI/EXTI/TIM/ADC/RCC but not GPIO, I2C, DMA,
+  # CRC or the flash controller, so signal-bus-demo is the one template whose
+  # behaviour is fully observable there. This is a runtime gate, not a
+  # substitute for hardware -- see docs/emulation.md.
+  qemu-smoke:
+    needs: image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Load SDK image from cache
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile.build
+          tags: stm32-sdk-build:ci
+          load: true
+          cache-from: type=gha
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      # QEMU runs on the runner, not inside the SDK image: the image is a
+      # build environment and stays lean, while the .elf lands in out/ on the
+      # runner's filesystem anyway.
+      - name: Install QEMU
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends qemu-system-arm
+          qemu-system-arm --version | head -1
+
+      # Same companion-branch convention as the build job above.
+      - name: Install stmtool
+        run: |
+          REF="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          pip install "git+https://github.com/khosta77/stmtool.git@${REF}" \
+            || pip install "git+https://github.com/khosta77/stmtool.git"
+
+      - name: Build the smoke image
+        run: |
+          stmtool project create qemu-smoke \
+            --chip STM32F405RG \
+            --template signal-bus-demo
+          cd qemu-smoke
+          stmtool build
+        env:
+          STMSDK_PATH: ${{ github.workspace }}
+          STMTOOL_DOCKER_IMAGE: stm32-sdk-build:ci
+
+      - name: Run under QEMU
+        run: |
+          python3 sdk/scripts/qemu/run_smoke.py \
+            --elf qemu-smoke/out/qemu-smoke.elf \
+            --timeout 20 \
+            --trace-log qemu-unimp.log \
+            --expect "signal-bus-demo bootstrap" \
+            --expect "all components started" \
+            --expect "workqueue self-check: PASS" \
+            --expect "beat #3" \
+            --reject "CRITICAL" \
+            --reject "self-check: FAIL"
+
+      # The unimplemented-device log is the machine-readable answer to "which
+      # peripherals does the firmware actually touch"; keeping it as an
+      # artifact means that list is never maintained by hand.
+      - name: Upload QEMU device log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qemu-unimplemented-devices
+          path: qemu-unimp.log
+          if-no-files-found: warn
