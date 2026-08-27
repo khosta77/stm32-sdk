@@ -35,55 +35,55 @@ namespace {
 
 GpioPin g_uartTx{
     *GPIOA,
-    gpio({
+    gpio<{
         .pin = 2,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::None,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::PushPull,
         .af = 7,
-    }),
+    }>(),
 };
 GpioPin g_uartRx{
     *GPIOA,
-    gpio({
+    gpio<{
         .pin = 3,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::None,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::PushPull,
         .af = 7,
-    }),
+    }>(),
 };
 GpioPin g_i2cScl{
     *GPIOB,
-    gpio({
+    gpio<{
         .pin = 6,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::PullUp,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::OpenDrain,
         .af = 4,
-    }),
+    }>(),
 };
 GpioPin g_i2cSda{
     *GPIOB,
-    gpio({
+    gpio<{
         .pin = 7,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::PullUp,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::OpenDrain,
         .af = 4,
-    }),
+    }>(),
 };
 
 I2c g_i2c1{
     *I2C1,
-    i2c({
+    i2c<{
         .clockSpeed = 100000,
         .fastMode = false,
-    }),
+    }>(),
 };
 
 void uartInit() {

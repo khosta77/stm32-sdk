@@ -13,7 +13,7 @@ a third component owns its own **deferred-start** FreeRTOS task.
 - MMIO access through `driver::reg::set/clear/write/read/get/modify` only.
 - No raw pointers to peripherals — references (`GPIO_TypeDef&`).
 - Configs without defaults — every field must be explicit.
-- `GpioConfig` / `ExtiConfig` are aggregates; wrap in `gpio({...})` / `exti({...})`
+- `GpioConfig` / `ExtiConfig` are aggregates; wrap in `gpio<{...}>()` / `exti<{...}>()`
   for compile-time validation.
 - EXTI ISR priority must be numerically ≥ `configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY`
   (5 on F4) so the handler may call `postFromISR`. This template uses 6.

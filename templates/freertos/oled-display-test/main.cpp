@@ -35,33 +35,33 @@ namespace {
 
 GpioPin g_i2cScl{
     *GPIOB,
-    gpio({
+    gpio<{
         .pin = 6,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::PullUp,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::OpenDrain,
         .af = 4,
-    }),
+    }>(),
 };
 GpioPin g_i2cSda{
     *GPIOB,
-    gpio({
+    gpio<{
         .pin = 7,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::PullUp,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::OpenDrain,
         .af = 4,
-    }),
+    }>(),
 };
 
 I2c g_i2c1{
     *I2C1,
-    i2c({
+    i2c<{
         .clockSpeed = 400000,
         .fastMode = true,
-    }),
+    }>(),
 };
 sensor::Ssd1306 g_oled{
     g_i2c1,

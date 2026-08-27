@@ -34,21 +34,23 @@ struct SpiConfig {
   SpiDataSize dataSize;
 };
 
-consteval SpiConfig spi(SpiConfig c) {
-  if (c.clockHz == 0) {
-    throw "SpiConfig: clockHz must be > 0";
-  }
-  if (c.mode == SpiMode::None) {
-    throw "SpiConfig: mode must be set (Mode0..Mode3)";
-  }
-  if (c.dataSize == SpiDataSize::None) {
-    throw "SpiConfig: dataSize must be set (currently only Bits8)";
-  }
-  if (c.dataSize == SpiDataSize::Bits16) {
-    throw "SpiConfig: dataSize Bits16 is not supported yet (driver is 8-bit "
-          "PIO); use SpiDataSize::Bits8";
-  }
-  return c;
+template <SpiConfig C>
+consteval SpiConfig spi() {
+  static_assert(C.clockHz != 0, "SpiConfig: clockHz must be > 0");
+  static_assert(
+      C.mode != SpiMode::None,
+      "SpiConfig: mode must be set (Mode0..Mode3)"
+  );
+  static_assert(
+      C.dataSize != SpiDataSize::None,
+      "SpiConfig: dataSize must be set (currently only Bits8)"
+  );
+  static_assert(
+      C.dataSize != SpiDataSize::Bits16,
+      "SpiConfig: dataSize Bits16 is not supported yet (driver is 8-bit PIO); "
+      "use SpiDataSize::Bits8"
+  );
+  return C;
 }
 
 // Compile-time contract for an SPI master bus (replaces the former virtual

@@ -11,7 +11,7 @@ built with the `testing/unit_test.hpp` helpers, reporting PASS/FAIL over USART2.
 - No raw pointers to peripherals — references (`GPIO_TypeDef&`).
 - Configs without defaults — every field must be explicit.
 - Peripheral configs are validated at compile time by a free `consteval`
-  wrapper: `gpio({...})`, `i2c({...})`, `spi({...})`, `uart({...})`. An
+  wrapper: `gpio<{...}>()`, `i2c<{...}>()`, `spi<{...}>()`, `uart<{...}>()`. An
   out-of-range field fails to compile.
 - Trailing comma after the last designated initializer to keep clang-format multi-line.
 

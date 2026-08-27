@@ -54,106 +54,106 @@ namespace {
 
 GpioPin g_uartTx{
     *GPIOA,
-    gpio({
+    gpio<{
         .pin = 2,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::None,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::PushPull,
         .af = 7,
-    }),
+    }>(),
 };
 GpioPin g_uartRx{
     *GPIOA,
-    gpio({
+    gpio<{
         .pin = 3,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::None,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::PushPull,
         .af = 7,
-    }),
+    }>(),
 };
 GpioPin g_i2cScl{
     *GPIOB,
-    gpio({
+    gpio<{
         .pin = 6,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::PullUp,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::OpenDrain,
         .af = 4,
-    }),
+    }>(),
 };
 GpioPin g_i2cSda{
     *GPIOB,
-    gpio({
+    gpio<{
         .pin = 7,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::PullUp,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::OpenDrain,
         .af = 4,
-    }),
+    }>(),
 };
 GpioPin g_ledGreen{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 12,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 GpioPin g_ledOrange{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 13,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 GpioPin g_ledRed{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 14,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 GpioPin g_ledBlue{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 15,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 
 I2c g_i2c1{
     *I2C1,
-    i2c({
+    i2c<{
         .clockSpeed = 400000,
         .fastMode = true,
-    }),
+    }>(),
 };
 Uart<256, 256, UartMode::Dma> g_uart2{
     *USART2,
     USART2_IRQn,
     usart2_tx,
-    uart({
+    uart<{
         .baudrate = 115200,
         .dataBits = DataBits::Eight,
         .stopBits = StopBits::One,
         .parity = Parity::None,
-    }),
+    }>(),
 };
 sensor::Mpu6050 g_mpu{
     g_i2c1,

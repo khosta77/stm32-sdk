@@ -11,7 +11,7 @@ read back, verify.
 - MMIO access through `driver::reg::set/clear/write/read/get/modify` only.
 - No raw pointers to peripherals — references (`GPIO_TypeDef&`).
 - Configs without defaults — every field must be explicit.
-- `GpioConfig` is an aggregate; wrap in `gpio({...})` for compile-time validation.
+- `GpioConfig` is an aggregate; wrap in `gpio<{...}>()` for compile-time validation.
 - Trailing comma after the last designated initializer to keep clang-format multi-line.
 
 ## Build / flash

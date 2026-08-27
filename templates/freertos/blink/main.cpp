@@ -16,33 +16,33 @@ namespace {
 
 GpioPin g_ledGreen{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 12,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 GpioPin g_ledRed{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 14,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 GpioPin g_ledBlue{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 15,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 
 void taskGreen(void *) {

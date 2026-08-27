@@ -252,117 +252,117 @@ private:
 struct DemoApp {
   GpioPin uartTx{
       *GPIOA,
-      gpio({
+      gpio<{
           .pin = 2,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
           .af = 7,
-      }),
+      }>(),
   };
   GpioPin uartRx{
       *GPIOA,
-      gpio({
+      gpio<{
           .pin = 3,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
           .af = 7,
-      }),
+      }>(),
   };
   GpioPin i2cScl{
       *GPIOB,
-      gpio({
+      gpio<{
           .pin = 6,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::PullUp,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::OpenDrain,
           .af = 4,
-      }),
+      }>(),
   };
   GpioPin i2cSda{
       *GPIOB,
-      gpio({
+      gpio<{
           .pin = 7,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::PullUp,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::OpenDrain,
           .af = 4,
-      }),
+      }>(),
   };
   GpioPin spiSck{
       *GPIOB,
-      gpio({
+      gpio<{
           .pin = 13,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
           .af = 5,
-      }),
+      }>(),
   };
   GpioPin spiMiso{
       *GPIOB,
-      gpio({
+      gpio<{
           .pin = 14,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
           .af = 5,
-      }),
+      }>(),
   };
   GpioPin spiMosi{
       *GPIOB,
-      gpio({
+      gpio<{
           .pin = 15,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
           .af = 5,
-      }),
+      }>(),
   };
   GpioPin flashCs{
       *GPIOB,
-      gpio({
+      gpio<{
           .pin = 12,
           .mode = PinMode::Output,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
-      }),
+      }>(),
   };
 
   I2c i2c1{
       *I2C1,
-      i2c({
+      i2c<{
           .clockSpeed = 400000,
           .fastMode = true,
-      }),
+      }>(),
   };
   Spi spi2{
       *SPI2,
-      spi({
+      spi<{
           .clockHz = 10000000,
           .mode = SpiMode::Mode0,
           .lsbFirst = false,
           .dataSize = SpiDataSize::Bits8,
-      }),
+      }>(),
   };
   Uart<> uart2{
       *USART2,
       USART2_IRQn,
-      uart({
+      uart<{
           .baudrate = 115200,
           .dataBits = DataBits::Eight,
           .stopBits = StopBits::One,
           .parity = Parity::None,
-      }),
+      }>(),
   };
 
   ImuSampler<I2c> imu{
