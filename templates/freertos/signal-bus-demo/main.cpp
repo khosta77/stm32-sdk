@@ -1,5 +1,8 @@
 #include "cmsis/stm32f4xx.h"
 #include "rtos/rtos.hpp"
+// Generated at configure time from this project's git tag (#90). A plain
+// textual header with no STL includes, so it is safe next to `import`.
+#include "version.hpp"
 
 import driver.types;
 import driver.gpio;
@@ -260,6 +263,11 @@ int main() {
   const system::BootReport report = app.boot();
 
   writeStr("\r\n=== signal-bus-demo bootstrap ===\r\n");
+  writePrintf(
+      "firmware %s%s\r\n",
+      firmware::VERSION,
+      firmware::VERSION_TAGGED ? "" : " (tag your project to get a version)"
+  );
   if (report.status != driver::Status::Ok) {
     writePrintf(
         "CRITICAL: %s failed (status=%d, phase=%d)\r\n",
