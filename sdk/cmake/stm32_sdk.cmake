@@ -44,6 +44,23 @@ if(NOT DEFINED STM32_HSE_VALUE)
     set(STM32_HSE_VALUE 8000000)
 endif()
 
+# Exception / RTTI dialect (#86, v0.2.4). Nothing throws at runtime -- the
+# config validators signal invalid input through static_assert -- so the
+# unwind tables are dead weight (~8 bytes per function in .ARM.exidx).
+#
+# GCC bakes the dialect into every module BMI, so a producer and a consumer
+# that disagree fail with "language dialect differs 'C++20', expected
+# 'C++20/no-exceptions'". These flags therefore have to reach EVERY target
+# that builds or imports an SDK module: stm32_core (which the user's
+# executable links) plus each OBJECT/STATIC library below, which deliberately
+# do not link stm32_core. Keep them in this one variable so they cannot drift.
+set(STM32_CXX_DIALECT_FLAGS
+    $<$<COMPILE_LANGUAGE:CXX>:-fno-exceptions>
+    $<$<COMPILE_LANGUAGE:CXX>:-fno-rtti>
+    -fno-unwind-tables
+    -fno-asynchronous-unwind-tables
+)
+
 add_library(stm32_core INTERFACE)
 
 target_sources(stm32_core INTERFACE
@@ -67,6 +84,7 @@ target_include_directories(stm32_core INTERFACE
 
 target_compile_options(stm32_core INTERFACE
     ${STM32_ARCH_FLAGS}
+    ${STM32_CXX_DIALECT_FLAGS}
     -Os
     -ffreestanding
     -ffunction-sections
@@ -95,7 +113,7 @@ set_source_files_properties(
 set_source_files_properties(
     ${_STM32_SDK_DIR}/core/src/newlib/cxx.cpp
     PROPERTIES COMPILE_OPTIONS
-        "-std=gnu++11;-fabi-version=0;-fno-exceptions;-fno-rtti;-fno-use-cxa-atexit;-fno-threadsafe-statics"
+        "-std=gnu++11;-fabi-version=0;-fno-use-cxa-atexit;-fno-threadsafe-statics"
 )
 
 add_library(stm32_hal INTERFACE)

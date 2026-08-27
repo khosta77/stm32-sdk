@@ -66,6 +66,7 @@ target_include_directories(stm32_rtos PRIVATE
 
 target_compile_options(stm32_rtos PRIVATE
     ${STM32_ARCH_FLAGS}
+    ${STM32_CXX_DIALECT_FLAGS}
     -Os
     -ffreestanding
     -ffunction-sections
