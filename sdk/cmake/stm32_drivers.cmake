@@ -1,3 +1,15 @@
+# Family-specific driver modules live next to the family, not in this file
+# (#98): sdk/drivers/families/<family>.cmake sets STM32_DRIVER_FAMILY_MODULES.
+set(_stm32_driver_family_file
+    "${_STM32_SDK_DIR}/drivers/families/${STM32_FAMILY_ID}.cmake")
+if(NOT EXISTS "${_stm32_driver_family_file}")
+    message(FATAL_ERROR
+        "No driver modules for family ${STM32_FAMILY_ID}.\n"
+        "Expected: ${_stm32_driver_family_file}\n"
+        "Adding a family: see docs/chips/index.md")
+endif()
+include("${_stm32_driver_family_file}")
+
 add_library(stm32_drivers OBJECT)
 
 target_sources(stm32_drivers PUBLIC
@@ -16,15 +28,7 @@ target_sources(stm32_drivers PUBLIC
         ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_exti.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/interface/i_crc.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/soft_crc.cppm
-        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/clock.cppm
-        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/dma.cppm
-        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/gpio.cppm
-        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/i2c.cppm
-        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/spi.cppm
-        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/flash.cppm
-        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/uart.cppm
-        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/exti.cppm
-        ${_STM32_SDK_DIR}/drivers/include/driver/stm32f4/crc.cppm
+        ${STM32_DRIVER_FAMILY_MODULES}
         ${_STM32_SDK_DIR}/drivers/include/driver/log.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/log_backend_itm.cppm
         ${_STM32_SDK_DIR}/drivers/include/driver/log_backend_uart.cppm
