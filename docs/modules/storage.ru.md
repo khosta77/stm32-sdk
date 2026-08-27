@@ -16,19 +16,21 @@ devicetree: перекрытия, невыравненные границы и �
 import sensor.w25q32;
 import storage.partition;
 
-constexpr auto kPartitions = storage::partitionTable<sensor::W25q32Spec>({
+using Partitions = storage::PartitionMap<
+    sensor::W25q32Spec,
     {.name = "boot",    .offset = 0x000000, .size = 0x010000},
     {.name = "config",  .offset = 0x010000, .size = 0x001000},
-    {.name = "storage", .offset = 0x011000, .size = 0x3EF000},
-});
+    {.name = "storage", .offset = 0x011000, .size = 0x3EF000}>;
 
-constexpr auto kConfig = kPartitions.find("config");
+constexpr auto kConfig = Partitions::find<"config">();
 ```
 
-`partitionTable()` — `consteval`, та же идиома, что `gpio()` / `spi()` /
-`exti()`. На этапе компиляции отвергаются:
+Карта — это тип, а не объект: каждая запись является аргументом шаблона,
+и именно поэтому любой инвариант выражается через `static_assert`. На этапе
+компиляции отвергаются:
 
-- пустое или дублирующееся имя;
+- пустая карта, пустое или дублирующееся имя;
+- имя длиннее 15 символов (`PARTITION_NAME_MAX` равен 16 вместе с NUL);
 - нулевой размер;
 - смещение или конец не на границе сектора (стирание такой партиции
   откусило бы кусок соседней);
@@ -36,9 +38,22 @@ constexpr auto kConfig = kPartitions.find("config");
 - любая пара перекрывающихся партиций — проверка попарная, поэтому записи не
   обязаны идти по порядку.
 
-`find()` тоже `consteval`, поэтому опечатка в имени — ошибка сборки, а не
-неудачный поиск в рантайме. `count()` и `operator[]` — `constexpr`, ими
+Нарушенный инвариант называет себя сам:
+
+```
+error: static assertion failed: PartitionMap: partition offset must be sector-aligned
+note: In instantiation of 'struct storage::PartitionMap<..., PartitionSpec{
+      PartitionName{"config"}, 65537, 4096}>'
+```
+
+`find<"имя">()` — `consteval`, поэтому опечатка в имени даёт ошибку сборки, а
+не неудачный поиск в рантайме. `count()` и `at(i)` — `constexpr`, ими
 пользуется обычный цикл по карте.
+
+Имена хранятся не как `const char *`, а как встроенный буфер на 16 байт: указатель
+на строковый литерал не является допустимым аргументом шаблона.
+`Partition::name()` по-прежнему отдаёт `const char *` внутрь этого буфера,
+поэтому `nameEquals` и вызовы в духе printf не затронуты.
 
 Параметр типа — геометрия носителя. `sensor::W25q32Spec` подходит как есть,
 потому что предоставляет `CAPACITY` и `SECTOR_SIZE`; для внутренней флэш
@@ -60,7 +75,7 @@ constexpr auto kConfig = kPartitions.find("config");
   `consteval`-самопроверка держит оба описания в согласии.
 
 `GeometryOf<Spec>` выбирает нужное — поэтому работают оба варианта записи
-`partitionTable<...>`.
+`PartitionMap<...>`.
 
 ## Устройства — `storage.flash_device`
 

@@ -103,20 +103,20 @@ using driver::stm32f4::GpioPin;
 
 GpioPin g_led{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 12,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 
 g_led.write(true);
 g_led.toggle();
 ```
 
-Свободная функция `gpio({...})` — `consteval`-валидатор: бросает (на этапе
+Свободная функция `gpio<{...}>()` — `consteval`-валидатор: бросает (на этапе
 компиляции) при `pin > 15`, `mode == None`, отсутствующих `speed`/`type` для
 Output / AlternateFunction, `af > 15` для AF.
 
@@ -160,14 +160,14 @@ using driver::stm32f4::I2c;
 
 I2c g_i2c1{
     *I2C1,
-    i2c({
+    i2c<{
         .clockSpeed = 400000,
         .fastMode = true,
-    }),
+    }>(),
 };
 ```
 
-`i2c({...})` — `consteval`-валидатор (как `gpio()` / `exti()`): бросает на этапе
+`i2c<{...}>()` — `consteval`-валидатор (как `gpio()` / `exti()`): бросает на этапе
 компиляции при `clockSpeed` вне `[1, 400000]` или `clockSpeed > 100000` без
 `fastMode`. `I2cConfig` и `i2c()` живут в interface-модуле `driver.i2c` —
 импортируйте его рядом с `driver.stm32f4.i2c` (реализация его не реэкспортирует).
@@ -209,12 +209,12 @@ using driver::stm32f4::UartMode;
 Uart<512, 256> g_uart2{
     *USART2,
     USART2_IRQn,
-    uart({
+    uart<{
         .baudrate = 115200,
         .dataBits = DataBits::Eight,
         .stopBits = StopBits::One,
         .parity = Parity::None,
-    }),
+    }>(),
 };
 
 extern "C" void USART2_IRQHandler() {
@@ -222,7 +222,7 @@ extern "C" void USART2_IRQHandler() {
 }
 ```
 
-`uart({...})` — `consteval`-валидатор: бросает на этапе компиляции при
+`uart<{...}>()` — `consteval`-валидатор: бросает на этапе компиляции при
 `baudrate == 0` или незаданных `dataBits`/`stopBits` (`DataBits::None` /
 `StopBits::None`). `UartConfig` и enum'ы живут в `driver.uart`.
 
@@ -267,23 +267,23 @@ using driver::stm32f4::Spi;
 
 Spi g_spi2{
     *SPI2,
-    spi({
+    spi<{
         .clockHz = 10'000'000,
         .mode = SpiMode::Mode0,
         .lsbFirst = false,
         .dataSize = SpiDataSize::Bits8,
-    }),
+    }>(),
 };
 ```
 
-`spi({...})` — `consteval`-валидатор: бросает на этапе компиляции при
+`spi<{...}>()` — `consteval`-валидатор: бросает на этапе компиляции при
 `clockHz == 0`, незаданных `mode`/`dataSize` (`SpiMode::None` /
 `SpiDataSize::None`) или `SpiDataSize::Bits16`. `SpiConfig`, `SpiMode`
 (`Mode0..Mode3`, CPOL/CPHA) и `SpiDataSize` живут в `driver.spi`.
 
 > Поддерживается только `SpiDataSize::Bits8`. Драйвер гонит регистр данных по
 > одному байту, поэтому 16-битный размер фрейма испортил бы фрейминг; с v0.2.0
-> `spi({...})` отклоняет `Bits16` на этапе компиляции. Значение enum
+> `spi<{...}>()` отклоняет `Bits16` на этапе компиляции. Значение enum
 > зарезервировано под будущий 16-битный путь.
 
 `Spi` выбирает `PCLK1` для SPI2/SPI3 (APB1) и `PCLK2` для SPI1/SPI4/SPI5/SPI6
@@ -348,7 +348,7 @@ g_flash.write(0x080E0000, std::span{data});
 
 Драйвер линий внешних прерываний: маршрутизирует вывод GPIO на линию EXTI,
 настраивает фронт и вызывает captureless-колбэк из ISR. Концепт `driver::IExti`,
-агрегат `ExtiConfig` и валидатор `exti({...})` живут в `driver.exti`; реализация
+агрегат `ExtiConfig` и валидатор `exti<{...}>()` живут в `driver.exti`; реализация
 для F4 `ExtiLine` — в `driver.stm32f4.exti`.
 
 ```cpp
@@ -361,12 +361,12 @@ using driver::stm32f4::ExtiLine;
 
 // Привязка линии к методу; колбэк выполняется в контексте прерывания.
 ExtiLine g_button = ExtiLine::bind<&App::onButton>(
-    exti({
+    exti<{
         .line = 0,
         .port = ExtiPort::A,
         .trigger = ExtiTrigger::Rising,
         .priority = 6,
-    }),
+    }>(),
     app
 );
 
@@ -375,7 +375,7 @@ extern "C" void EXTI0_IRQHandler() {
 }
 ```
 
-- `exti({...})` — `consteval`-валидатор: бросает (на этапе компиляции) при
+- `exti<{...}>()` — `consteval`-валидатор: бросает (на этапе компиляции) при
   `line > 15` или `priority > 15` (у F4 4 бита приоритета NVIC).
 - Конструктор включает такт SYSCFG, выбирает порт в `SYSCFG_EXTICR`, ставит
   `RTSR`/`FTSR` под фронт, гасит pending-бит, задаёт приоритет NVIC, включает IRQ

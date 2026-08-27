@@ -49,7 +49,7 @@ import driver.stm32f4.uart;
 Установите backend один раз при старте, задайте runtime-уровень и логируйте:
 
 ```cpp
-Uart<> g_uart{*USART2, USART2_IRQn, uart({...})};
+Uart<> g_uart{*USART2, USART2_IRQn, uart<{...}>()};
 driver::log::UartBackend g_logSink{g_uart};
 
 int main() {
