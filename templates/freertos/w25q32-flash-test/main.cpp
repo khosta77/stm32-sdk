@@ -142,14 +142,14 @@ sensor::W25q32 g_flash{
 };
 
 // The partition map. W25q32Spec already carries CAPACITY and SECTOR_SIZE, so
-// it doubles as the device geometry. partitionTable() is consteval: an
-// overlap, an offset off a 4 KB sector boundary or a partition running past
-// the 4 MB chip would fail to compile, not fail at runtime.
-constexpr auto kPartitions = storage::partitionTable<sensor::W25q32Spec>({
+// it doubles as the device geometry. Every invariant is a static_assert inside
+// PartitionMap: an overlap, an offset off a 4 KB sector boundary or a
+// partition running past the 4 MB chip would fail to compile, not at runtime.
+using Partitions = storage::PartitionMap<
+    sensor::W25q32Spec,
     {.name = "boot", .offset = 0x000000, .size = 0x010000},
     {.name = "config", .offset = 0x010000, .size = 0x001000},
-    {.name = "storage", .offset = 0x011000, .size = 0x3EF000},
-});
+    {.name = "storage", .offset = 0x011000, .size = 0x3EF000}>;
 
 storage::ExternalFlashDevice g_device{g_flash};
 driver::stm32f4::Crc g_crc{*CRC};
@@ -260,16 +260,16 @@ void taskFlashTest(void *) {
   // "boot". Everything below addresses "config" relative to itself and must
   // leave "boot" untouched.
   writeStr("\r\n--- partitions ---\r\n");
-  for (size_t i = 0; i < kPartitions.count(); ++i) {
+  for (size_t i = 0; i < Partitions::count(); ++i) {
     writePrintf(
         "  %-8s offset=0x%06lX size=0x%06lX\r\n",
-        kPartitions[i].name,
-        static_cast<unsigned long>(kPartitions[i].offset),
-        static_cast<unsigned long>(kPartitions[i].size)
+        Partitions::at(i).name.c_str(),
+        static_cast<unsigned long>(Partitions::at(i).offset),
+        static_cast<unsigned long>(Partitions::at(i).size)
     );
   }
 
-  storage::Partition config{g_device, kPartitions.find("config")};
+  storage::Partition config{g_device, Partitions::find<"config">()};
 
   writePrintf(
       "erase \"%s\" (%lu bytes)...\r\n",
@@ -319,7 +319,7 @@ void taskFlashTest(void *) {
   );
 
   // "boot" still holds the pattern the raw test wrote at address 0.
-  storage::Partition boot{g_device, kPartitions.find("boot")};
+  storage::Partition boot{g_device, Partitions::find<"boot">()};
   uint8_t bootBack[8] = {0};
   st = boot.read(0, {bootBack, sizeof(bootBack)});
   bool isolated = (st == driver::Status::Ok);

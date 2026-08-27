@@ -229,7 +229,9 @@ public:
 
   [[nodiscard]] constexpr uint32_t size() const { return _spec.size; }
   [[nodiscard]] constexpr uint32_t deviceOffset() const { return _spec.offset; }
-  [[nodiscard]] constexpr const char *name() const { return _spec.name; }
+  [[nodiscard]] constexpr const char *name() const {
+    return _spec.name.c_str();
+  }
   [[nodiscard]] uint8_t erasedValue() const { return _device.erasedValue(); }
 
 private:
