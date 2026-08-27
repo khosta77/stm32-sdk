@@ -42,6 +42,7 @@ target_compile_features(stm32_drivers PUBLIC cxx_std_20)
 
 target_compile_options(stm32_drivers PRIVATE
     ${STM32_ARCH_FLAGS}
+    ${STM32_CXX_DIALECT_FLAGS}
     -Os
     -ffreestanding
     -ffunction-sections

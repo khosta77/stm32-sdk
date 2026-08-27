@@ -15,6 +15,16 @@ endif()
 
 enable_testing()
 
+# Same exception/RTTI dialect as the firmware build (#86). GCC stores it in
+# every module BMI, so producer and consumer must agree or the import fails
+# with "language dialect differs".
+set(SDK_CXX_DIALECT_FLAGS
+  -fno-exceptions
+  -fno-rtti
+  -fno-unwind-tables
+  -fno-asynchronous-unwind-tables
+)
+
 get_filename_component(SDK "${CMAKE_CURRENT_SOURCE_DIR}/../../sdk" ABSOLUTE)
 
 add_library(sdk_portable STATIC)
@@ -47,6 +57,7 @@ target_include_directories(sdk_portable PUBLIC
   ${SDK}/drivers/include
   ${SDK}/testing/include
 )
+target_compile_options(sdk_portable PUBLIC ${SDK_CXX_DIALECT_FLAGS})
 target_compile_options(sdk_portable PRIVATE -Wall -Wextra)
 
 function(add_host_test name)
