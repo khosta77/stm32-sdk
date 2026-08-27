@@ -34,14 +34,14 @@ namespace {
 
 GpioPin g_uartTx{
     *GPIOA,
-    gpio({
+    gpio<{
         .pin = 2,
         .mode = PinMode::AlternateFunction,
         .pull = PullMode::None,
         .speed = OutputSpeed::VeryHigh,
         .type = OutputType::PushPull,
         .af = 7,
-    }),
+    }>(),
 };
 
 // The hardware CRC unit enables its own AHB1 clock in the constructor, so no

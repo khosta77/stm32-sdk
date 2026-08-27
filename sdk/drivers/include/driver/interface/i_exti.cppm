@@ -31,15 +31,14 @@ struct ExtiConfig {
   uint32_t priority;
 };
 
-consteval ExtiConfig exti(ExtiConfig c) {
-  if (c.line > 15) {
-    throw "ExtiConfig: line must be in [0, 15]";
-  }
-  if (c.priority > 15) {
-    throw "ExtiConfig: priority must be in [0, 15] (4 NVIC priority bits on "
-          "F4)";
-  }
-  return c;
+template <ExtiConfig C>
+consteval ExtiConfig exti() {
+  static_assert(C.line <= 15, "ExtiConfig: line must be in [0, 15]");
+  static_assert(
+      C.priority <= 15,
+      "ExtiConfig: priority must be in [0, 15] (4 NVIC priority bits on F4)"
+  );
+  return C;
 }
 
 // Compile-time contract for a single external-interrupt line. Satisfied by

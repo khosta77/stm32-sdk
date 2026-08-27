@@ -14,14 +14,17 @@ struct I2cConfig {
   bool fastMode;
 };
 
-consteval I2cConfig i2c(I2cConfig c) {
-  if (c.clockSpeed == 0 || c.clockSpeed > 400000) {
-    throw "I2cConfig: clockSpeed must be in [1, 400000]";
-  }
-  if (!c.fastMode && c.clockSpeed > 100000) {
-    throw "I2cConfig: clockSpeed > 100000 requires fastMode";
-  }
-  return c;
+template <I2cConfig C>
+consteval I2cConfig i2c() {
+  static_assert(
+      C.clockSpeed != 0 && C.clockSpeed <= 400000,
+      "I2cConfig: clockSpeed must be in [1, 400000]"
+  );
+  static_assert(
+      C.fastMode || C.clockSpeed <= 100000,
+      "I2cConfig: clockSpeed > 100000 requires fastMode"
+  );
+  return C;
 }
 
 // Compile-time contract for an I2C master bus (replaces the former virtual

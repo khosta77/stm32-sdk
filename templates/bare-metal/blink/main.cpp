@@ -20,43 +20,43 @@ volatile uint32_t g_ticks = 0;
 // manual RCC/MODER poking is needed.
 GpioPin g_green{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 12,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 GpioPin g_orange{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 13,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 GpioPin g_red{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 14,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 GpioPin g_blue{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 15,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 
 void delay(uint32_t ms) {

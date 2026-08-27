@@ -232,66 +232,66 @@ private:
 struct ButtonDemo {
   GpioPin uartTx{
       *GPIOA,
-      gpio({
+      gpio<{
           .pin = 2,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
           .af = 7,
-      }),
+      }>(),
   };
   GpioPin uartRx{
       *GPIOA,
-      gpio({
+      gpio<{
           .pin = 3,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
           .af = 7,
-      }),
+      }>(),
   };
   GpioPin button{
       *GPIOA,
-      gpio({
+      gpio<{
           .pin = 0,
           .mode = PinMode::Input,
           .pull = PullMode::None,
           .speed = OutputSpeed::None,
           .type = OutputType::None,
-      }),
+      }>(),
   };
   GpioPin pressLed{
       *GPIOD,
-      gpio({
+      gpio<{
           .pin = 12,
           .mode = PinMode::Output,
           .pull = PullMode::None,
           .speed = OutputSpeed::Low,
           .type = OutputType::PushPull,
-      }),
+      }>(),
   };
   GpioPin heartbeatLed{
       *GPIOD,
-      gpio({
+      gpio<{
           .pin = 13,
           .mode = PinMode::Output,
           .pull = PullMode::None,
           .speed = OutputSpeed::Low,
           .type = OutputType::PushPull,
-      }),
+      }>(),
   };
 
   Uart<> uart2{
       *USART2,
       USART2_IRQn,
-      uart({
+      uart<{
           .baudrate = 115200,
           .dataBits = DataBits::Eight,
           .stopBits = StopBits::One,
           .parity = Parity::None,
-      }),
+      }>(),
   };
 
   system::SingleThreadExecutor exec{
@@ -307,12 +307,12 @@ struct ButtonDemo {
       {
           .base =
               {.name = "button", .criticality = system::Criticality::Common},
-          .line = exti({
+          .line = exti<{
               .line = 0,
               .port = ExtiPort::A,
               .trigger = ExtiTrigger::Rising,
               .priority = 6,
-          }),
+          }>(),
           .debounceMs = 20,
       },
       {.exec = exec, .bus = bus, .pin = button},

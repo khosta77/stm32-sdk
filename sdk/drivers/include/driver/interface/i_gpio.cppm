@@ -44,25 +44,29 @@ struct GpioConfig {
   uint8_t af = 0;
 };
 
-consteval GpioConfig gpio(GpioConfig c) {
-  if (c.pin > 15) {
-    throw "GpioConfig: pin must be in [0, 15]";
-  }
-  if (c.mode == PinMode::None) {
-    throw "GpioConfig: mode must not be PinMode::None";
-  }
-  const bool needsDrive =
-      (c.mode == PinMode::Output || c.mode == PinMode::AlternateFunction);
-  if (needsDrive && c.speed == OutputSpeed::None) {
-    throw "GpioConfig: OutputSpeed required for Output/AlternateFunction";
-  }
-  if (needsDrive && c.type == OutputType::None) {
-    throw "GpioConfig: OutputType required for Output/AlternateFunction";
-  }
-  if (c.mode == PinMode::AlternateFunction && c.af > 15) {
-    throw "GpioConfig: af must be in [0, 15]";
-  }
-  return c;
+template <GpioConfig C>
+consteval GpioConfig gpio() {
+  constexpr bool needsDrive =
+      (C.mode == PinMode::Output || C.mode == PinMode::AlternateFunction);
+
+  static_assert(C.pin <= 15, "GpioConfig: pin must be in [0, 15]");
+  static_assert(
+      C.mode != PinMode::None,
+      "GpioConfig: mode must not be PinMode::None"
+  );
+  static_assert(
+      !needsDrive || C.speed != OutputSpeed::None,
+      "GpioConfig: OutputSpeed required for Output/AlternateFunction"
+  );
+  static_assert(
+      !needsDrive || C.type != OutputType::None,
+      "GpioConfig: OutputType required for Output/AlternateFunction"
+  );
+  static_assert(
+      C.mode != PinMode::AlternateFunction || C.af <= 15,
+      "GpioConfig: af must be in [0, 15]"
+  );
+  return C;
 }
 
 // Compile-time contract for a single GPIO pin (replaces the former virtual

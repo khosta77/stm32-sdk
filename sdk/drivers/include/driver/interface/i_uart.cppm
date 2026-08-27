@@ -34,17 +34,18 @@ struct UartConfig {
   Parity parity;
 };
 
-consteval UartConfig uart(UartConfig c) {
-  if (c.baudrate == 0) {
-    throw "UartConfig: baudrate must be > 0";
-  }
-  if (c.dataBits == DataBits::None) {
-    throw "UartConfig: dataBits must be set (Eight or Nine)";
-  }
-  if (c.stopBits == StopBits::None) {
-    throw "UartConfig: stopBits must be set (One or Two)";
-  }
-  return c;
+template <UartConfig C>
+consteval UartConfig uart() {
+  static_assert(C.baudrate != 0, "UartConfig: baudrate must be > 0");
+  static_assert(
+      C.dataBits != DataBits::None,
+      "UartConfig: dataBits must be set (Eight or Nine)"
+  );
+  static_assert(
+      C.stopBits != StopBits::None,
+      "UartConfig: stopBits must be set (One or Two)"
+  );
+  return C;
 }
 
 // Compile-time contract for a UART (replaces the former virtual IUart base

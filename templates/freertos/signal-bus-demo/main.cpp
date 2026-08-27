@@ -130,46 +130,46 @@ private:
 struct SignalDemo {
   GpioPin uartTx{
       *GPIOA,
-      gpio({
+      gpio<{
           .pin = 2,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
           .af = 7,
-      }),
+      }>(),
   };
   GpioPin uartRx{
       *GPIOA,
-      gpio({
+      gpio<{
           .pin = 3,
           .mode = PinMode::AlternateFunction,
           .pull = PullMode::None,
           .speed = OutputSpeed::VeryHigh,
           .type = OutputType::PushPull,
           .af = 7,
-      }),
+      }>(),
   };
   GpioPin led{
       *GPIOD,
-      gpio({
+      gpio<{
           .pin = 12,
           .mode = PinMode::Output,
           .pull = PullMode::None,
           .speed = OutputSpeed::Low,
           .type = OutputType::PushPull,
-      }),
+      }>(),
   };
 
   Uart<> uart2{
       *USART2,
       USART2_IRQn,
-      uart({
+      uart<{
           .baudrate = 115200,
           .dataBits = DataBits::Eight,
           .stopBits = StopBits::One,
           .parity = Parity::None,
-      }),
+      }>(),
   };
 
   system::SingleThreadExecutor exec{
