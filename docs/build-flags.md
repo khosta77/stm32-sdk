@@ -73,6 +73,44 @@ code that mixes 8/16/32-bit register fields, it produces a wall of
 noise without finding real bugs. It may return in a future release after
 a focused cleanup pass.
 
+## Exceptions and RTTI are off (v0.2.4)
+
+Since v0.2.4 every C++ target carries:
+
+```
+-fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables
+```
+
+Nothing in the SDK ever threw at runtime -- the config validators signal bad
+input through `static_assert`, at compile time -- so the exception machinery
+was dead weight. Removing it takes out the `.ARM.exidx` / `.ARM.extab` tables
+*and* the stack unwinder and personality routine that libstdc++ drags in:
+
+| template | flash before | after |
+|---|---|---|
+| `bare-metal/blink` | 5892 | 1724 (-71%) |
+| `freertos/signal-bus-demo` | 21796 | 14236 (-35%) |
+| `freertos/w25q32-flash-test` | 23796 | 16344 (-31%) |
+| `freertos/imu-flash-oled-demo` | 25812 | 18016 (-30%) |
+
+Consequences for application code: `try` / `catch` / `throw` /
+`dynamic_cast` / `typeid` do not compile.
+
+The flags live in one variable, `STM32_CXX_DIALECT_FLAGS` in
+`sdk/cmake/stm32_sdk.cmake`, and are applied to `stm32_core` *and* to each
+OBJECT/STATIC library, which deliberately do not link `stm32_core`. This is
+not optional tidiness: GCC stores the dialect in every module BMI, so a
+producer and a consumer that disagree fail the import outright with
+
+```
+error: module driver.gpio: language dialect differs 'C++20',
+       expected 'C++20/no-exceptions'
+```
+
+`-fno-exceptions` and `-fno-rtti` are wrapped in
+`$<$<COMPILE_LANGUAGE:CXX>:...>` because `stm32_rtos` also compiles C, where
+GCC would warn about them and `-Werror` would turn that into an error.
+
 ## `-Werror` policy
 
 `-Werror` is permanently on starting with v0.1.4. Any warning that

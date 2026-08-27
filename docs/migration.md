@@ -14,6 +14,112 @@ upgrade deliberately.
 5. Flash to hardware and verify the smoke-test for your scenario.
 6. Merge back once green.
 
+## New in v0.2.4
+
+v0.2.4 is a **breaking** release. It contains no new firmware functionality --
+it removes `throw` from the SDK, turns off exceptions and RTTI, and unpicks the
+F4 hardcode from family-neutral code. Two source changes are required.
+
+### 1. Config validators take the config as a template argument
+
+`gpio()`, `exti()`, `i2c()`, `spi()` and `uart()` used to signal an invalid
+config with `throw`, which is what blocked `-fno-exceptions`: GCC rejects the
+token even inside a `consteval` function, and the exception dialect is baked
+into every module BMI, so the flag could not be applied to part of the tree.
+
+The config is now a template parameter and every rule is a `static_assert`.
+Move the braces inside the angle brackets and add `()`:
+
+```cpp
+// before
+GpioPin g_led{*GPIOD, gpio({.pin = 12, .mode = PinMode::Output,
+                            .speed = OutputSpeed::Low,
+                            .type = OutputType::PushPull})};
+
+// after
+GpioPin g_led{*GPIOD, gpio<{.pin = 12, .mode = PinMode::Output,
+                            .speed = OutputSpeed::Low,
+                            .type = OutputType::PushPull}>()};
+```
+
+The change is mechanical: `name({...})` becomes `name<{...}>()`. Field names,
+values and validation rules are all unchanged.
+
+Diagnostics improve. `throw` produced
+`error: expression '<throw-expression>' is not a constant expression`, with the
+message readable only because GCC echoes the source line. A `static_assert`
+carries the text as the diagnostic itself, GCC adds a note with the substituted
+values, and **every** violated rule is reported in one pass instead of only the
+first:
+
+```
+error: static assertion failed: GpioConfig: pin must be in [0, 15]
+note: the comparison reduces to '(42 <= 15)'
+error: static assertion failed: GpioConfig: OutputSpeed required for Output/AlternateFunction
+```
+
+### 2. The partition map is a type
+
+For the same reason, `storage::partitionTable()` and `PartitionTable<N>` are
+replaced by `storage::PartitionMap`. A partition name is now stored inline
+(max 15 characters) instead of as a `const char *`, because a pointer to a
+string literal is not a valid template argument.
+
+```cpp
+// before
+constexpr auto kPartitions = storage::partitionTable<sensor::W25q32Spec>({
+    {.name = "boot",   .offset = 0x000000, .size = 0x010000},
+    {.name = "config", .offset = 0x010000, .size = 0x001000},
+});
+storage::Partition config{device, kPartitions.find("config")};
+for (size_t i = 0; i < kPartitions.count(); ++i) { use(kPartitions[i]); }
+
+// after
+using Partitions = storage::PartitionMap<
+    sensor::W25q32Spec,
+    {.name = "boot",   .offset = 0x000000, .size = 0x010000},
+    {.name = "config", .offset = 0x010000, .size = 0x001000}>;
+storage::Partition config{device, Partitions::find<"config">()};
+for (size_t i = 0; i < Partitions::count(); ++i) { use(Partitions::at(i)); }
+```
+
+`operator[]` became `at(i)`, and `PartitionSpec::name` is a `PartitionName`
+rather than a `const char *` -- use `.name.c_str()` where you printed it.
+`Partition::name()` is unchanged and still returns `const char *`.
+
+### 3. Exceptions and RTTI are off everywhere
+
+`-fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables`
+now apply to `stm32_core` and to every SDK library, and therefore to your
+firmware too. `try` / `catch` / `throw` / `dynamic_cast` / `typeid` in
+application code stop compiling. Nothing in the SDK threw at runtime, so this
+removes only dead weight:
+
+| template | flash before | after |
+|---|---|---|
+| `bare-metal/blink` | 5892 | 1724 (-71%) |
+| `freertos/signal-bus-demo` | 21796 | 14236 (-35%) |
+| `freertos/w25q32-flash-test` | 23796 | 16344 (-31%) |
+| `freertos/imu-flash-oled-demo` | 25812 | 18016 (-30%) |
+
+The flags cannot be applied selectively: GCC stores the dialect in each module
+BMI, and a mismatch fails with
+`error: module ...: language dialect differs 'C++20', expected 'C++20/no-exceptions'`.
+
+### 4. New, no action required
+
+- `out/generated/version.hpp` is generated from your project's `git describe`
+  and is on the include path of every project. `firmware::VERSION`,
+  `VERSION_MAJOR/MINOR/PATCH`, `VERSION_TAGGED`, `VERSION_DIRTY`. A project
+  with no tag reports `v0.0.0-untagged` -- a fallback, not an error.
+- `sdk/chips.json` is the chip index; the sixteen "not yet supported" family
+  stubs under `sdk/cmake/families/` are gone. An unsupported chip now reports
+  the supported list from that one file.
+- `STM32_LOG_BACKEND_SEL_ITM` depends on `STM32_CORE_HAS_ITM`, so on a
+  Cortex-M0/M0+ part it is rejected at configure time rather than failing
+  inside a module. No effect on F4.
+- CI gained a QEMU runtime smoke gate -- see [Emulation](emulation.md).
+
 ## New in v0.2.3
 
 v0.2.3 adds CRC-32 and the flash partition layer. It is **additive** — no

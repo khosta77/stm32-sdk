@@ -107,17 +107,18 @@ The second half of the run addresses the same chip through the partition
 layer. The map lives in `main.cpp` and is validated at compile time:
 
 ```cpp
-constexpr auto kPartitions = storage::partitionTable<sensor::W25q32Spec>({
+using Partitions = storage::PartitionMap<
+    sensor::W25q32Spec,
     {.name = "boot",    .offset = 0x000000, .size = 0x010000},
     {.name = "config",  .offset = 0x010000, .size = 0x001000},
-    {.name = "storage", .offset = 0x011000, .size = 0x3EF000},
-});
+    {.name = "storage", .offset = 0x011000, .size = 0x3EF000}>;
 ```
 
-An overlap, an offset that is not 4 KiB-aligned or a partition running past
-the 4 MiB chip fails to compile — `partitionTable()` is `consteval`. Names
-are looked up the same way (`kPartitions.find("config")`), so a typo is a
-build error too.
+The map is a type, so every entry is a template argument and every invariant
+is a `static_assert`. An overlap, an offset that is not 4 KiB-aligned or a
+partition running past the 4 MiB chip fails to compile, naming the rule it
+broke. Lookup works the same way (`Partitions::find<"config">()`), so a typo
+is a build error too — and the message prints the whole map with its values.
 
 Offsets passed to a `storage::Partition` are relative to that partition, and
 anything reaching past its end returns `Status::InvalidArg` instead of

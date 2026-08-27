@@ -74,7 +74,7 @@ extern "C" void __initialize_hardware() {
 }
 
 namespace {
-GpioPin g_led{*GPIOD, gpio({.pin = 12, ...})};
+GpioPin g_led{*GPIOD, gpio<{.pin = 12, ...}>()};
 I2c g_i2c1{*I2C1, {.clockSpeed = 400000, .fastMode = true}};
 Uart<> g_uart2{*USART2, USART2_IRQn, {...}};
 }  // namespace

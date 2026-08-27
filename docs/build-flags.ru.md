@@ -74,6 +74,45 @@ target_compile_options(stm32_core INTERFACE
 реальных находок. Возможно вернётся в одном из будущих релизов после
 отдельного прохода чистки.
 
+## Исключения и RTTI выключены (v0.2.4)
+
+С v0.2.4 каждая C++-цель несёт:
+
+```
+-fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables
+```
+
+В рантайме SDK никогда ничего не бросал — валидаторы конфигов сообщают о
+неверном вводе через `static_assert`, на этапе компиляции, — поэтому машинерия
+исключений была мёртвым весом. Её удаление выбрасывает таблицы
+`.ARM.exidx` / `.ARM.extab` *и вместе с ними* раскрутчик стека и
+personality-функцию, которые притягивает libstdc++:
+
+| шаблон | flash до | после |
+|---|---|---|
+| `bare-metal/blink` | 5892 | 1724 (−71%) |
+| `freertos/signal-bus-demo` | 21796 | 14236 (−35%) |
+| `freertos/w25q32-flash-test` | 23796 | 16344 (−31%) |
+| `freertos/imu-flash-oled-demo` | 25812 | 18016 (−30%) |
+
+Следствие для прикладного кода: `try` / `catch` / `throw` / `dynamic_cast` /
+`typeid` не компилируются.
+
+Флаги живут в одной переменной `STM32_CXX_DIALECT_FLAGS` в
+`sdk/cmake/stm32_sdk.cmake` и применяются к `stm32_core` *и* к каждой
+OBJECT/STATIC-библиотеке, которые намеренно не линкуют `stm32_core`. Это не
+вопрос аккуратности: GCC хранит диалект в BMI каждого модуля, поэтому
+рассогласование producer и consumer прямо ломает импорт:
+
+```
+error: module driver.gpio: language dialect differs 'C++20',
+       expected 'C++20/no-exceptions'
+```
+
+`-fno-exceptions` и `-fno-rtti` завёрнуты в `$<$<COMPILE_LANGUAGE:CXX>:...>`,
+потому что `stm32_rtos` компилирует ещё и C, где GCC выдал бы на них
+предупреждение, а `-Werror` превратил бы его в ошибку.
+
 ## Политика `-Werror`
 
 `-Werror` включён постоянно начиная с v0.1.4. Любое предупреждение,

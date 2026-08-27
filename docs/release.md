@@ -53,6 +53,67 @@ the same source of truth the SDK CMake side already uses.
 
 ## Release history
 
+### v0.2.4
+
+Rules and build debt. No new firmware functionality -- the release removes the
+last `throw` from the SDK, turns exceptions and RTTI off, unpicks the F4
+hardcode from family-neutral code, gives projects a real version, and puts a
+runtime gate in CI. **Breaking**: see the [upgrade notes](migration.md).
+
+- **Throw-free `consteval` validators (#86).** `gpio()` / `exti()` / `i2c()` /
+  `spi()` / `uart()` take the config as a template argument and assert on it:
+  `gpio<{...}>()` instead of `gpio({...})`. Diagnostics get better, not worse
+  -- the message is now the diagnostic itself rather than an echoed source
+  line, GCC adds the substituted values (`the comparison reduces to
+  '(42 <= 15)'`), and all violated rules are reported at once instead of the
+  first one only.
+- **`storage::PartitionMap` (#86).** The partition map became a type so its
+  entries are template arguments; `partitionTable()` and `PartitionTable<N>`
+  are gone. Names are stored inline (15 characters max) because a pointer to a
+  string literal is not a valid template argument. `find<"config">()` on a
+  typo now reports `static assertion failed: PartitionMap: no partition with
+  this name` and prints the whole map with its values.
+- **`-fno-exceptions`/`-fno-rtti` SDK-wide (#86).** The measured win is far
+  larger than the `.ARM.exidx` growth #86 estimated, because the unwinder and
+  personality routine go with it: `bare-metal/blink` 5892 -> 1724 bytes of
+  flash (-71%), the FreeRTOS demos -30..-35%. RAM unchanged. Applied through
+  one `STM32_CXX_DIALECT_FLAGS` variable because GCC bakes the dialect into
+  every module BMI and a partial application fails the import.
+- **Family layer unpicked (#98).** `system.work_queue` and
+  `driver.log_backend_itm` no longer include `cmsis/stm32f4xx.h`; each HAL
+  ships `include/cmsis_device.h` instead. The driver module list moved to
+  `sdk/drivers/families/<family>.cmake`. `sdk/chips.json` replaced sixteen
+  byte-identical "not yet supported" family stubs plus a hardcoded chip list in
+  stmtool. `STM32_LOG_BACKEND_SEL_ITM` now depends on `STM32_CORE_HAS_ITM`, so
+  a Cortex-M0/M0+ part rejects it at configure time -- `core_cm0plus.h`
+  declares no `ITM_SendChar` at all.
+- **Project versioning (#90).** `out/generated/version.hpp` comes from
+  `git describe` in the project directory: `firmware::VERSION` plus semver
+  constants, `VERSION_TAGGED` and `VERSION_DIRTY`. No tag is a fallback
+  (`v0.0.0-untagged`), not an error. `signal-bus-demo` logs it at startup.
+- **QEMU runtime smoke gate (#95).** CI boots `signal-bus-demo` on
+  `netduinoplus2` and requires the bootstrap banner, "all components started",
+  the work-queue self-check and event delivery. This closes the one real gap in
+  coverage: `system.work_queue` / `executor` / `timer` / `signal_bus` pull in
+  CMSIS and FreeRTOS and are absent from the host suite. Semihosting turned out
+  to be unnecessary -- QEMU emulates USART, so the image's real UART driver
+  carries the output. New page: [Emulation](emulation.md).
+
+**Notes.** Verified: host tests 9/9, 10/10 templates for STM32F407VG with
+`-Werror`, before/after flash measured on four templates, negative compile
+checks for both validators and the partition map, an unsupported chip reporting
+the supported list out of `chips.json`, the ITM gate refusing a core without
+ITM, and the QEMU gate passing on a good image and failing on a missing marker.
+**Not verified on hardware:** nothing in this release was flashed to a board.
+The v0.2.3 hardware debt (`unit-test-demo` CRC cross-check,
+`w25q32-flash-test` `ISOLATION OK`) is still open.
+
+**Left undone on purpose.** `trace_write()` in `sdk/core/src/diag/trace-impl.cpp`
+still returns `-1` because no `OS_USE_TRACE_*` is ever defined by the build, and
+`_exit()` still carries a `// TODO` where a semihosting exit belongs. Both were
+in the plan only because it assumed the QEMU gate needed semihosting; it does
+not. They are a genuine gap and want their own issue.
+
 ### v0.2.3
 
 Focus: **storage groundwork** — CRC-32 (#61) and the flash partition layer

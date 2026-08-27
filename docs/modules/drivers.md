@@ -101,20 +101,20 @@ using driver::stm32f4::GpioPin;
 
 GpioPin g_led{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 12,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 
 g_led.write(true);
 g_led.toggle();
 ```
 
-The `gpio({...})` free function is a `consteval` validator: it throws
+The `gpio<{...}>()` free function is a `consteval` validator: it throws
 (at compile time) on invalid values like `pin > 15`, `mode == None`, missing
 `speed`/`type` for Output / AlternateFunction modes, or `af > 15` for AF mode.
 
@@ -158,14 +158,14 @@ using driver::stm32f4::I2c;
 
 I2c g_i2c1{
     *I2C1,
-    i2c({
+    i2c<{
         .clockSpeed = 400000,
         .fastMode = true,
-    }),
+    }>(),
 };
 ```
 
-`i2c({...})` is a `consteval` validator (like `gpio()` / `exti()`): it throws at
+`i2c<{...}>()` is a `consteval` validator (like `gpio()` / `exti()`): it throws at
 compile time on `clockSpeed` outside `[1, 400000]`, or `clockSpeed > 100000`
 without `fastMode`. `I2cConfig` and `i2c()` live in the interface module
 `driver.i2c` — import it alongside `driver.stm32f4.i2c` (the implementation does
@@ -208,12 +208,12 @@ using driver::stm32f4::UartMode;
 Uart<512, 256> g_uart2{
     *USART2,
     USART2_IRQn,
-    uart({
+    uart<{
         .baudrate = 115200,
         .dataBits = DataBits::Eight,
         .stopBits = StopBits::One,
         .parity = Parity::None,
-    }),
+    }>(),
 };
 
 extern "C" void USART2_IRQHandler() {
@@ -221,7 +221,7 @@ extern "C" void USART2_IRQHandler() {
 }
 ```
 
-`uart({...})` is a `consteval` validator: it throws at compile time on
+`uart<{...}>()` is a `consteval` validator: it throws at compile time on
 `baudrate == 0` or an unset `dataBits`/`stopBits` (`DataBits::None` /
 `StopBits::None`). `UartConfig` and the enums live in `driver.uart`.
 
@@ -266,23 +266,23 @@ using driver::stm32f4::Spi;
 
 Spi g_spi2{
     *SPI2,
-    spi({
+    spi<{
         .clockHz = 10'000'000,
         .mode = SpiMode::Mode0,
         .lsbFirst = false,
         .dataSize = SpiDataSize::Bits8,
-    }),
+    }>(),
 };
 ```
 
-`spi({...})` is a `consteval` validator: it throws at compile time on
+`spi<{...}>()` is a `consteval` validator: it throws at compile time on
 `clockHz == 0`, an unset `mode`/`dataSize` (`SpiMode::None` /
 `SpiDataSize::None`), or `SpiDataSize::Bits16`. `SpiConfig`, `SpiMode`
 (`Mode0..Mode3`, CPOL/CPHA) and `SpiDataSize` live in `driver.spi`.
 
 > Only `SpiDataSize::Bits8` is supported. The driver drives the data register
 > one byte at a time, so a 16-bit frame size would corrupt framing; since v0.2.0
-> `spi({...})` rejects `Bits16` at compile time. The enum value is reserved for a
+> `spi<{...}>()` rejects `Bits16` at compile time. The enum value is reserved for a
 > future 16-bit path.
 
 `Spi` selects `PCLK1` for SPI2/SPI3 (APB1) and `PCLK2` for SPI1/SPI4/SPI5/SPI6
@@ -347,7 +347,7 @@ program / lock sequences.
 
 External-interrupt line driver: routes a GPIO pin to an EXTI line, configures
 the edge, and dispatches to a captureless callback from the ISR. The concept
-`driver::IExti` and the `ExtiConfig` aggregate + `exti({...})` validator live in
+`driver::IExti` and the `ExtiConfig` aggregate + `exti<{...}>()` validator live in
 `driver.exti`; the F4 implementation `ExtiLine` in `driver.stm32f4.exti`.
 
 ```cpp
@@ -360,12 +360,12 @@ using driver::stm32f4::ExtiLine;
 
 // Bind the line to a member; the callback runs in interrupt context.
 ExtiLine g_button = ExtiLine::bind<&App::onButton>(
-    exti({
+    exti<{
         .line = 0,
         .port = ExtiPort::A,
         .trigger = ExtiTrigger::Rising,
         .priority = 6,
-    }),
+    }>(),
     app
 );
 
@@ -374,7 +374,7 @@ extern "C" void EXTI0_IRQHandler() {
 }
 ```
 
-- `exti({...})` is a `consteval` validator: it throws (at compile time) on
+- `exti<{...}>()` is a `consteval` validator: it throws (at compile time) on
   `line > 15` or `priority > 15` (F4 has 4 NVIC priority bits).
 - The constructor enables the SYSCFG clock, selects the port in
   `SYSCFG_EXTICR`, sets `RTSR`/`FTSR` for the edge, clears any pending bit, sets

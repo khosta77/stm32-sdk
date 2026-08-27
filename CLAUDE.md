@@ -101,6 +101,24 @@ to update docs means future contributors see stale information.
   `set_source_files_properties(... PROPERTIES COMPILE_OPTIONS "-Wno-XXX")`,
   not globally.
 
+- **No `throw`, no exceptions, no RTTI (since v0.2.4, #86).**
+  `-fno-exceptions -fno-rtti -fno-unwind-tables
+  -fno-asynchronous-unwind-tables` are applied through the single
+  `STM32_CXX_DIALECT_FLAGS` variable in `sdk/cmake/stm32_sdk.cmake`, to
+  `stm32_core` **and** to every OBJECT/STATIC library — those deliberately do
+  not link `stm32_core`, and GCC bakes the dialect into each module BMI, so a
+  target left out fails the import with `language dialect differs`. A new
+  target must be added to that list. Compile-time errors are signalled with
+  `static_assert` over a template parameter, never `throw`; if a value cannot
+  be a template argument (as `const char *` cannot), restructure so it can —
+  see `storage::PartitionName`.
+
+- **Runtime gate.** CI boots `signal-bus-demo` under QEMU and asserts on its
+  serial output (`sdk/scripts/qemu/run_smoke.py`). A change to the Cortex-M
+  runtime, the linker scripts or the `system.*` concurrency layer must keep
+  that job green — it is the only automated coverage those modules have, since
+  they pull CMSIS/FreeRTOS and are absent from `tests/host`.
+
 - C/C++ style is Google, **2-space indent, 80-column limit**,
   `Cpp11BracedListStyle: true` (braced-init lists format as `{nullptr}`),
   fixed in the root `.clang-format` (since v0.1.12). clang-format is
@@ -245,7 +263,20 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
   verbatim; `__isr_vectors` forced back to external linkage). The CMSIS device
   headers (`include/cmsis/*.h`) stay `.h` and pristine — renaming them to
   `.hpp` would break ST's internal cross-includes and upstream diffability.
-- `sdk/cmake/` — `stm32_sdk.cmake`, `stm32_toolchain.cmake`, `families/`.
+  `include/cmsis_device.h` (v0.2.4) is ours, not vendor: the family-neutral
+  entry point that common code (`system.work_queue`, the ITM log backend)
+  includes instead of naming `cmsis/stm32f4xx.h`.
+- `sdk/cmake/` — `stm32_sdk.cmake`, `stm32_toolchain.cmake`, `families/`,
+  `version.cmake` (project version from `git describe` → `version.hpp`).
+- `sdk/chips.json` (v0.2.4) — the chip index: which families exist, which are
+  supported, and the concrete part numbers. Read by `stm32_families.cmake` and
+  by stmtool; it replaced sixteen identical "not yet supported" family stubs.
+- `sdk/drivers/families/<family>.cmake` (v0.2.4) — that family's driver module
+  list in `STM32_DRIVER_FAMILY_MODULES`; `stm32_drivers.cmake` includes the one
+  matching `STM32_FAMILY_ID` instead of hardcoding F4.
+- `sdk/scripts/qemu/run_smoke.py` (v0.2.4) — the CI runtime gate: boots an image
+  under QEMU `netduinoplus2` and asserts on its serial output. See
+  `docs/emulation.md` for what QEMU does and does not model.
 - `sdk/rtos/` — FreeRTOS (heap_4, 16 KB), RAII wrappers (`rtos.hpp`).
 - `sdk/drivers/include/driver/` — modules:
     - `types.cppm`, `reg.cppm`, `circular_buffer.cppm` — utilities.
@@ -277,9 +308,12 @@ Solution: don't include STL headers in `main.cpp`; use brace-init
   linked as `stm32_storage`, CMSIS-free and host-tested. `geometry.cppm`
   (`IFlashGeometry`, `UniformGeometry` from any `CAPACITY`/`SECTOR_SIZE` spec,
   `Stm32f4Geometry` for the mixed 16K/64K/128K internal layout),
-  `partition.cppm` (`PartitionSpec`, `PartitionTable`, `consteval
-  partitionTable()` + `find()` — overlaps, unaligned bounds, duplicate names
-  and typos are compile errors), `flash_device.cppm` (`IFlashDevice` plus
+  `partition.cppm` (`PartitionName`, `PartitionSpec`, `PartitionMap<Spec,
+  Specs...>` + `find<"name">()` — since v0.2.4 the whole map is a template
+  argument list so every invariant is a `static_assert`; overlaps, unaligned
+  bounds, duplicate names and typos are compile errors. Names are an inline
+  16-byte buffer, not `const char *`: a pointer to a string literal is not a
+  valid template argument), `flash_device.cppm` (`IFlashDevice` plus
   `ExternalFlashDevice`/`InternalFlashDevice` adapters and the `Partition`
   view with relative addressing, bounds checks and `checksum()` over
   `driver::ICrc`). No devicetree — `consteval` replaces the Zephyr generator.
@@ -363,25 +397,23 @@ out-of-range or unset field fails to compile. SPI/UART fields are strong enums
 validator rejects:
 
 ```cpp
-I2c g_i2c{*I2C1, i2c({.clockSpeed = 400000, .fastMode = true})};
+I2c g_i2c{*I2C1, i2c<{.clockSpeed = 400000, .fastMode = true}>()};
 Spi g_spi{
     *SPI2,
-    spi(
+    spi<
         {.clockHz = 10000000,
          .mode = SpiMode::Mode0,
          .lsbFirst = false,
-         .dataSize = SpiDataSize::Bits8}
-    )
+         .dataSize = SpiDataSize::Bits8}>()
 };
 Uart<> g_uart{
     *USART2,
     USART2_IRQn,
-    uart(
+    uart<
         {.baudrate = 115200,
          .dataBits = DataBits::Eight,
          .stopBits = StopBits::One,
-         .parity = Parity::None}
-    )
+         .parity = Parity::None}>()
 };
 ```
 
@@ -398,20 +430,23 @@ factored out into a free `consteval` function `gpio()`:
 ```cpp
 GpioPin g_led{
     *GPIOD,
-    gpio({
+    gpio<{
         .pin = 12,
         .mode = PinMode::Output,
         .pull = PullMode::None,
         .speed = OutputSpeed::Low,
         .type = OutputType::PushPull,
-    }),
+    }>(),
 };
 ```
 
-`gpio({...})` throws (at compile time) on `pin > 15`, `mode == None`,
-missing `speed`/`type` for Output / AF, `af > 15` for AF. Because it's
-`consteval`, calling with runtime values is rejected by the compiler — it's
-impossible to accidentally pass an unvalidated config.
+`gpio<{...}>()` fails to compile on `pin > 15`, `mode == None`, missing
+`speed`/`type` for Output / AF, `af > 15` for AF. Since v0.2.4 the config is a
+**template parameter** and every rule is a `static_assert` — `throw` is gone
+from the SDK so `-fno-exceptions` can be on (#86). Because it's `consteval`,
+calling with runtime values is rejected by the compiler — it's impossible to
+accidentally pass an unvalidated config. All violated rules are reported in one
+pass, with the substituted values in a `note`.
 
 Trailing comma after the last field (`.type = ...,`) is idiomatic: clang-format
 preserves multi-line formatting and won't collapse the call into one line.
@@ -447,7 +482,7 @@ extern "C" void __initialize_hardware() {
 }
 
 namespace {
-GpioPin g_led{*GPIOD, gpio({.pin = 12, .mode = PinMode::Output, ...})};
+GpioPin g_led{*GPIOD, gpio<{.pin = 12, .mode = PinMode::Output, ...}>()};
 I2c g_i2c1{*I2C1, {.clockSpeed = 400000, .fastMode = true}};
 Uart<> g_uart2{*USART2, USART2_IRQn, {...}};
 }  // namespace
@@ -535,7 +570,7 @@ Finishes the layer (issues #52–#55). Same zero-vtable/zero-heap style.
   through `reg::*`; `EXTI->PR` is write-1-to-clear via `reg::write`. Callback is a
   captureless thunk (`ExtiLine::bind<&T::method>(cfg, obj)`). ISR pattern mirrors
   UART: `EXTI0_IRQHandler() { obj.irqHandler(); }`; shared vectors (5–9, 10–15)
-  call `irqHandler()` on every line object. `exti({...})` is a `consteval`
+  call `irqHandler()` on every line object. `exti<{...}>()` is a `consteval`
   validator like `gpio()`.
 - **`Timer` (`system.timer`, FreeRTOS only)** — thin wrapper over the executor
   (`postAfter`/`addPeriodic`/`cancel`); owns one `WorkItem`, thunk callback.

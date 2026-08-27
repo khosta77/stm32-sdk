@@ -86,5 +86,6 @@ nav:
       - MPU6050: sensors/mpu6050.md
       - SSD1306: sensors/ssd1306.md
       - W25Q32: sensors/w25q32.md
+  - Emulation: emulation.md
   - Release: release.md
   - Upgrade notes: migration.md

@@ -67,6 +67,8 @@ TUI показывает каждую опцию с её help-текстом, с
 | `STM32_LOG_LEVEL_*` (choice `NONE`…`TRACE`) | `INFO` | compile-time потолок; `LOG_*` выше него исчезают из flash |
 | `STM32_LOG_BACKEND_SEL_*` (choice `NONE`/`ITM`/`UART`) | `NONE` | предполагаемый sink, выставляется как define `STM32_LOG_BACKEND` |
 
+Вариант `ITM` зависит от `STM32_CORE_HAS_ITM` — символа, производного от чипа (см. ниже). ITM относится к отладочному блоку ARMv7-M, поэтому на Cortex-M0/M0+ опция скрыта, а её ручная простановка в `.config` роняет configure сообщением `STM32_LOG_BACKEND_SEL_ITM was assigned 'y' but evaluated to 'n'` — вместо падения много позже внутри модуля, который не находит `ITM_SendChar`.
+
 ### Тюнаблы FreeRTOS (при `STM32_USE_FREERTOS`)
 
 Раньше были захардкожены в `FreeRTOSConfig.h` SDK, с v0.2.2 настраиваются.
@@ -103,8 +105,18 @@ sdk/Kconfig ──┘        │
 `sdk/cmake/kconfig.cmake` запускает генератор на каждой конфигурации,
 регистрирует `.config` и фрагменты Kconfig как configure-зависимости (их
 правка перезапускает CMake), а также пишет `out/generated/Kconfig.chip` —
-производный от чипа фрагмент (`STM32_FAMILY_STM32F4`, имя чипа), на который
-будущие per-family опции и слой партиций (#62) вешают свои `depends on`.
+производный от чипа фрагмент, на который per-family опции вешают свои
+`depends on`:
+
+| Сгенерированный символ | Значение |
+|---|---|
+| `STM32_FAMILY_<ID>` | семейство `STM32_CHIP`, например `STM32_FAMILY_STM32F4` |
+| `STM32_CHIP_NAME` | сама строка чипа |
+| `STM32_CORE_HAS_ITM` | есть ли у ядра отладочный блок ARMv7-M (`n` на Cortex-M0/M0+) |
+
+Рядом с ними пишется `out/generated/version.hpp` — но он берётся из
+`git describe` в каталоге проекта, а не из `.config`; см.
+[заметки по апгрейду](migration.ru.md).
 
 Шаблоны поставляют `defconfig` со своим набором гейтов;
 `stmtool project create` копирует его в новый проект как `.config`.

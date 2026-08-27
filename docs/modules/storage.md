@@ -16,19 +16,21 @@ to registers — so it is fully covered by host tests
 import sensor.w25q32;
 import storage.partition;
 
-constexpr auto kPartitions = storage::partitionTable<sensor::W25q32Spec>({
+using Partitions = storage::PartitionMap<
+    sensor::W25q32Spec,
     {.name = "boot",    .offset = 0x000000, .size = 0x010000},
     {.name = "config",  .offset = 0x010000, .size = 0x001000},
-    {.name = "storage", .offset = 0x011000, .size = 0x3EF000},
-});
+    {.name = "storage", .offset = 0x011000, .size = 0x3EF000}>;
 
-constexpr auto kConfig = kPartitions.find("config");
+constexpr auto kConfig = Partitions::find<"config">();
 ```
 
-`partitionTable()` is `consteval` — the same idiom as `gpio()` / `spi()` /
-`exti()`. It rejects, at compile time:
+The map is a type, not an object: every entry is a template argument, which is
+what lets each invariant be a `static_assert`. Rejected at compile time:
 
-- an empty or duplicated name;
+- an empty map, or an empty or duplicated name;
+- a name longer than 15 characters (`PARTITION_NAME_MAX` is 16 including the
+  NUL);
 - a zero size;
 - an offset or an end that is not on a sector boundary (erasing such a
   partition would take a bite out of its neighbour);
@@ -36,9 +38,22 @@ constexpr auto kConfig = kPartitions.find("config");
 - any pair of partitions that overlaps — checked pairwise, so entries need not
   be listed in order.
 
-`find()` is `consteval` as well, so a misspelled name is a build error rather
-than a runtime lookup failure. `count()` and `operator[]` are `constexpr` and
-are what a runtime loop over the map uses.
+A violated invariant names itself:
+
+```
+error: static assertion failed: PartitionMap: partition offset must be sector-aligned
+note: In instantiation of 'struct storage::PartitionMap<..., PartitionSpec{
+      PartitionName{"config"}, 65537, 4096}>'
+```
+
+`find<"name">()` is `consteval`, so a misspelled name is a build error rather
+than a runtime lookup failure. `count()` and `at(i)` are `constexpr` and are
+what a runtime loop over the map uses.
+
+Names are stored inline as a fixed 16-byte buffer rather than as a
+`const char *`, because a pointer to a string literal is not a valid template
+argument. `Partition::name()` still hands out a `const char *` into that
+buffer, so `nameEquals` and printf-style callers are unaffected.
 
 The type parameter is the device geometry. `sensor::W25q32Spec` works as-is
 because it exposes `CAPACITY` and `SECTOR_SIZE`; the internal flash uses
@@ -60,7 +75,7 @@ Two concepts and two models:
   self-check keeps the two descriptions in step.
 
 `GeometryOf<Spec>` picks the right one, which is why both spellings of
-`partitionTable<...>` work.
+`PartitionMap<...>` work.
 
 ## Devices — `storage.flash_device`
 

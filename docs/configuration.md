@@ -66,6 +66,8 @@ Symbols appear in `.config` with the `CONFIG_` prefix.
 | `STM32_LOG_LEVEL_*` (choice `NONE`…`TRACE`) | `INFO` | compile-time ceiling; `LOG_*` above it vanish from flash |
 | `STM32_LOG_BACKEND_SEL_*` (choice `NONE`/`ITM`/`UART`) | `NONE` | intended sink, exposed as the `STM32_LOG_BACKEND` define |
 
+The `ITM` choice depends on `STM32_CORE_HAS_ITM`, a chip-derived symbol (see below). ITM belongs to the ARMv7-M debug block, so on a Cortex-M0/M0+ part the option is hidden and assigning it in `.config` by hand fails the configure step with `STM32_LOG_BACKEND_SEL_ITM was assigned 'y' but evaluated to 'n'` -- rather than failing much later inside a module that cannot find `ITM_SendChar`.
+
 ### FreeRTOS tunables (with `STM32_USE_FREERTOS`)
 
 Previously hardcoded in the SDK's `FreeRTOSConfig.h`, configurable since
@@ -101,8 +103,17 @@ sdk/Kconfig ──┘        │
 `sdk/cmake/kconfig.cmake` runs the generator on every configure, registers
 `.config` and the Kconfig fragments as configure dependencies (editing them
 re-triggers CMake), and also writes `out/generated/Kconfig.chip` — a
-chip-derived fragment (`STM32_FAMILY_STM32F4`, chip name) that future
-per-family options and the partition layer (#62) hang their `depends on` off.
+chip-derived fragment that per-family options hang their `depends on` off:
+
+| Generated symbol | Meaning |
+|---|---|
+| `STM32_FAMILY_<ID>` | the family of `STM32_CHIP`, e.g. `STM32_FAMILY_STM32F4` |
+| `STM32_CHIP_NAME` | the chip string itself |
+| `STM32_CORE_HAS_ITM` | whether the core has the ARMv7-M debug block (`n` on Cortex-M0/M0+) |
+
+`out/generated/version.hpp` is written next to them, from `git describe` in the
+project directory rather than from `.config` — see the
+[upgrade notes](migration.md#new-in-v024).
 
 Templates ship a `defconfig` with their gate set;
 `stmtool project create` copies it into the new project as `.config`.

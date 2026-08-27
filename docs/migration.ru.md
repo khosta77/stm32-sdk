@@ -14,6 +14,112 @@
 5. Прошейте на железо и убедитесь, что ваш smoke-test проходит.
 6. Сливайте, когда всё зелёное.
 
+## Новое в v0.2.4
+
+v0.2.4 — **ломающий** релиз. Новой функциональности прошивки в нём нет: он
+убирает `throw` из SDK, выключает исключения и RTTI и расшивает привязку к F4
+в семейно-нейтральном коде. Правок в исходниках требуется две.
+
+### 1. Валидаторы конфигов принимают конфиг параметром шаблона
+
+`gpio()`, `exti()`, `i2c()`, `spi()` и `uart()` сообщали о неверном конфиге
+через `throw` — именно это блокировало `-fno-exceptions`: GCC отвергает сам
+токен даже внутри `consteval`-функции, а диалект исключений зашит в BMI каждого
+модуля, поэтому флаг нельзя было применить к части дерева.
+
+Теперь конфиг — параметр шаблона, а каждое правило — `static_assert`.
+Перенесите фигурные скобки внутрь угловых и добавьте `()`:
+
+```cpp
+// было
+GpioPin g_led{*GPIOD, gpio({.pin = 12, .mode = PinMode::Output,
+                            .speed = OutputSpeed::Low,
+                            .type = OutputType::PushPull})};
+
+// стало
+GpioPin g_led{*GPIOD, gpio<{.pin = 12, .mode = PinMode::Output,
+                            .speed = OutputSpeed::Low,
+                            .type = OutputType::PushPull}>()};
+```
+
+Правка механическая: `name({...})` превращается в `name<{...}>()`. Имена полей,
+значения и правила проверки не изменились.
+
+Диагностика при этом улучшилась. `throw` давал
+`error: expression '<throw-expression>' is not a constant expression`, и текст
+сообщения был виден только потому, что GCC выводит эхом исходную строку.
+`static_assert` несёт текст как саму диагностику, GCC добавляет note с
+подставленными значениями, и сообщаются **все** нарушенные правила за один
+проход, а не только первое:
+
+```
+error: static assertion failed: GpioConfig: pin must be in [0, 15]
+note: the comparison reduces to '(42 <= 15)'
+error: static assertion failed: GpioConfig: OutputSpeed required for Output/AlternateFunction
+```
+
+### 2. Карта партиций стала типом
+
+По той же причине `storage::partitionTable()` и `PartitionTable<N>` заменены на
+`storage::PartitionMap`. Имя партиции теперь хранится встроенно (не более 15
+символов), а не как `const char *`: указатель на строковый литерал не является
+допустимым аргументом шаблона.
+
+```cpp
+// было
+constexpr auto kPartitions = storage::partitionTable<sensor::W25q32Spec>({
+    {.name = "boot",   .offset = 0x000000, .size = 0x010000},
+    {.name = "config", .offset = 0x010000, .size = 0x001000},
+});
+storage::Partition config{device, kPartitions.find("config")};
+for (size_t i = 0; i < kPartitions.count(); ++i) { use(kPartitions[i]); }
+
+// стало
+using Partitions = storage::PartitionMap<
+    sensor::W25q32Spec,
+    {.name = "boot",   .offset = 0x000000, .size = 0x010000},
+    {.name = "config", .offset = 0x010000, .size = 0x001000}>;
+storage::Partition config{device, Partitions::find<"config">()};
+for (size_t i = 0; i < Partitions::count(); ++i) { use(Partitions::at(i)); }
+```
+
+`operator[]` стал `at(i)`, а `PartitionSpec::name` теперь `PartitionName`, а не
+`const char *` — там, где вы его печатали, используйте `.name.c_str()`.
+`Partition::name()` не изменился и по-прежнему возвращает `const char *`.
+
+### 3. Исключения и RTTI выключены везде
+
+`-fno-exceptions -fno-rtti -fno-unwind-tables -fno-asynchronous-unwind-tables`
+теперь применяются к `stm32_core` и ко всем библиотекам SDK, а значит и к вашей
+прошивке. `try` / `catch` / `throw` / `dynamic_cast` / `typeid` в прикладном
+коде перестают компилироваться. В рантайме SDK ничего не бросал, поэтому
+выброшен только мёртвый вес:
+
+| шаблон | flash до | после |
+|---|---|---|
+| `bare-metal/blink` | 5892 | 1724 (−71%) |
+| `freertos/signal-bus-demo` | 21796 | 14236 (−35%) |
+| `freertos/w25q32-flash-test` | 23796 | 16344 (−31%) |
+| `freertos/imu-flash-oled-demo` | 25812 | 18016 (−30%) |
+
+Флаги нельзя применить выборочно: GCC хранит диалект в BMI каждого модуля, и
+рассогласование даёт
+`error: module ...: language dialect differs 'C++20', expected 'C++20/no-exceptions'`.
+
+### 4. Новое, действий не требует
+
+- `out/generated/version.hpp` генерируется из `git describe` вашего проекта и
+  лежит на include-пути любого проекта. `firmware::VERSION`,
+  `VERSION_MAJOR/MINOR/PATCH`, `VERSION_TAGGED`, `VERSION_DIRTY`. Проект без
+  тега сообщает `v0.0.0-untagged` — это запасной вариант, а не ошибка.
+- `sdk/chips.json` — индекс чипов; шестнадцать заглушек «not yet supported» в
+  `sdk/cmake/families/` удалены. Неподдерживаемый чип теперь сообщает список
+  поддерживаемых семейств из этого одного файла.
+- `STM32_LOG_BACKEND_SEL_ITM` зависит от `STM32_CORE_HAS_ITM`, поэтому на
+  Cortex-M0/M0+ он отвергается на этапе configure, а не падает внутри модуля.
+  На F4 ничего не меняется.
+- В CI появился QEMU-гейт рантайма — см. [Эмуляцию](emulation.ru.md).
+
 ## Новое в v0.2.3
 
 v0.2.3 добавляет CRC-32 и слой флэш-партиций. Релиз **аддитивный** — ни один

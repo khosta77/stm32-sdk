@@ -81,7 +81,15 @@ all `onBeat()` fan-out is serialized on that one task — no mutex in the handle
 ### Expected behaviour
 
 - On boot USART2 prints `=== signal-bus-demo bootstrap ===`, then
-  `all components started` and `workqueue self-check: PASS`.
+  `firmware <version>`, `all components started` and
+  `workqueue self-check: PASS`. The version comes from `git describe` in this
+  project via the generated `version.hpp`; an untagged project reports
+  `v0.0.0-untagged` -- `git tag -a v0.1.0 -m ...` and rebuild to change that.
+- This template doubles as the SDK's QEMU smoke image: it needs only a UART
+  and the concurrency layer, both of which `netduinoplus2` emulates. Run it
+  without hardware with
+  `python3 <sdk>/sdk/scripts/qemu/run_smoke.py --elf out/@PROJECT_NAME@.elf
+  --expect "all components started"`.
 - Every 500 ms a new line appears: `beat #<n> value=<±v>` with an increasing
   `n` and a value sweeping a sawtooth between -100 and +99.
 - The PD12 LED toggles once per event (≈1 Hz visible blink).
