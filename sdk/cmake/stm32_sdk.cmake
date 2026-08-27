@@ -28,6 +28,10 @@ endif()
 # resolution -- the float ABI feeds STM32_ARCH_FLAGS.
 include(${CMAKE_CURRENT_LIST_DIR}/kconfig.cmake)
 
+# Project version from the project's own git tags -> out/generated/version.hpp
+# (#90). After kconfig.cmake because it writes into the same generated dir.
+include(${CMAKE_CURRENT_LIST_DIR}/version.cmake)
+
 include(${CMAKE_CURRENT_LIST_DIR}/stm32_families.cmake)
 stm32_resolve_family(${STM32_CHIP})
 
@@ -80,6 +84,7 @@ target_sources(stm32_core INTERFACE
 target_include_directories(stm32_core INTERFACE
     ${_STM32_SDK_DIR}/core/include
     ${_STM32_SDK_DIR}/core/include/cmsis
+    ${STM32_GENERATED_DIR}
 )
 
 target_compile_options(stm32_core INTERFACE
