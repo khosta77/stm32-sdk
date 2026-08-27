@@ -61,6 +61,12 @@ config STM32_LOG_BACKEND_SEL_NONE
 
 config STM32_LOG_BACKEND_SEL_ITM
 	bool "itm (SWO trace)"
+	depends on STM32_CORE_HAS_ITM
+	help
+	  Streams every byte to ITM stimulus port 0, read back over SWO by the
+	  debugger. ITM is part of the ARMv7-M debug block, so this option is
+	  hidden on Cortex-M0/M0+ parts (F0, G0, L0), where the CMSIS core
+	  header does not declare ITM_SendChar at all.
 
 config STM32_LOG_BACKEND_SEL_UART
 	bool "uart"

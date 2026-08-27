@@ -1,7 +1,7 @@
 module;
 #include <cstddef>
 #include <cstdint>
-#include "cmsis/stm32f4xx.h"
+#include "cmsis_device.h"
 export module driver.log.itm;
 
 import driver.log;
